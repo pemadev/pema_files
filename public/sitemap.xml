@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url><loc>https://pema.co.id/</loc><priority>1.0</priority><changefreq>daily</changefreq></url>
+    <url><loc>https://pema.co.id/profil</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+    <url><loc>https://pema.co.id/bisnis</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+    <url><loc>https://pema.co.id/berita</loc><priority>0.8</priority><changefreq>daily</changefreq></url>
+    <url><loc>https://pema.co.id/pengumuman</loc><priority>0.7</priority><changefreq>daily</changefreq></url>
+    <url><loc>https://pema.co.id/galeri</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>
+    <url><loc>https://pema.co.id/laporan</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+    <url><loc>https://pema.co.id/agenda</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+    <url><loc>https://pema.co.id/karir</loc><priority>0.5</priority><changefreq>weekly</changefreq></url>
+    <url><loc>https://pema.co.id/kerjasama</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+    <url><loc>https://pema.co.id/kontak</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+    <url><loc>https://pema.co.id/privacy-policy</loc><priority>0.3</priority><changefreq>yearly</changefreq></url>
+    <url><loc>https://pema.co.id/terms-of-service</loc><priority>0.3</priority><changefreq>yearly</changefreq></url>
+</urlset>

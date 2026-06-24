@@ -1,0 +1,325 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    /* Fonts */
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-heading: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* PEMA Brand Colors - Blue (from logo) & Gold */
+    --color-pema-50: #e8f0fe;
+    --color-pema-100: #c5dcfa;
+    --color-pema-200: #9dc2f6;
+    --color-pema-300: #70a6f0;
+    --color-pema-400: #4689e8;
+    --color-pema-500: #0A6AC9;
+    --color-pema-600: #0855a3;
+    --color-pema-700: #06407d;
+    --color-pema-800: #042c57;
+    --color-pema-900: #021831;
+
+    /* Gold Accent */
+    --color-gold-50: #fef8e7;
+    --color-gold-100: #fdf0c9;
+    --color-gold-200: #fbe49b;
+    --color-gold-300: #f5d36d;
+    --color-gold-400: #e8bf4a;
+    --color-gold-500: #C4923C;
+    --color-gold-600: #a37630;
+    --color-gold-700: #7f5b25;
+    --color-gold-800: #5c411b;
+    --color-gold-900: #3d2a11;
+
+    /* Warm Earth */
+    --color-earth-50: #faf6f3;
+    --color-earth-100: #f2ebe4;
+    --color-earth-200: #e3d5c8;
+    --color-earth-300: #d0bca9;
+    --color-earth-400: #b89f89;
+    --color-earth-500: #9e846b;
+    --color-earth-600: #7f6954;
+    --color-earth-700: #635142;
+    --color-earth-800: #4f3f33;
+    --color-earth-900: #42352b;
+
+    /* Carousel crossfade animation */
+    --animate-carousel-in: carousel-in 0.7s ease-out;
+    --animate-carousel-out: carousel-out 0.7s ease-out;
+
+    @keyframes carousel-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes carousel-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+}
+
+/* Base styles */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply font-sans text-gray-800 antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-heading;
+    }
+}
+
+/* Alpine.js x-cloak */
+[x-cloak] { display: none !important; }
+
+/* Custom animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-in-left {
+    animation: slideInLeft 0.6s ease-out forwards;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 0.6s ease-out forwards;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+}
+
+/* Animation delays (for staggered reveals) */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-1000 { animation-delay: 1000ms; }
+
+/* Navigation dropdown styles */
+.nav-dropdown-trigger {
+    position: relative;
+}
+.nav-dropdown-trigger > .nav-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: all 0.2s ease;
+}
+.nav-dropdown-trigger:hover > .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Sub-sub-dropdown bridge */
+.nav-group {
+    position: relative;
+}
+.nav-group > .nav-sub-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+}
+.nav-group:hover > .nav-sub-dropdown {
+    opacity: 1;
+    visibility: visible;
+}
+/* Invisible bridge between parent and sub-dropdown */
+.nav-group::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 8px;
+    height: 100%;
+}
+
+/* Hero overlay */
+.hero-overlay {
+    background: linear-gradient(
+        135deg,
+        rgba(4, 44, 87, 0.92) 0%,
+        rgba(6, 64, 125, 0.7) 50%,
+        rgba(2, 24, 49, 0.6) 100%
+    );
+}
+
+/* Card hover effects */
+.card-hover {
+    transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient text */
+.gradient-gold {
+    background: linear-gradient(135deg, #C4923C, #e8bf4a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Decorative line */
+.deco-line {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #C4923C, #e8bf4a);
+    border-radius: 2px;
+}
+
+/* Splide carousel custom styles */
+.splide {
+    padding: 1.5rem 0;
+}
+
+.splide__track {
+    padding: 0.5rem 0;
+}
+
+.splide__arrow {
+    background: white !important;
+    border: 1px solid #E5E7EB !important;
+    border-radius: 50% !important;
+    width: 2.75rem !important;
+    height: 2.75rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.2s ease !important;
+    opacity: 1 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
+.splide__arrow:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+    border-color: #0A6AC9 !important;
+}
+
+.splide__arrow svg {
+    fill: none !important;
+    viewBox: 0 0 24 24 !important;
+    stroke: #4B5563 !important;
+    stroke-width: 2 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+}
+
+.splide__arrow--prev {
+    left: -1.5rem !important;
+}
+
+.splide__arrow--next {
+    right: -1.5rem !important;
+}
+
+@media (max-width: 640px) {
+    .splide__arrow {
+        width: 2.25rem !important;
+        height: 2.25rem !important;
+    }
+
+    .splide__arrow--prev {
+        left: -0.5rem !important;
+    }
+
+    .splide__arrow--next {
+        right: -0.5rem !important;
+    }
+}
+
+.splide__pagination {
+    bottom: 0 !important;
+    padding-top: 1rem !important;
+}
+
+.splide__pagination__page {
+    background: #D1D5DB !important;
+    border: none !important;
+    border-radius: 9999px !important;
+    width: 0.625rem !important;
+    height: 0.625rem !important;
+    transition: all 0.3s ease !important;
+    opacity: 1 !important;
+    margin: 0 0.25rem !important;
+}
+
+.splide__pagination__page.is-active {
+    background: #0A6AC9 !important;
+    width: 0.625rem !important;
+    height: 0.625rem !important;
+    transform: scale(1.4) !important;
+    opacity: 1 !important;
+}
+
+
