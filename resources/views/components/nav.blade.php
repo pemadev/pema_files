@@ -36,7 +36,7 @@
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2"
                          x-transition:enter-end="opacity-100 translate-y-0">
-                        <a href="{{ route('profil') }}#visi-misi" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Visi dan Misi</a>
+                        <a href="{{ route('profil') }}#visi-misi" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors" section id="visi-misi" class="scroll-mt-24">Visi dan Misi</a>
                         <a href="{{ route('profil') }}#sambutan" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Sambutan Dirut</a>
                         <a href="{{ route('profil') }}#sejarah" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Sejarah PT PEMA</a>
                         <a href="{{ route('profil') }}#stakeholder" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Stakeholder</a>
@@ -129,7 +129,7 @@
                          x-transition:enter-start="opacity-0 translate-y-2"
                          x-transition:enter-end="opacity-100 translate-y-0">
                         <a href="{{ route('kerjasama') }}" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Mitra</a>
-                        <a href="https://ivds.ptpema.co.id" target="_blank" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Vendor</a>
+                        <a href="https://ivds.pema.co.id" target="_blank" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Vendor</a>
                     </div>
                 </div>
 

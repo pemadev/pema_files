@@ -159,7 +159,7 @@
         </div>
         <div class="p-5">
             @if($activities->count() > 0)
-                <div class="space-y-3">
+                <div class="space-y-4">
                     @foreach($activities as $activity)
                         <div class="flex items-start gap-3 text-sm">
                             <div class="w-7 h-7 rounded-full bg-pema-100 flex items-center justify-center flex-shrink-0 mt-0.5">

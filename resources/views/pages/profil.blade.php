@@ -91,7 +91,7 @@
         <div class="grid lg:grid-cols-5 gap-12 items-start">
             <div class="lg:col-span-2 animate-slide-in-left">
                 <div class="relative">
-                    <div class="aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden relative py-4">
+                    <div class="aspect-[3/4] bg-gray-300 rounded-2xl overflow-hidden relative py-4">
                         @if($sambutan->image)
                             <img src="{{ asset('storage/' . $sambutan->image) }}"
                                  alt="{{ $sambutan->title ?? 'Foto Direktur Utama' }}"
@@ -141,7 +141,7 @@
     $timelineItems = array_filter(explode("\n\n", $sejarah->content), fn($item) => trim($item));
 @endphp
 @if(count($timelineItems) > 0)
-<section id="sejarah" class="py-20 lg:py-28 bg-gray-50">
+<section id="sejarah" class="py-20 lg:py-28 bg-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-16">
             <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Sejarah</span>
@@ -195,7 +195,7 @@
 
 <!-- Stakeholder -->
 @if($stakeholder && $stakeholder->content)
-<section id="stakeholder" class="py-20 lg:py-28 bg-gray-50">
+<section id="stakeholder" class="py-20 lg:py-28 bg-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-16">
             <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Stakeholder</span>
