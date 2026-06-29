@@ -1,0 +1,19 @@
+{
+    "name": "PT PEMA - PT Pembangunan Aceh",
+    "short_name": "PT PEMA",
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#0A6AC9",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}
