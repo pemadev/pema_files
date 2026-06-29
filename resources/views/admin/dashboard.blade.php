@@ -111,15 +111,15 @@
         <!-- Pesan Terbaru -->
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
             <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-3">
                     <h3 class="font-heading font-semibold text-gray-900 text-sm">Pesan Masuk</h3>
                     @if($stats['pesan_baru'] > 0)
-                    <span class="inline-flex items-center justify-center w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full">
+                    <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full">
                         {{ $stats['pesan_baru'] }}
                     </span>
                     @endif
                 </div>
-                <a href="{{ route('admin.enquiry.index') }}" class="text-pema-500 hover:text-pema-600 text-xs font-medium">Lihat Semua</a>
+                <a href="{{ route('admin.enquiry.index') }}" class="text-pema-500 hover:text-pema-600 text-xs">Lihat Semua</a>
             </div>
             <div class="p-5">
                 @if($stats['pesan_terbaru']->count() > 0)
@@ -130,13 +130,13 @@
                                     <i class="fi fi-rs-envelope {{ $pesan->is_read ? 'text-gray-500' : 'text-blue-500' }} text-xs"></i>
                                 </div>
                                 <div class="min-w-0 flex-1">
-                                    <div class="flex items-start justify-between gap-2">
+                                    <div class="flex items-center justify-between gap-2">
                                         <p class="text-sm font-medium text-gray-900 truncate group-hover:text-pema-500 transition-colors">{{ $pesan->name }}</p>
                                         @if(!$pesan->is_read)
                                         <span class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1.5"></span>
                                         @endif
                                     </div>
-                                    <p class="text-xs text-gray-500 truncate">{{ $pesan->subject }}</p>
+                                    <p class="text-sm text-gray-600 truncate">{{ $pesan->subject }}</p>
                                     <p class="text-xs text-gray-400 mt-0.5">{{ $pesan->created_at->format('d M Y H:i') }}</p>
                                 </div>
                             </a>
