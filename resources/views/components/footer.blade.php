@@ -114,6 +114,7 @@
                 </p>
                 <div class="flex items-center gap-6">
                     <a href="{{ route('privacy') }}" class="text-gray-400 hover:text-gold-400 text-sm transition-colors">Kebijakan Privasi</a>
+                    <a href="{{ route('policy') }}" class="text-gray-400 hover:text-gold-400 text-sm transition-colors">Privacy Policy</a>
                     <a href="{{ route('terms') }}" class="text-gray-400 hover:text-gold-400 text-sm transition-colors">Syarat & Ketentuan</a>
                 </div>
             </div>

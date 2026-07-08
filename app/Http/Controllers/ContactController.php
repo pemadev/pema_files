@@ -21,6 +21,6 @@ class ContactController extends Controller
         Enquiry::create($validated);
 
         return redirect()->route('kontak')
-            ->with('success', 'Pesan Anda telah terkirim. Kami akan menghubungi Anda segera.');
+            ->with('success', 'Pesan Anda telah terkirim.');
     }
 }

@@ -49,7 +49,7 @@
             <div class="animate-slide-in-left">
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
                     <iframe
-                        src="https://maps.google.com/maps?ll=5.540777,95.313287&z=16&t=m&hl=en-US&gl=US&q=PT+PEMA+Banda+Aceh+Aceh&output=embed"
+                        src="https://maps.google.com/maps?ll=5.556639418601494, 95.32456641020168&z=16&t=m&hl=en-US&gl=US&q=PT+PEMA+Banda+Aceh+Aceh&output=embed"
                         style="width: 100%; height: 500px;"
                         frameborder="0"
                         allowfullscreen
@@ -78,12 +78,12 @@
                                     type="text"
                                     id="name"
                                     name="name"
-                                    placeholder="Masukkan nama Anda"
+                                placeholder="Masukan nama lengkap Anda"
                                     class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-pema-500 focus:border-transparent transition-all duration-200"
                                 >
                             </div>
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb 1.5">Email</label>
                                 <input
                                     type="email"
                                     id="email"
@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <div>
-                            <label for="subject" class="block text-sm font-medium text-gray-700 mb-1.5">Subjek</label>
+                            <label for="subject" class="block text-sm font-medium text-gray-700 mb 1.5">Subjek</label>
                                 <input
                                     type="text"
                                     id="subject"

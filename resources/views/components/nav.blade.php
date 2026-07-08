@@ -40,7 +40,7 @@
                         <a href="{{ route('profil') }}#sambutan" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Sambutan Dirut</a>
                         <a href="{{ route('profil') }}#sejarah" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Sejarah PT PEMA</a>
                         <a href="{{ route('profil') }}#stakeholder" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Stakeholder</a>
-                        <a href="{{ route('profil') }}#team" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Direksi & Komisaris</a>
+                        <a href="{{ route('profil') }}#direksi" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Direksi & Komisaris</a>
                     </div>
                 </div>
 

@@ -292,6 +292,11 @@ class WebController extends Controller
         return view('pages.privacy');
     }
 
+    public function policy()
+    {
+        return view('pages.policy');
+    }
+
     public function terms()
     {
         return view('pages.terms');

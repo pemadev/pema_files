@@ -27,4 +27,5 @@ Route::get('/kontak', [WebController::class, 'kontak'])->name('kontak');
 Route::post('/kontak', [ContactController::class, 'send'])->name('kontak.send');
 
 Route::get('/privacy-policy', [WebController::class, 'privacy'])->name('privacy');
+Route::get('/id/privacy-policy', [WebController::class, 'policy'])->name('policy');
 Route::get('/terms-of-service', [WebController::class, 'terms'])->name('terms');

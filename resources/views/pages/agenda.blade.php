@@ -67,7 +67,7 @@
                     @php
                         $past = $agenda->date->isPast();
                     @endphp
-                    <article class="group bg-gray-300 rounded-2xl overflow-hidden border border-gray-300 shadow-sm card-hover flex flex-col {{ $past ? 'opacity-60' : '' }}">
+                    <article class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm card-hover flex flex-col {{ $past ? 'opacity-60' : '' }}">
                         <!-- Thumbnail -->
                         <div class="block aspect-[16/10] {{ $past ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-to-br from-pema-50 to-amber-50' }} relative overflow-hidden flex-shrink-0">
                             <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -77,11 +77,11 @@
                                 <p class="text-xs {{ $past ? 'text-gray-400' : 'text-pema-400' }} font-medium">{{ $agenda->date->format('M Y') }}</p>
                             </div>
                             @if(!$past)
-                                <span class="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-xs font-medium rounded-lg">
+                                <span class="absolute top-4 left-4 px-3 py-1 bg-pema-500 text-white text-xs font-medium rounded-lg">
                                     Akan Datang
                                 </span>
                             @else
-                                <span class="absolute top-4 left-4 px-3 py-1 bg-gray-400 text-white text-xs font-medium rounded-lg">
+                                <span class="absolute top-4 left-4 px-3 py-1 bg-gray-300 text-gray-600 text-xs font-medium rounded-lg">
                                     Selesai
                                 </span>
                             @endif
@@ -106,7 +106,7 @@
                                 {{ $agenda->title }}
                             </h3>
                             @if($agenda->description)
-                                <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-4">
+                                <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-4 flex-1">
                                     {{ $agenda->description }}
                                 </p>
                             @else
