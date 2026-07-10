@@ -66,6 +66,10 @@
                         class="w-full py-2.5 px-4 bg-pema-500 hover:bg-pema-600 text-white font-medium rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-pema-500 focus:ring-offset-1 transition-all">
                         Masuk
                     </button>
+                    <a href="{{ route('admin.password.request') }}"
+                        class="block text-center text-sm font-medium text-pema-600 hover:text-pema-700 hover:underline">
+                        Lupa password?
+                    </a>
                 </form>
             </div>
 
