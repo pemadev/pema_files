@@ -1,12 +1,12 @@
-import './bootstrap';
-import Alpine from 'alpinejs';
-import Splide from '@splidejs/splide';
-import '@splidejs/splide/css';
+import "./admin-bootstrap";
+import Alpine from "alpinejs";
+import Splide from "@splidejs/splide";
+import "@splidejs/splide/css";
 
 window.Alpine = Alpine;
 
-document.addEventListener('alpine:init', () => {
-    Alpine.data('carousel', (total = 3) => ({
+document.addEventListener("alpine:init", () => {
+    Alpine.data("carousel", (total = 3) => ({
         active: 0,
         total: total,
         slides: Array.from({ length: total }, (_, i) => i),
@@ -37,19 +37,18 @@ document.addEventListener('alpine:init', () => {
             this.active = (this.active - 1 + this.total) % this.total;
         },
     }));
-
 });
 
 Alpine.start();
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     const splideConfig = {
-        type: 'loop',
+        type: "loop",
         perPage: 4,
         autoplay: true,
         interval: 3000,
         pauseOnHover: true,
-        gap: '1rem',
+        gap: "1rem",
         arrows: true,
         pagination: true,
         breakpoints: {
@@ -65,13 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     };
 
-    const partnerSplide = document.querySelector('#partner-splide');
+    const partnerSplide = document.querySelector("#partner-splide");
     if (partnerSplide) {
-        new Splide('#partner-splide', splideConfig).mount();
+        new Splide("#partner-splide", splideConfig).mount();
     }
 
-    const kerjasamaSplide = document.querySelector('#kerjasama-splide');
+    const kerjasamaSplide = document.querySelector("#kerjasama-splide");
     if (kerjasamaSplide) {
-        new Splide('#kerjasama-splide', splideConfig).mount();
+        new Splide("#kerjasama-splide", splideConfig).mount();
     }
 });
