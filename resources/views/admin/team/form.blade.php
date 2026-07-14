@@ -51,6 +51,23 @@
                     @enderror
                 </div>
 
+                <!-- Biodata -->
+                <div>
+                    <label for="biodata" class="block text-sm font-medium text-gray-700 mb-1.5">Biodata<span class="text-red-400">*</span></label>
+                    <textarea id="biodata"
+                            name="biodata"
+                            rows="6"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pema-500/20 focus:border-pema-500 text-sm transition-all resize-none @error('biodata') border-red-300 @enderror"
+                            placeholder="Masukkan biodata atau profil singkat anggota direksi/komisaris...">{{ old('biodata', $team->biodata) }}</textarea>
+                    @error('biodata')
+                        <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                    @enderror
+                        <p class="mt-1 text-xs text-gray-400">
+                            Contoh: Riwayat pendidikan, pengalaman kerja, serta jabatan yang pernah diemban.
+                        </p>
+                    </div>
+                </div>
+
                 <!-- Category -->
                 <div>
                     <label for="category" class="block text-sm font-medium text-gray-700 mb-1.5">Kategori <span class="text-red-400">*</span></label>

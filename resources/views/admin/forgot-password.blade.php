@@ -60,8 +60,7 @@
                     required
                     autofocus
                     class="w-full rounded-xl border px-4 py-3 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 transition"
-                    :class="error ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-blue-200 focus:border-blue-400'"
-                >
+                    :class="error ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-blue-200 focus:border-blue-400'" >
                 <p x-show="error" x-text="error" class="mt-1.5 text-xs text-red-500"></p>
                 @error('email')
                     <p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>
