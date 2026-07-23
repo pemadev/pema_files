@@ -14,7 +14,8 @@ class ApiController extends Controller
         $newsList = News::type('berita')
             ->where('is_published', true)
             ->paginate(10)
-            ->appends(request()->query());
+            ->appends(request()->query())
+            ->orderBy('id', 'desc');
 
         return response()->json($newsList);
     }
