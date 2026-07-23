@@ -130,6 +130,8 @@ class WebController extends Controller
         return view('pages.berita.index', compact('newsList', 'years'));
     }
 
+
+
     public function beritaDetail(News $news)
     {
         if ($news->type !== 'berita') {
@@ -201,7 +203,7 @@ class WebController extends Controller
         }
 
         $path = $report->file;
-        
+
         if (!Storage::disk('public')->exists($path)) {
             abort(404, 'File tidak ditemukan.');
         }
@@ -220,7 +222,7 @@ class WebController extends Controller
         }
 
         $path = $report->file;
-        
+
         if (!Storage::disk('public')->exists($path)) {
             abort(404, 'File tidak ditemukan.');
         }
