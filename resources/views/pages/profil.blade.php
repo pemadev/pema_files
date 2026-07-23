@@ -34,8 +34,8 @@
 <!-- Visi dan Misi -->
 @if($visiMisi && ($visiMisi->title || $visiMisi->content))
 @php
-    $visiText = $visiMisi->title ?? '';
-    $misiText = $visiMisi->content ?? '';
+    $visiText = strip_tags($visiMisi->title ?? '');
+    $misiText = strip_tags($visiMisi->content ?? '');
     $misiItems = array_filter(explode("\n", $misiText), fn($line) => trim($line));
 @endphp
 <section id="visi-misi" class="py-20 lg:py-28 bg-white">
@@ -43,7 +43,7 @@
         <div class="text-center max-w-3xl mx-auto mb-16">
             <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Visi & Misi</span>
             <h2 class="text-3xl sm:text-4xl font-heading font-bold text-gray-900 mt-3 mb-4">
-                {{ $visiMisi->title ?? 'Visi dan Misi Perusahaan' }}
+                {{ $visiText ?: 'Visi dan Misi Perusahaan' }}
             </h2>
             <div class="w-16 h-1 bg-gold-500 rounded-full mx-auto"></div>
         </div>
@@ -86,7 +86,7 @@
 
 <!-- Sambutan Dirut -->
 @if($sambutan && $sambutan->title)
-<section id="sambutan" class="py-20 lg:py-28 bg-white">
+<section id="sambutan" class="py-20 lg:py-28 bg-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-5 gap-12 items-start">
             <div class="lg:col-span-2 animate-slide-in-left">
@@ -120,8 +120,9 @@
                     <p class="text-lg italic leading-relaxed">{!! $sambutan->additional_info !!}</p>
                 </div>
                 @endif
-
-                <div class="mt-8 pt-8 border-t border-gray-100">
+                <div class="mt-8 pt-6">
+                <div class="w-20 h-1 bg-gold-500 rounded-full mb-5">
+                </div>
                     @if($sambutan->title)
                     <p class="font-heading font-semibold text-gray-900 text-lg">{{ $sambutan->title }}</p>
                     @endif
@@ -222,7 +223,7 @@
 
 <!-- Team: Direksi -->
 @if($direksi && $direksi->count() > 0)
-<section id="direksi" class="py-20 lg:py-28 bg-white">
+<section id="direksi" class="py-20 lg:py-28 bg-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-16">
             <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Manajemen</span>
@@ -251,8 +252,17 @@
                 <div class="p-5 flex-1 flex flex-col">
                     <h3 class="font-heading font-semibold text-gray-900">{{ $member->name }}</h3>
                     @if($member->position)
-                    <p class="text-gold-500 text-sm mt-auto pt-2">{{ $member->position }}</p>
+                    <p class="text-gold-500 text-sm mt-1">{{ $member->position }}</p>
                     @endif
+
+                    <a href="{{ route('direksi.show', $member) }}"
+                       class="group/link mt-auto pt-4 inline-flex items-center gap-2 px-4 py-2 bg-pema-100 text-pema-700 rounded-xl hover:bg-pema-200 transition duration-300">
+                        <span class="text-sm font-medium">Lihat Biografi</span>
+                        <svg class="w-4 h-4 transition-transform duration-300 group-hover/link:animate-arrow-slide"
+                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
             @endforeach
@@ -261,9 +271,20 @@
 </section>
 @endif
 
+<style>
+    @keyframes arrow-slide {
+        0%   { transform: translateX(0); }
+        50%  { transform: translateX(6px); }
+        100% { transform: translateX(0); }
+    }
+    .group\/link:hover .group-hover\/link\:animate-arrow-slide {
+        animation: arrow-slide 0.8s ease-in-out infinite;
+    }
+</style>
+
 <!-- Team: Komisaris -->
 @if($komisaris && $komisaris->count() > 0)
-<section id="komisaris" class="py-20 lg:py-28 bg-gray-50">
+<section id="komisaris" class="py-20 lg:py-28 bg-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-16">
             <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Pengawasan</span>
@@ -292,8 +313,16 @@
                 <div class="p-5 flex-1 flex flex-col">
                     <h3 class="font-heading font-semibold text-gray-900">{{ $member->name }}</h3>
                     @if($member->position)
-                    <p class="text-gold-500 text-sm mt-auto pt-2">{{ $member->position }}</p>
+                    <p class="text-gold-500 text-sm mt-1">{{ $member->position }}</p>
                     @endif
+            <a href="{{ route('direksi.show', $member) }}"
+                       class="group/link mt-auto pt-4 inline-flex items-center gap-2 px-4 py-2 bg-pema-100 text-pema-700 rounded-xl hover:bg-pema-200 transition duration-300">
+                        <span class="text-sm font-medium">Lihat Biografi</span>
+                        <svg class="w-4 h-4 transition-transform duration-300 group-hover/link:animate-arrow-slide"
+                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
             @endforeach
@@ -301,6 +330,17 @@
     </div>
 </section>
 @endif
+
+<style>
+    @keyframes arrow-slide {
+        0%   { transform: translateX(0); }
+        50%  { transform: translateX(6px); }
+        100% { transform: translateX(0); }
+    }
+    .group\/link:hover .group-hover\/link\:animate-arrow-slide {
+        animation: arrow-slide 0.8s ease-in-out infinite;
+    }
+</style>
 
 <!-- Empty state when no data at all -->
 @unless($sambutan || $sejarah || $visiMisi || $stakeholder || ($direksi && $direksi->count() > 0) || ($komisaris && $komisaris->count() > 0))

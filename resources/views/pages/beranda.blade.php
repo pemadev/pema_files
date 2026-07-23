@@ -184,6 +184,26 @@
 </div>  <!-- close container -->
 </section>
 
+<!-- Section Video YouTube -->
+<section class="pt-16 pb-20 bg-white">   
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8">
+            <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Video Profil</span>
+            <h2 class="text-2xl sm:text-3xl font-heading font-bold text-gray-900 mt-3">Mengenal PT PEMA Lebih Dekat</h2>
+        </div>
+        <div class="relative w-full rounded-2xl overflow-hidden shadow-lg" style="padding-bottom: 56.25%;">
+            <iframe
+                class="absolute top-0 left-0 w-full h-full"
+                src="https://www.youtube.com/embed/2rZShiJEEbU"
+                title="Video Profil PT PEMA"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+</section>
+
 <!-- Business Highlights -->
 <section class="py-20 lg:py-28 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -294,31 +314,45 @@
 </section>
 
 <!-- Quote / Testimonial Section -->
-@if($sambutan && $sambutan->additional_info)
-<section class="py-20 lg:py-28 bg-pema-800 relative overflow-hidden">
+<section class="py-12 lg:py-16 bg-pema-800 relative overflow-hidden">
     <div class="absolute inset-0 opacity-10">
         <div class="absolute top-10 left-10 w-64 h-64 bg-gold-500 rounded-full blur-3xl"></div>
         <div class="absolute bottom-10 right-10 w-96 h-96 bg-pema-400 rounded-full blur-3xl"></div>
     </div>
-
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="w-60 h-60 mx-auto mb-6 rounded-full overflow-hidden border-2 border-gold-500/30">
+        <div class="w-40 h-40 mx-auto mb-6 rounded-full overflow-hidden border-2 border-gold-500/30">
              <img src="{{ asset('storage/team/foto-direktur.png') }}" alt="Mawardi Nur, SE" class="w-full h-full object-contain bg-gray-50">
         </div>
         <i class="fi fi-rs-quote-right text-gold-500 text-4xl mb-6 inline-block opacity-50"></i>
-        <blockquote class="text-2xl sm:text-3xl font-heading font-medium text-white leading-relaxed mb-8">
-            "{!! html_entity_decode($sambutan->additional_info) !!}"
+        <blockquote class="text-2xl sm:text-2xl font-heading font-medium text-white leading-relaxed mb-4">
+            "PT PEMA hadir sebagai  Badan Usaha Milik Aceh (BUMA) dengan kepemilikan saham penuh oleh Pemerintah Aceh. Sejak resmi berdiri pada 05 April 2019, PT PEMA mengemban mandat strategis untuk mengoptimalkan potensi dan sumber daya daerah"
         </blockquote>
         <div class="w-16 h-0.5 bg-gold-500 mx-auto mb-6"></div>
-        @if($sambutan->title)
-            <p class="font-heading font-semibold text-white text-lg">{{ $sambutan->title }}</p>
-        @endif
-        @if($sambutan->content)
-            <p class="text-gold-400 text-sm mt-1">{{ Str::limit(strip_tags($sambutan->content), 100) }}</p>
-        @endif
+        <p class="font-heading font-semibold text-white text-lg">Mawardi Nur, SE</p>
+        <p class="text-gold-400 text-sm mt-1">Direktur Utama</p>
+        <p class="text-gold-400 text-sm mt-1">PT Pembangunan Aceh (Perseroda)</p>
+        <div class="mt-4 mb-4">
+            <a href="{{ route('profil') }}#sambutan" class="group inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gold-500 text-pema-900 text-base font-bold hover:bg-gold-400 transition-colors duration-300">
+                Sambutan Direktur
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transition-transform duration-300 group-hover:animate-arrow-slide" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </a>
+        </div>
     </div>
 </section>
-@endif
+
+<style>
+    @keyframes arrow-slide {
+        0%   { transform: translateX(0); }
+        50%  { transform: translateX(6px); }
+        100% { transform: translateX(0); }
+    }
+    .group:hover .group-hover\:animate-arrow-slide {
+        animation: arrow-slide 0.8s ease-in-out infinite;
+    }
+</style>
+
 
 <!-- News Highlights -->
 <section class="py-20 lg:py-28 bg-white">

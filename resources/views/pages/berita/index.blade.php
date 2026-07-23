@@ -128,10 +128,73 @@
                 @endforeach
             </div>
 
-            <!-- Pagination -->
-            <div class="mt-12">
-                {{ $newsList->links() }}
-            </div>
+            <!-- Tombol Navigasi Halaman -->
+            @if($newsList->hasPages())
+    <div class="flex flex-col items-center gap-4 mt-12">
+        <p class="text-sm text-gray-500">
+            Halaman <span class="font-semibold text-gray-900">{{ $newsList->currentPage() }}</span>
+            dari <span class="font-semibold text-gray-900">{{ $newsList->lastPage() }}</span>
+        </p>
+
+        <div class="flex justify-center items-center gap-4">
+            @if(!$newsList->onFirstPage())
+                <a href="{{ $newsList->previousPageUrl() }}" class="btn-nav-prev">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Berita Sebelumnya
+                </a>
+            @endif
+
+            @if($newsList->hasMorePages())
+                <a href="{{ $newsList->nextPageUrl() }}" class="btn-nav-next">
+                    Lihat Berita Selanjutnya
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            @endif
+        </div>
+    </div>
+    @endif
+
+<style>
+    .btn-nav-next,
+    .btn-nav-prev {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 2rem;
+        background-color: #2563eb; /* ganti sesuai warna pema-500 kamu */
+        color: white;
+        font-weight: 500;
+        font-size: 0.875rem;
+        border-radius: 0.75rem;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .btn-nav-next:hover,
+    .btn-nav-prev:hover {
+        background-color: #1d4ed8; /* ganti sesuai pema-600 kamu */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .nav-icon {
+        width: 1rem;
+        height: 1rem;
+        transition: transform 0.3s ease;
+    }
+
+    .btn-nav-next:hover .nav-icon {
+        transform: translateX(4px);
+    }
+
+    .btn-nav-prev:hover .nav-icon {
+        transform: translateX(-4px);
+    }
+</style>
+
         @else
             <!-- Empty State -->
             <div class="text-center py-20">

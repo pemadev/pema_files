@@ -19,8 +19,9 @@ use Illuminate\Support\Facades\Date;
 
 class WebController extends Controller
 {
-    public function beranda()
+   public function beranda()
     {
+
         $businesses = Business::orderBy('sort_order')->get()->groupBy('category');
         $latestNews = News::type('berita')->where('is_published', true)->latest()->take(3)->get();
         $partners = Partner::orderBy('sort_order')->get();
@@ -30,7 +31,8 @@ class WebController extends Controller
         return view('pages.beranda', compact(
             'businesses', 'latestNews', 'partners', 'sambutan', 'banners'
         ));
-    }
+
+}
 
     public function profil()
     {
@@ -56,6 +58,8 @@ class WebController extends Controller
 
         return view('pages.bisnis', compact('categories'));
     }
+
+
 
     public function bisnisCategory(Request $request, string $category)
     {
@@ -122,7 +126,7 @@ class WebController extends Controller
             ->when($request->year, fn($q, $v) => $q->whereYear('date', $v))
             ->orderBy($sortBy, $sortDir)
             ->orderBy('id', $sortDir)
-            ->paginate(10)
+            ->paginate(12)
             ->appends(request()->query());
 
         $years = News::type('berita')->where('is_published', true)->whereNotNull('date')->get()->sortByDesc('date')->groupBy(fn($n) => $n->date instanceof \Carbon\Carbon ? $n->date->year : date('Y', strtotime($n->date)))->keys();

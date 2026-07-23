@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Team extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['name', 'position', 'photo', 'category', 'sort_order'];
+    protected $fillable = ['name', 'position', 'photo', 'category', 'sort_order', 'biography'];
 
     public function scopeCategory($query, $category)
     {

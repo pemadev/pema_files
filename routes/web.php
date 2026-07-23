@@ -2,17 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebController;
+use App\Models\Team;
 use App\Http\Controllers\ContactController;
-<<<<<<< HEAD
 use App\Http\Controllers\Admin\AuthController;
-
 
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
-=======
 use App\Http\Controllers\Ppid\DashboardController;
 use App\Http\Controllers\Ppid\PpidController;
->>>>>>> 721d647 (add template)
 
 Route::get('/', [WebController::class, 'beranda'])->name('beranda');
 Route::get('/beranda2', [WebController::class, 'beranda2'])->name('beranda2');
@@ -39,6 +36,7 @@ Route::post('/kontak', [ContactController::class, 'send'])->name('kontak.send');
 Route::get('/privacy-policy', [WebController::class, 'privacy'])->name('privacy');
 Route::get('/id/privacy-policy', [WebController::class, 'policy'])->name('policy');
 Route::get('/terms-of-service', [WebController::class, 'terms'])->name('terms');
+Route::get('/direksi/{team}', function (Team $team) {return view('direksi.show', compact('team'));})->name('direksi.show');
 
 // ADMIN ROUTES
 Route::get('/dashboard', [DashboardController::class, 'index']);

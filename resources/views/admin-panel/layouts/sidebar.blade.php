@@ -155,7 +155,7 @@
                                                                 'menu-dropdown-item-active' :
                                                                 'menu-dropdown-item-inactive'">
                                                             {{ $subItem['name'] }}
-                                                            <span class="flex items-center gap-1 ml-auto">
+                                                            <span class="flex items-center gap-1">
                                                                 @if (!empty($subItem['new']))
                                                                     <span
                                                                         :class="isActive('{{ $subItem['path'] }}') ?

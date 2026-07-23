@@ -57,11 +57,43 @@
                 </p>
                 @if($karirLink && $karirLink !== '#')
                     <a href="{{ $karirLink }}" 
-                       target="_blank"
-                       class="inline-flex items-center gap-2 px-8 py-4 bg-white text-pema-600 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-lg">
-                        <i class="fi fi-rs-arrow-right text-lg"></i>
+                        target="_blank"
+                        class="btn-daftar">
                         Isi Formulir Pendaftaran
+                        <i class="fi fi-rs-arrow-right text-lg icon-daftar"></i>
                     </a>
+
+                <style>
+    .btn-daftar {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background-color: white;
+        color: #1d4ed8;
+        font-weight: 600;
+        border-radius: 0.75rem;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    }
+
+    .btn-daftar:hover {
+        background-color: #f9fafb;
+    }
+
+    .icon-daftar {
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
+        position: relative;
+        top: 1px; /* turunkan sedikit agar sejajar dengan teks */
+        transition: transform 0.3s ease;
+    }
+
+    .btn-daftar:hover .icon-daftar {
+        transform: translateX(4px);
+    }
+                </style>
                 @else
                     <p class="text-white/60 text-sm italic">Link pendaftaran belum tersedia.</p>
                 @endif
@@ -87,7 +119,7 @@
                     <div class="w-14 h-14 bg-pema-50 rounded-xl flex items-center justify-center mx-auto mb-4">
                         <i class="fi fi-rs-briefcase text-pema-500 text-2xl"></i>
                     </div>
-                    <h3 class="font-heading font-semibold text-gray-900 mb-2">Profesinal</h3>
+                    <h3 class="font-heading font-semibold text-gray-900 mb-2">Profesional</h3>
                     <p class="text-gray-500 text-sm leading-relaxed">
                         Lingkungan kerja profesional yang mendukung pengembangan karir dan kompetensi.
                     </p>

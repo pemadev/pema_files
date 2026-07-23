@@ -92,7 +92,7 @@
                                 </div>
                             </td>
                             <td class="px-5 py-4 text-gray-600">{{ $user->email }}</td>
-                            <td class="px-5 py-4 text-gray-400">{{ $user->created_at->format('d M Y') }}</td>
+                            
                             <td class="px-5 py-4 text-right">
                                 <div class="flex items-center justify-end gap-2">
                                      <a href="{{ $user->id === auth()->id() ? route('admin.profile.edit') : route('admin.users.edit', $user) }}"

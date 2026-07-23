@@ -129,10 +129,69 @@
 
             <!-- Pagination -->
             @if($agendaList->hasPages())
-                <div class="mt-12">
-                    {{ $agendaList->links() }}
-                </div>
+        <div class="flex flex-col items-center gap-4 mt-12">
+        <p class="text-sm text-gray-500">
+            Halaman <span class="font-semibold text-gray-900">{{ $agendaList->currentPage() }}</span>
+            dari <span class="font-semibold text-gray-900">{{ $agendaList->lastPage() }}</span>
+        </p>
+
+        <div class="flex justify-center items-center gap-4">
+            @if(!$agendaList->onFirstPage())
+                <a href="{{ $agendaList->previousPageUrl() }}" class="btn-nav-prev">
+                    <i class="fi fi-rs-arrow-left text-lg icon-nav"></i>
+                    Agenda Sebelumnya
+                </a>
             @endif
+
+            @if($agendaList->hasMorePages())
+                <a href="{{ $agendaList->nextPageUrl() }}" class="btn-nav-next">
+                    Lihat Agenda Selanjutnya
+                    <i class="fi fi-rs-arrow-right text-lg icon-nav"></i>
+                </a>
+            @endif
+        </div>
+    </div>
+
+    <style>
+        .btn-nav-next,
+        .btn-nav-prev {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            background-color: #2563eb; /* ganti sesuai pema-500 */
+            color: white;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border-radius: 0.75rem;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .btn-nav-next:hover,
+        .btn-nav-prev:hover {
+            background-color: #1d4ed8; /* ganti sesuai pema-600 */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .icon-nav {
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+            position: relative;
+            top: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-nav-next:hover .icon-nav {
+            transform: translateX(4px);
+        }
+
+        .btn-nav-prev:hover .icon-nav {
+            transform: translateX(-4px);
+        }
+    </style>
+    @endif
         @else
             <!-- Empty State -->
             <div class="text-center py-20">

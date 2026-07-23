@@ -19,11 +19,11 @@
                     <a href="{{ $footerSettings['instagram'] ?? '#' }}" target="_blank" class="w-10 h-10 bg-white/10 hover:bg-gold-500 rounded-lg flex items-center justify-center transition-all duration-300 group">
                         <i class="fi fi-brands-instagram text-white/80 group-hover:text-white text-lg"></i>
                     </a>
-                    <a href="{{ $footerSettings['facebook'] ?? '#' }}" target="_blank" class="w-10 h-10 bg-white/10 hover:bg-gold-500 rounded-lg flex items-center justify-center transition-all duration-300 group">
-                        <i class="fi fi-brands-facebook text-white/80 group-hover:text-white text-lg"></i>
-                    </a>
-                    <a href="{{ $footerSettings['twitter'] ?? '#' }}" target="_blank" class="w-10 h-10 bg-white/10 hover:bg-gold-500 rounded-lg flex items-center justify-center transition-all duration-300 group">
-                        <i class="fi fi-brands-twitter text-white/80 group-hover:text-white text-lg"></i>
+                    <a href="https://www.tiktok.com/@ptpema" target="_blank"
+                    class="w-10 h-10 bg-white/10 hover:bg-gold-500 rounded-lg flex items-center justify-center transition-all duration-300 group">
+                    <svg class="w-5 h-5 text-white/80 group-hover:text-white" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16.6 5.82c-.9-.88-1.44-2.06-1.5-3.32V2h-3.4v13.4a2.59 2.59 0 1 1-1.83-2.47V9.4a5.99 5.99 0 0 0-1.17-.12A6.02 6.02 0 1 0 14.7 15.4V9.68a7.87 7.87 0 0 0 4.6 1.47V7.75c-1.01 0-2-.31-2.83-.89-.28-.2-.55-.42-.87-.85z"/>
+                    </svg>
                     </a>
                     <a href="{{ $footerSettings['youtube'] ?? '#' }}" target="_blank" class="w-10 h-10 bg-white/10 hover:bg-gold-500 rounded-lg flex items-center justify-center transition-all duration-300 group">
                         <i class="fi fi-brands-youtube text-white/80 group-hover:text-white text-lg"></i>

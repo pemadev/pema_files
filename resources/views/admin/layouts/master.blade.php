@@ -53,40 +53,12 @@
         <nav class="p-3 space-y-1 flex-1 overflow-y-auto">
             <x-admin.sidebar-item icon="fi fi-rs-home" href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" label="Dashboard" />
 
-            <!-- Manajemen Sistem -->
+           <!-- Manajemen Sistem -->
             <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Manajemen Sistem</div>
             <x-admin.sidebar-item icon="fi fi-rs-users" href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')" label="Pengguna" />
-
-            <!-- Profil & Organisasi -->
-            <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Profil & Organisasi</div>
-            <x-admin.sidebar-item icon="fi fi-rs-building" href="{{ route('admin.profil.index') }}" :active="request()->routeIs('admin.profil.*')" label="Profil Perusahaan" />
-            <x-admin.sidebar-item icon="fi fi-rs-users" href="{{ route('admin.team.index') }}" :active="request()->routeIs('admin.team.*')" label="Direksi & Komisaris" />
-            <x-admin.sidebar-item icon="fi fi-rs-handshake" href="{{ route('admin.mitra.index') }}" :active="request()->routeIs('admin.mitra.*')" label="Mitra Kerja" />
-
-            <!-- Konten -->
-            <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Konten</div>
-            <x-admin.sidebar-item icon="fi fi-rs-newspaper" href="{{ route('admin.berita.index') }}" :active="request()->routeIs('admin.berita.*')" label="Berita" />
-            <x-admin.sidebar-item icon="fi fi-rs-megaphone" href="{{ route('admin.pengumuman.index') }}" :active="request()->routeIs('admin.pengumuman.*')" label="Pengumuman" />
-
-            <!-- Media & Portofolio -->
-            <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Media & Portofolio</div>
-            <x-admin.sidebar-item icon="fi fi-rs-images" href="{{ route('admin.galeri.index') }}" :active="request()->routeIs('admin.galeri.*')" label="Galeri Foto" />
             <x-admin.sidebar-item icon="fi fi-rs-sliders-v" href="{{ route('admin.banner.index') }}" :active="request()->routeIs('admin.banner.*')" label="Banner Halaman Depan" />
-            <x-admin.sidebar-item icon="fi fi-rs-briefcase" href="{{ route('admin.bisnis.index') }}" :active="request()->routeIs('admin.bisnis.*')" label="Bidang Bisnis" />
+            <x-admin.sidebar-item icon="fi fi-rs-newspaper" href="{{ route('admin.berita.index') }}" :active="request()->routeIs('admin.berita.*')" label="Berita" />
 
-            <!-- Informasi -->
-            <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Informasi</div>
-            <x-admin.sidebar-item icon="fi fi-rs-document" href="{{ route('admin.laporan.index') }}" :active="request()->routeIs('admin.laporan.*')" label="Laporan" />
-            <x-admin.sidebar-item icon="fi fi-rs-calendar" href="{{ route('admin.agenda.index') }}" :active="request()->routeIs('admin.agenda.*')" label="Agenda" />
-
-            <!-- Komunikasi -->
-            <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Komunikasi</div>
-            <x-admin.sidebar-item icon="fi fi-rs-envelope" href="{{ route('admin.enquiry.index') }}" :active="request()->routeIs('admin.enquiry.*')" label="Pesan Kontak" :badge="App\Models\Enquiry::where('is_read', false)->count()" />
-
-            <!-- Settings -->
-            <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Sistem</div>
-            <x-admin.sidebar-item icon="fi fi-rs-settings" href="{{ route('admin.settings.index') }}" :active="request()->routeIs('admin.settings.*')" label="Pengaturan" />
-        </nav>
 
         <!-- Bottom Profile Card -->
         <a href="{{ route('admin.profile.edit') }}" class="border-t border-gray-100 p-3 flex-shrink-0 block hover:opacity-80 transition-opacity">
@@ -99,7 +71,7 @@
                     <p class="text-[10px] text-gray-600 truncate">{{ Auth::user()->email }}</p>
                 </div>
             </div>
-        </a>
+        </a> 
     </aside>
 
     <!-- Main Content -->
@@ -190,12 +162,7 @@
             @yield('content')
         </main>
 
-        <!-- Footer -->
-        <footer class="px-4 lg:px-6 py-4 border-t border-gray-100">
-            <p class="text-xs text-gray-400 text-center">&copy; {{ date('Y') }} PT PEMA. Panel Admin v1.0</p>
-        </footer>
-    </div>
-
+       
     <script type="text/javascript" src="https://unpkg.com/trix@2.1.12/dist/trix.umd.min.js"></script>
     <script>
         // Auto-scroll sidebar to active item

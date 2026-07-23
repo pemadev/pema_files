@@ -149,12 +149,36 @@
                 @endforeach
             </div>
 
-            <!-- Pagination -->
+           <!-- Tombol Navigasi Halaman -->
             @if($reports->hasPages())
-                <div class="mt-12">
-                    {{ $reports->links() }}
-                </div>
+    <div class="flex flex-col items-center gap-4 mt-12">
+        <p class="text-sm text-gray-500">
+            Halaman <span class="font-semibold text-gray-900">{{ $reports->currentPage() }}</span>
+            dari <span class="font-semibold text-gray-900">{{ $reports->lastPage() }}</span>
+        </p>
+
+        <div class="flex justify-center items-center gap-4">
+            @if(!$reports->onFirstPage())
+                <a href="{{ $reports->previousPageUrl() }}" class="btn-nav-prev">
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Laporan Sebelumnya
+                </a>
             @endif
+
+            @if($reports->hasMorePages())
+                <a href="{{ $reports->nextPageUrl() }}" class="btn-nav-next">
+                    Lihat Laporan Selanjutnya
+                    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            @endif
+        </div>
+    </div>
+    @endif
+
         @else
             <!-- Empty State -->
             <div class="text-center py-20">

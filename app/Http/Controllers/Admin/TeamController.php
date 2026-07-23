@@ -91,6 +91,7 @@ class TeamController extends Controller
             'name'       => ['required', 'string', 'max:255'],
             'position'   => ['required', 'string', 'max:255'],
             'category'   => ['required', 'in:direksi,komisaris'],
+            'biography'  => ['nullable', 'string'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'photo'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ], [
