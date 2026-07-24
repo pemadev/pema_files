@@ -58,7 +58,8 @@
             <x-admin.sidebar-item icon="fi fi-rs-users" href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')" label="Pengguna" />
             <x-admin.sidebar-item icon="fi fi-rs-sliders-v" href="{{ route('admin.banner.index') }}" :active="request()->routeIs('admin.banner.*')" label="Banner Halaman Depan" />
             <x-admin.sidebar-item icon="fi fi-rs-newspaper" href="{{ route('admin.berita.index') }}" :active="request()->routeIs('admin.berita.*')" label="Berita" />
-
+            <x-admin.sidebar-item icon="fi fi-rs-megaphone" href="{{ route('admin.pengumuman.index') }}" :active="request()->routeIs('admin.pengumuman.*')" label="Pengumuman" />
+            
 
         <!-- Bottom Profile Card -->
         <a href="{{ route('admin.profile.edit') }}" class="border-t border-gray-100 p-3 flex-shrink-0 block hover:opacity-80 transition-opacity">
