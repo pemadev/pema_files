@@ -11,6 +11,8 @@ use App\Http\Controllers\Ppid\PpidController;
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
+Route::get('/', [App\Http\Controllers\PageController::class, 'index'])->name('beranda');
+
 Route::get('/', [WebController::class, 'beranda'])->name('beranda');
 Route::get('/beranda2', [WebController::class, 'beranda2'])->name('beranda2');
 Route::get('/profil', [WebController::class, 'profil'])->name('profil');

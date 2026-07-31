@@ -17,8 +17,10 @@
     use App\Http\Controllers\Admin\EnquiryController;
     use App\Http\Controllers\Admin\UserController;
     use App\Http\Controllers\Admin\JobListingController;
+    use App\Http\Controllers\Admin\StatistikPemaController;
 
     Route::prefix('admin')->name('admin.')->group(function () {
+
         // Login
         Route::get('login', [AuthController::class, 'showLogin'])->name('login');
         Route::post('login', [AuthController::class, 'login']);
@@ -104,6 +106,8 @@
             Route::get('/mitra/{partner}/edit', [PartnerController::class, 'edit'])->name('mitra.edit');
             Route::put('/mitra/{partner}', [PartnerController::class, 'update'])->name('mitra.update');
             Route::delete('/mitra/{partner}', [PartnerController::class, 'destroy'])->name('mitra.destroy');
+
+            Route::resource('statistik', StatistikPemaController::class);
 
             // Profile
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -148,7 +148,7 @@
                    Kontak
                 </a>
             </div>
-
+            
             <!-- Mobile menu button -->
             <button @click="mobileOpen = !mobileOpen"
                     class="lg:hidden p-2 rounded-lg text-gray-600 hover:text-pema-500 hover:bg-pema-50 transition-all">

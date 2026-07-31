@@ -422,6 +422,76 @@
     </div>
 </section>
 
+<!-- Statistik -->
+<section class="py-12 lg:py-16 bg-pema-800 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+            <div>
+                <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Statistik</span>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-gray-500 mt-3">Capaian PT PEMA dalam Angka</h2>
+            </div>
+            <p class="text-gray-500 text-sm max-w-md">
+                Rangkuman kinerja dan kontribusi PT Pembangunan Aceh (Perseroda) bagi perekonomian Aceh.
+            </p>
+        </div>
+
+        @if($statistik->isNotEmpty())
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($statistik as $item)
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm card-hover p-6">
+                        <p class="text-sm font-medium text-gray-500">{{ $item->label }}</p>
+
+                        <p class="mt-3 text-4xl sm:text-5xl font-heading font-bold tracking-tight text-pema-800"
+                           x-data="{ display: 0 }"
+                           x-init="
+                                const target = {{ $item->value }};
+                                const decimals = {{ $item->decimals }};
+                                const el = $el;
+                                const runCountUp = () => {
+                                    let start = null;
+                                    const duration = 1200;
+                                    const step = (ts) => {
+                                        if (!start) start = ts;
+                                        const progress = Math.min((ts - start) / duration, 1);
+                                        display = (target * progress).toFixed(decimals);
+                                        if (progress < 1) requestAnimationFrame(step);
+                                    };
+                                    requestAnimationFrame(step);
+                                };
+                                if ('IntersectionObserver' in window) {
+                                    const observer = new IntersectionObserver((entries) => {
+                                        entries.forEach(entry => {
+                                            if (entry.isIntersecting) {
+                                                runCountUp();
+                                                observer.disconnect();
+                                            }
+                                        });
+                                    }, { threshold: 0.3 });
+                                    observer.observe(el);
+                                } else {
+                                    runCountUp();
+                                }
+                           ">
+                            <span>{{ $item->prefix }}</span><span x-text="display">0</span><span>{{ $item->suffix }}</span>
+                        </p>
+
+                        <div class="w-10 h-0.5 bg-gold-500 rounded-full my-4"></div>
+
+                        @if($item->deskripsi)
+                            <p class="text-gray-500 text-sm leading-relaxed">{{ $item->deskripsi }}</p>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="text-center py-12">
+                <i class="fi fi-rs-stats text-gray-300 text-5xl mb-4 inline-block"></i>
+                <p class="text-gray-500">Belum ada data statistik.</p>
+            </div>
+        @endif
+    </div>
+</section>
+
 <!-- Partners -->
 <section class="py-16 lg:py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

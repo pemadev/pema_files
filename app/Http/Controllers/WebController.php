@@ -13,6 +13,7 @@ use App\Models\ProfileContent;
 use App\Models\Report;
 use App\Models\Setting;
 use App\Models\Team;
+use App\Models\StatistikPema;   
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Date;
@@ -27,9 +28,10 @@ class WebController extends Controller
         $partners = Partner::orderBy('sort_order')->get();
         $sambutan = ProfileContent::type('sambutan')->first();
         $banners = Banner::where('is_active', true)->orderBy('sort_order')->get();
+         $statistik = StatistikPema::aktif()->get(); 
 
         return view('pages.beranda', compact(
-            'businesses', 'latestNews', 'partners', 'sambutan', 'banners'
+            'businesses', 'latestNews', 'partners', 'sambutan', 'banners', 'statistik'
         ));
 
 }

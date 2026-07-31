@@ -67,14 +67,14 @@
                     @php
                         $past = $agenda->date->isPast();
                     @endphp
-                    <article class="group bg-white rounded-2xl overflow-hidden border border-gray-300 shadow-sm card-hover flex flex-col {{ $past ? 'opacity-60' : '' }}">
+                    <article class="group bg-gray-300 rounded-2xl overflow-hidden border border-gray-300 shadow-sm card-hover flex flex-col">
                         <!-- Thumbnail -->
                         <div class="block aspect-[16/10] {{ $past ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-to-br from-pema-50 to-amber-50' }} relative overflow-hidden flex-shrink-0">
                             <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                <div class="w-16 h-16 rounded-2xl {{ $past ? 'bg-gray-200' : 'bg-pema-100' }} flex items-center justify-center mb-3">
-                                    <span class="font-heading font-bold text-2xl {{ $past ? 'text-gray-400' : 'text-pema-500' }}">{{ $agenda->date->format('d') }}</span>
+                                <div class="w-16 h-16 rounded-2xl {{ $past ? 'bg-gray-300' : 'bg-pema-100' }} flex items-center justify-center mb-3">
+                                    <span class="font-heading font-bold text-2xl {{ $past ? 'text-black-400' : 'text-pema-500' }}">{{ $agenda->date->format('d') }}</span>
                                 </div>
-                                <p class="text-xs {{ $past ? 'text-gray-400' : 'text-pema-400' }} font-medium">{{ $agenda->date->format('M Y') }}</p>
+                                <p class="text-xs {{ $past ? 'text-black-400' : 'text-pema-400' }} font-medium">{{ $agenda->date->format('M Y') }}</p>
                             </div>
                             @if(!$past)
                                 <span class="absolute top-4 left-4 px-3 py-1 bg-pema-500 text-white text-xs font-medium rounded-lg">
