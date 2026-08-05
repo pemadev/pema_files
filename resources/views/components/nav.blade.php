@@ -63,7 +63,7 @@
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2"
                          x-transition:enter-end="opacity-100 translate-y-0">
-                        <a href="{{ route('bisnis.category', 'migas') }}" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Migas</a>
+                        <a href="{{ route('bisnis.category', 'migas') }}" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Migas & EBTKE</a>
                         <a href="{{ route('bisnis.category', 'agroindustri') }}" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Agroindustri</a>
                         <a href="{{ route('bisnis.category', 'jasa') }}" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Jasa & Perdagangan</a>
                     </div>
@@ -198,7 +198,7 @@
                     </svg>
                 </button>
                 <div x-show="open" x-cloak class="ml-4 mt-1 space-y-1">
-                    <a href="{{ route('bisnis.category', 'migas') }}" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-pema-500 hover:bg-pema-50 rounded-lg transition-colors">Migas</a>
+                    <a href="{{ route('bisnis.category', 'migas') }}" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-pema-500 hover:bg-pema-50 rounded-lg transition-colors">Migas & EBTKE</a>
                     <a href="{{ route('bisnis.category', 'agroindustri') }}" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-pema-500 hover:bg-pema-50 rounded-lg transition-colors">Agroindustri</a>
                     <a href="{{ route('bisnis.category', 'jasa') }}" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-pema-500 hover:bg-pema-50 rounded-lg transition-colors">Jasa & Perdagangan</a>
                 </div>

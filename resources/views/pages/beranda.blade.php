@@ -110,7 +110,7 @@
             <div class="lg:col-span-3 relative rounded-2xl overflow-hidden flex flex-col min-h-[300px] lg:min-h-0">
                 <!-- Background image -->
                 <div class="absolute inset-0">
-<img src="{{ asset('img/hero/slide-3-jasa.jpg') }}" alt="Pemandangan kota dan pelabuhan" class="w-full h-full object-cover" loading="lazy">
+                        <img src="{{ asset('img/hero/slide-3-jasa.jpg') }}" alt="Pemandangan kota dan pelabuhan" class="w-full h-full object-cover" loading="lazy">
                     <div class="absolute inset-0 hero-overlay"></div>
                 </div>
                 <!-- Content -->
@@ -134,7 +134,7 @@
                     </a>
                 </div>
             </div>
-        </div>  <!-- close left column -->
+        </div> 
 
             <!-- Right: Poster / Banner Carousel -->
             <div class="lg:col-span-2 flex flex-col" x-data="{ current: 0, total: {{ $banners->count() ?: 1 }}, timer: null }"
@@ -154,17 +154,6 @@
                         @endforeach
 
                         @if($banners->count() > 1)
-                            <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; pointer-events: none; padding: 0 12px; z-index: 10;">
-                                <button @click="clearInterval(timer); current = (current - 1 + total) % total; timer = setInterval(() => { current = (current + 1) % total }, 4000)"
-                                        style="pointer-events: auto; width: 32px; height: 32px; border-radius: 9999px; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: none; cursor: pointer;">
-                                    <svg style="width: 16px; height: 16px; fill: none; stroke: #1f2937; stroke-width: 2;" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                                </button>
-                                <button @click="clearInterval(timer); current = (current + 1) % total; timer = setInterval(() => { current = (current + 1) % total }, 4000)"
-                                        style="pointer-events: auto; width: 32px; height: 32px; border-radius: 9999px; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: none; cursor: pointer;">
-                                    <svg style="width: 16px; height: 16px; fill: none; stroke: #1f2937; stroke-width: 2;" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                                </button>
-                            </div>
-
                             <div style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10;">
                                 @foreach($banners as $i => $banner)
                                     <button @click="clearInterval(timer); current = {{ $i }}; timer = setInterval(() => { current = (current + 1) % total }, 4000)"
@@ -180,29 +169,29 @@
             </div>
             </div>
 
-    </div>  <!-- close grid -->
-</div>  <!-- close container -->
+    </div>  
+</div>  
 </section>
 
-<!-- Section Video YouTube -->
-<section class="pt-16 pb-20 bg-white">   
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-8">
-            <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Video Profil</span>
-            <h2 class="text-2xl sm:text-3xl font-heading font-bold text-gray-900 mt-3">Mengenal PT PEMA Lebih Dekat</h2>
+    <!-- Section Video YouTube -->
+    <section class="pt-4 pb-4 bg-white">   
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Video Profil</span>
+                <h2 class="text-2xl sm:text-3xl font-heading font-bold text-gray-900 mt-3">Mengenal PT PEMA Lebih Dekat</h2>
+            </div>
+            <div class="relative w-full rounded-2xl overflow-hidden shadow-lg" style="padding-bottom: 56.25%;">
+                <iframe
+                    class="absolute top-0 left-0 w-full h-full"
+                    src="https://www.youtube.com/embed/2rZShiJEEbU"
+                    title="Video Profil PT PEMA"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
         </div>
-        <div class="relative w-full rounded-2xl overflow-hidden shadow-lg" style="padding-bottom: 56.25%;">
-            <iframe
-                class="absolute top-0 left-0 w-full h-full"
-                src="https://www.youtube.com/embed/2rZShiJEEbU"
-                title="Video Profil PT PEMA"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-            </iframe>
-        </div>
-    </div>
-</section>
+    </section>
 
 <!-- Business Highlights -->
 <section class="py-20 lg:py-28 bg-white">
@@ -210,7 +199,7 @@
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
             <div>
                 <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Bidang Usaha</span>
-                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-gray-900 mt-3">Program dan Bisnis Kami</h2>
+                <h2 class="text-3xl sm:text-4xl font-heading font-bold text-gray-900 mt-3">Bisnis Kami</h2>
             </div>
             <a href="{{ route('bisnis') }}" class="inline-flex items-center gap-2 text-pema-500 hover:text-pema-600 font-medium text-sm transition-colors">
                 Lihat Semua Bidang Usaha
@@ -328,7 +317,7 @@
             "PT PEMA hadir sebagai  Badan Usaha Milik Aceh (BUMA) dengan kepemilikan saham penuh oleh Pemerintah Aceh. Sejak resmi berdiri pada 05 April 2019, PT PEMA mengemban mandat strategis untuk mengoptimalkan potensi dan sumber daya daerah"
         </blockquote>
         <div class="w-16 h-0.5 bg-gold-500 mx-auto mb-6"></div>
-        <p class="font-heading font-semibold text-white text-lg">Mawardi Nur, SE</p>
+        <p class="font-heading font-semibold text-white text-lg">Mawardi Nur, S.E</p>
         <p class="text-gold-400 text-sm mt-1">Direktur Utama</p>
         <p class="text-gold-400 text-sm mt-1">PT Pembangunan Aceh (Perseroda)</p>
         <div class="mt-4 mb-4">

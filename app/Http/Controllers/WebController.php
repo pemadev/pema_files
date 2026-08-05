@@ -76,7 +76,7 @@ class WebController extends Controller
             ->when($request->search, fn($q, $v) => $q->where('title', 'like', "%{$v}%"))
             ->orderBy($sortBy, $sortDir)
             ->orderBy('id', $sortDir)
-            ->paginate(12)
+            ->paginate(9)
             ->appends(request()->query());
 
         $catLabels = [
@@ -128,7 +128,7 @@ class WebController extends Controller
             ->when($request->year, fn($q, $v) => $q->whereYear('date', $v))
             ->orderBy($sortBy, $sortDir)
             ->orderBy('id', $sortDir)
-            ->paginate(12)
+            ->paginate(9)
             ->appends(request()->query());
 
         $years = News::type('berita')->where('is_published', true)->whereNotNull('date')->get()->sortByDesc('date')->groupBy(fn($n) => $n->date instanceof \Carbon\Carbon ? $n->date->year : date('Y', strtotime($n->date)))->keys();
@@ -154,7 +154,7 @@ class WebController extends Controller
             ->when($request->search, fn($q, $v) => $q->where('title', 'like', "%{$v}%"))
             ->when($request->year, fn($q, $v) => $q->whereYear('date', $v))
             ->latest()
-            ->paginate(12)
+            ->paginate(9)
             ->appends(request()->query());
 
         $years = News::type('pengumuman')->where('is_published', true)->whereNotNull('date')->get()->sortByDesc('date')->groupBy(fn($n) => $n->date instanceof \Carbon\Carbon ? $n->date->year : date('Y', strtotime($n->date)))->keys();
@@ -177,7 +177,7 @@ class WebController extends Controller
             ->when($request->search, fn($q, $v) => $q->where('title', 'like', "%{$v}%"))
             ->orderBy('sort_order')
             ->orderBy('created_at', 'desc')
-            ->paginate(12)
+            ->paginate(9)
             ->appends(request()->query());
 
         return view('pages.galeri', compact('galleries'));
@@ -190,7 +190,7 @@ class WebController extends Controller
             ->when($request->year, fn($q, $v) => $q->where('year', $v))
             ->orderBy('year', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate(12)
+            ->paginate(9)
             ->appends(request()->query());
 
         $years = Report::where('is_published', true)->select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
@@ -249,7 +249,7 @@ class WebController extends Controller
             ->when($request->filter === 'upcoming', fn($q) => $q->where('date', '>=', now()))
             ->when($request->filter === 'past', fn($q) => $q->where('date', '<', now()))
             ->orderBy('date', 'desc')
-            ->paginate(12)
+            ->paginate(9)
             ->appends(request()->query());
 
         return view('pages.agenda', compact('agendaList'));

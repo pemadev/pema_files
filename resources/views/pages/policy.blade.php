@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Privacy Policy - PT PEMA')
+@section('title', 'Kebijakan Privasi Aplikasi - PT PEMA')
 @section('meta_description', 'Kebijakan Privasi Harmoni - HR & Monitoring Informasi PT Pembangunan Aceh (PEMA) mengenai pengumpulan, penggunaan, dan perlindungan data pribadi.')
 
 @section('content')
@@ -17,7 +17,7 @@
             <div class="animate-fade-in-up">
                 <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full text-gold-400 text-sm font-medium">Legal</span>
             </div>
-            <h1 class="animate-fade-in-up delay-100 text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white mt-4 mb-4">Privacy<span class="gradient-gold">Policy</span></h1>
+            <h1 class="animate-fade-in-up delay-100 text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white mt-4 mb-4">Kebijakan Privasi<span class="gradient-gold">Aplikasi</span></h1>
             <p class="animate-fade-in-up delay-200 text-gray-300 text-lg max-w-2xl">Harmoni &ndash; HR &amp; Monitoring Informasi | PT Pembangunan Aceh (PEMA)</p>
         </div>
     </div>

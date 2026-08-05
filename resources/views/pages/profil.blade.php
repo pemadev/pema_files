@@ -206,15 +206,44 @@
             <div class="w-16 h-1 bg-gold-500 rounded-full mx-auto"></div>
         </div>
 
-        <div class="max-w-4xl mx-auto">
-            <div class="bg-white rounded-2xl p-8 lg:p-10 border border-gray-100 shadow-sm">
-                <div class="text-gray-600 leading-relaxed space-y-5">
-                    @foreach(explode("\n\n", $stakeholder->content) as $paragraph)
-                        @if(trim($paragraph))
-                        <p>{!! trim($paragraph) !!}</p>
-                        @endif
-                    @endforeach
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center justify-center gap-6 lg:gap-10">
+
+                <!-- Foto Kiri -->
+                @if($stakeholder->image_left)
+                <div class="hidden md:block flex-shrink-0">
+                    <div class="relative w-28 h-28 lg:w-36 lg:h-36 rounded-full p-1.5 bg-white shadow-lg">
+                        <img src="{{ asset('storage/' . $stakeholder->image_left) }}"
+                             alt="{{ $stakeholder->title ?? 'Stakeholder' }}"
+                             class="w-full h-full object-cover rounded-full border-4 border-gold-100">
+                    </div>
                 </div>
+                @endif
+
+                <!-- Isi Konten -->
+                <div class="flex-1 min-w-0">
+                    <div class="bg-white rounded-2xl p-8 lg:p-10 border border-gray-100 shadow-sm">
+                        <div class="text-gray-600 leading-relaxed space-y-5">
+                            @foreach(explode("\n\n", $stakeholder->content) as $paragraph)
+                                @if(trim($paragraph))
+                                <p>{!! trim($paragraph) !!}</p>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Foto Kanan -->
+                @if($stakeholder->image_right)
+                <div class="hidden md:block flex-shrink-0">
+                    <div class="relative w-28 h-28 lg:w-36 lg:h-36 rounded-full p-1.5 bg-white shadow-lg">
+                        <img src="{{ asset('storage/' . $stakeholder->image_right) }}"
+                             alt="{{ $stakeholder->title ?? 'Stakeholder' }}"
+                             class="w-full h-full object-cover rounded-full border-4 border-gold-100">
+                    </div>
+                </div>
+                @endif
+
             </div>
         </div>
     </div>
@@ -254,15 +283,6 @@
                     @if($member->position)
                     <p class="text-gold-500 text-sm mt-1">{{ $member->position }}</p>
                     @endif
-
-                    <a href="{{ route('direksi.show', $member) }}"
-                       class="group/link mt-auto pt-4 inline-flex items-center gap-2 px-4 py-2 bg-pema-100 text-pema-700 rounded-xl hover:bg-pema-200 transition duration-300">
-                        <span class="text-sm font-medium">Lihat Biografi</span>
-                        <svg class="w-4 h-4 transition-transform duration-300 group-hover/link:animate-arrow-slide"
-                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                        </svg>
-                    </a>
                 </div>
             </div>
             @endforeach
@@ -270,17 +290,6 @@
     </div>
 </section>
 @endif
-
-<style>
-    @keyframes arrow-slide {
-        0%   { transform: translateX(0); }
-        50%  { transform: translateX(6px); }
-        100% { transform: translateX(0); }
-    }
-    .group\/link:hover .group-hover\/link\:animate-arrow-slide {
-        animation: arrow-slide 0.8s ease-in-out infinite;
-    }
-</style>
 
 <!-- Team: Komisaris -->
 @if($komisaris && $komisaris->count() > 0)
@@ -315,14 +324,6 @@
                     @if($member->position)
                     <p class="text-gold-500 text-sm mt-1">{{ $member->position }}</p>
                     @endif
-            <a href="{{ route('direksi.show', $member) }}"
-                       class="group/link mt-auto pt-4 inline-flex items-center gap-2 px-4 py-2 bg-pema-100 text-pema-700 rounded-xl hover:bg-pema-200 transition duration-300">
-                        <span class="text-sm font-medium">Lihat Biografi</span>
-                        <svg class="w-4 h-4 transition-transform duration-300 group-hover/link:animate-arrow-slide"
-                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                        </svg>
-                    </a>
                 </div>
             </div>
             @endforeach
@@ -330,17 +331,6 @@
     </div>
 </section>
 @endif
-
-<style>
-    @keyframes arrow-slide {
-        0%   { transform: translateX(0); }
-        50%  { transform: translateX(6px); }
-        100% { transform: translateX(0); }
-    }
-    .group\/link:hover .group-hover\/link\:animate-arrow-slide {
-        animation: arrow-slide 0.8s ease-in-out infinite;
-    }
-</style>
 
 <!-- Empty state when no data at all -->
 @unless($sambutan || $sejarah || $visiMisi || $stakeholder || ($direksi && $direksi->count() > 0) || ($komisaris && $komisaris->count() > 0))

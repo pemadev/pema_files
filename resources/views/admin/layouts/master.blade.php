@@ -56,14 +56,17 @@
            <!-- Manajemen Sistem -->
             <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Manajemen Sistem</div>
             <x-admin.sidebar-item icon="fi fi-rs-users" href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')" label="Pengguna" />
-            <x-admin.sidebar-item icon="fi fi-rs-sliders-v" href="{{ route('admin.banner.index') }}" :active="request()->routeIs('admin.banner.*')" label="Banner Halaman Depan" />
+            <x-admin.sidebar-item icon="fi fi-rs-building" href="{{ route('admin.profil.index') }}" :active="request()->routeIs('admin.profil.*')" label="Profil Perusahaan" />
+            <x-admin.sidebar-item icon="fi fi-rs-users" href="{{ route('admin.team.index') }}" :active="request()->routeIs('admin.team.*')" label="Direksi & Komisaris" />
             <x-admin.sidebar-item icon="fi fi-rs-newspaper" href="{{ route('admin.berita.index') }}" :active="request()->routeIs('admin.berita.*')" label="Berita" />
             <x-admin.sidebar-item icon="fi fi-rs-megaphone" href="{{ route('admin.pengumuman.index') }}" :active="request()->routeIs('admin.pengumuman.*')" label="Pengumuman" />
-            <x-admin.sidebar-item icon="fi fi-rs-building" href="{{ route('admin.profil.index') }}" :active="request()->routeIs('admin.profil.*')" label="Profil Perusahaan" />
-            <x-admin.sidebar-item icon="fi fi-rs-stats" href="{{ route('admin.statistik.index') }}" :active="request()->routeIs('admin.statistik.*')" label="Statistik Beranda" />
-            <x-admin.sidebar-item icon="fi fi-rs-users" href="{{ route('admin.team.index') }}" :active="request()->routeIs('admin.team.*')" label="Direksi & Komisaris" />
+            <x-admin.sidebar-item icon="fi fi-rs-images" href="{{ route('admin.galeri.index') }}" :active="request()->routeIs('admin.galeri.*')" label="Galeri Foto" />
+            <x-admin.sidebar-item icon="fi fi-rs-sliders-v" href="{{ route('admin.banner.index') }}" :active="request()->routeIs('admin.banner.*')" label="Banner Halaman Depan" />
+            <x-admin.sidebar-item icon="fi fi-rs-briefcase" href="{{ route('admin.bisnis.index') }}" :active="request()->routeIs('admin.bisnis.*')" label="Bidang Bisnis" />
             <x-admin.sidebar-item icon="fi fi-rs-calendar" href="{{ route('admin.agenda.index') }}" :active="request()->routeIs('admin.agenda.*')" label="Agenda" />
             <x-admin.sidebar-item icon="fi fi-rs-document" href="{{ route('admin.laporan.index') }}" :active="request()->routeIs('admin.laporan.*')" label="Laporan" />
+            <x-admin.sidebar-item icon="fi fi-rs-stats" href="{{ route('admin.statistik.index') }}" :active="request()->routeIs('admin.statistik.*')" label="Statistik Beranda" />
+            <x-admin.sidebar-item icon="fi fi-rs-settings" href="{{ route('admin.settings.index') }}" :active="request()->routeIs('admin.settings.*')" label="Pengaturan" />
 
         <!-- Bottom Profile Card -->
         <a href="{{ route('admin.profile.edit') }}" class="border-t border-gray-100 p-3 flex-shrink-0 block hover:opacity-80 transition-opacity">

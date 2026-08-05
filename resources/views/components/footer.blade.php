@@ -54,7 +54,7 @@
 
 
     <div class="mt-8">
-        <h4 class="font-heading font-semibold text-white text-sm uppercase tracking-wider mb-4">Untuk Mendapatkan Informasi PPID Lebih Lanjut</h4>
+        <h4 class="font-heading font-semibold text-white text-sm uppercase tracking-wider mb-4">Download Aplikasi PPID</h4>
         <div class="flex items-center gap-3">
 
            {{-- App Store --}}
@@ -114,7 +114,7 @@
                 </p>
                 <div class="flex items-center gap-6">
                     <a href="{{ route('privacy') }}" class="text-gray-400 hover:text-gold-400 text-sm transition-colors">Kebijakan Privasi</a>
-                    <a href="{{ route('policy') }}" class="text-gray-400 hover:text-gold-400 text-sm transition-colors">Privacy Policy</a>
+                    <a href="{{ route('policy') }}" class="text-gray-400 hover:text-gold-400 text-sm transition-colors">Kebijakan Privasi Aplikasi</a>
                     <a href="{{ route('terms') }}" class="text-gray-400 hover:text-gold-400 text-sm transition-colors">Syarat & Ketentuan</a>
                 </div>
             </div>
