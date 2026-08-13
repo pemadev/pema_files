@@ -152,48 +152,27 @@
                 <p class="mt-1 text-xs text-gray-400">Format: JPG, PNG, WebP. Maksimal 2MB.</p>
             </div>
 
-            @if($type === 'stakeholder')
-            <!-- Foto Kiri & Kanan (khusus Stakeholder) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-5 border-t border-gray-100">
-                <!-- Foto Kiri -->
-                <div>
-                    <label for="image_left" class="block text-sm font-medium text-gray-700 mb-1.5">Foto Kiri <span class="text-gray-400 font-normal">(opsional)</span></label>
-                    @if($profile->image_left)
-                        <div class="mb-3">
-                            <p class="text-xs text-gray-500 mb-2">Foto saat ini:</p>
-                            <img src="{{ asset('storage/' . $profile->image_left) }}"
-                                 alt="Foto kiri stakeholder"
-                                 class="h-32 w-auto rounded-xl border border-gray-200 object-cover">
-                        </div>
-                    @endif
-                    <input type="file" id="image_left" name="image_left"
-                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-pema-50 file:text-pema-600 hover:file:bg-pema-100 transition-colors @error('image_left') border-red-300 @enderror">
-                    @error('image_left')
-                        <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                    @enderror
-                    <p class="mt-1 text-xs text-gray-400">Format: JPG, PNG, WebP. Maksimal 2MB.</p>
-                </div>
-
-                <!-- Foto Kanan -->
-                <div>
-                    <label for="image_right" class="block text-sm font-medium text-gray-700 mb-1.5">Foto Kanan <span class="text-gray-400 font-normal">(opsional)</span></label>
-                    @if($profile->image_right)
-                        <div class="mb-3">
-                            <p class="text-xs text-gray-500 mb-2">Foto saat ini:</p>
-                            <img src="{{ asset('storage/' . $profile->image_right) }}"
-                                 alt="Foto kanan stakeholder"
-                                 class="h-32 w-auto rounded-xl border border-gray-200 object-cover">
-                        </div>
-                    @endif
-                    <input type="file" id="image_right" name="image_right"
-                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-pema-50 file:text-pema-600 hover:file:bg-pema-100 transition-colors @error('image_right') border-red-300 @enderror">
-                    @error('image_right')
-                        <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                    @enderror
-                    <p class="mt-1 text-xs text-gray-400">Format: JPG, PNG, WebP. Maksimal 2MB.</p>
-                </div>
-            </div>
-            @endif
+            <!-- Foto Stakeholder (khusus Stakeholder) -->
+@if($type === 'stakeholder')
+<div class="pt-5 border-t border-gray-100">
+    <label for="image_left" class="block text-sm font-medium text-gray-700 mb-1.5">
+        Foto Stakeholder <span class="text-gray-400 font-normal">(opsional)</span>
+    </label>
+    @if($profile->image_left)
+        <div class="mb-3">
+            <p class="text-xs text-gray-500 mb-2">Gambar saat ini:</p>
+            <img src="{{ asset('storage/' . $profile->image_left) }}"
+                 class="h-32 w-auto rounded-xl border border-gray-200 object-cover">
+        </div>
+    @endif
+    <input type="file" id="image_left" name="image_left"
+           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-pema-50 file:text-pema-600 hover:file:bg-pema-100 transition-colors @error('image_left') border-red-300 @enderror">
+    @error('image_left')
+        <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+    @enderror
+    <p class="mt-1 text-xs text-gray-400">Format: JPG, PNG, WebP. Maksimal 2MB.</p>
+</div>
+@endif
 
             <!-- Actions -->
             <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
@@ -210,4 +189,4 @@
         </div>
     </form>
 </div>
-@endsection 
+@endsection

@@ -46,28 +46,42 @@
         </div>
 
         @if($partners && $partners->count() > 0)
-            <div id="kerjasama-splide" class="splide">
-                <div class="splide__track">
-                    <ul class="splide__list">
-                        @foreach($partners as $partner)
-                            <li class="splide__slide">
-                                <a href="{{ $partner->website ?: '#' }}"
-                                   target="{{ $partner->website ? '_blank' : '_self' }}"
-                                   rel="{{ $partner->website ? 'noopener noreferrer' : '' }}"
-                                   class="block bg-white rounded-xl shadow-sm hover:shadow-md transition-all aspect-square flex items-center justify-center p-2 sm:p-3 mx-auto" style="max-width: 140px; max-height: 140px;">
-                                    @if($partner->logo)
-                                        <img src="{{ asset('storage/' . $partner->logo) }}"
-                                             alt="{{ $partner->name }}"
-                                             class="w-full h-full object-contain p-1"
-                                             loading="lazy">
-                                    @else
-                                        <span class="text-gray-400 font-heading font-semibold text-sm text-center leading-tight">{{ $partner->name }}</span>
-                                    @endif
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                @foreach($partners as $partner)
+                    <a href="{{ $partner->website ?: '#' }}"
+                       target="{{ $partner->website ? '_blank' : '_self' }}"
+                       rel="{{ $partner->website ? 'noopener noreferrer' : '' }}"
+                       class="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
+
+                        <!-- Frame Foto Logo -->
+                        <div class="relative h-56 overflow-hidden bg-gradient-to-br from-pema-100 to-pema-50 flex items-center justify-center p-10">
+                            @if($partner->logo)
+                                <img src="{{ asset('storage/' . $partner->logo) }}"
+                                     alt="{{ $partner->name }}"
+                                     class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                                     loading="lazy">
+                            @else
+                                <span class="text-pema-400 font-heading font-semibold text-sm text-center leading-tight">{{ $partner->name }}</span>
+                            @endif
+                        </div>
+
+                        <!-- Konten -->
+                        <div class="bg-gray-100 p-6">
+
+                            <!-- Caption -->
+                            <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                                <i class="fi fi-rs-handshake text-gray-400"></i>
+                            <span>{{ $partner->caption ?? 'Mitra Kerjasama' }}</span>
+                            </div>
+
+                            <!-- Nama Mitra -->
+                            <h3 class="font-heading font-bold text-lg text-gray-900">
+                                {{ $partner->name }}
+                            </h3>
+                        </div>
+
+                    </a>
+                @endforeach
             </div>
         @else
             <div class="text-center py-16 max-w-lg mx-auto">

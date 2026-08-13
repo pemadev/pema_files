@@ -18,6 +18,7 @@
     use App\Http\Controllers\Admin\UserController;
     use App\Http\Controllers\Admin\JobListingController;
     use App\Http\Controllers\Admin\StatistikPemaController;
+    use App\Http\Controllers\Admin\ProductController;
 
     Route::prefix('admin')->name('admin.')->group(function () {
 
@@ -106,6 +107,14 @@
             Route::get('/mitra/{partner}/edit', [PartnerController::class, 'edit'])->name('mitra.edit');
             Route::put('/mitra/{partner}', [PartnerController::class, 'update'])->name('mitra.update');
             Route::delete('/mitra/{partner}', [PartnerController::class, 'destroy'])->name('mitra.destroy');
+
+            // Produk Vendor
+            Route::get('/produk', [ProductController::class, 'index'])->name('produk.index');
+            Route::get('/produk/create', [ProductController::class, 'create'])->name('produk.create');
+            Route::post('/produk', [ProductController::class, 'store'])->name('produk.store');
+            Route::get('/produk/{product}/edit', [ProductController::class, 'edit'])->name('produk.edit');
+            Route::put('/produk/{product}', [ProductController::class, 'update'])->name('produk.update');
+            Route::delete('/produk/{product}', [ProductController::class, 'destroy'])->name('produk.destroy');
 
             Route::resource('statistik', StatistikPemaController::class);
 

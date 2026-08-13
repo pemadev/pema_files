@@ -7,6 +7,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Ppid\DashboardController;
 use App\Http\Controllers\Ppid\PpidController;
+use App\Http\Controllers\VendorController;
+
 
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
@@ -32,8 +34,9 @@ Route::get('/laporan/{report}/view', [WebController::class, 'viewLaporan'])->nam
 Route::get('/agenda', [WebController::class, 'agenda'])->name('agenda');
 Route::get('/karir', [WebController::class, 'karir'])->name('karir');
 Route::get('/kerjasama', [WebController::class, 'kerjasama'])->name('kerjasama');
+Route::get('/vendor', [VendorController::class, 'index'])->name('vendor');
 Route::get('/kontak', [WebController::class, 'kontak'])->name('kontak');
-Route::post('/kontak', [ContactController::class, 'send'])->name('kontak.send');
+Route::post('/kontak', [ContactController::class, 'send'])->name('kontak.store');
 
 Route::get('/privacy-policy', [WebController::class, 'privacy'])->name('privacy');
 Route::get('/id/privacy-policy', [WebController::class, 'policy'])->name('policy');

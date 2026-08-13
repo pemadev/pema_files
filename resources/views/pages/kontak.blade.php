@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Hubungi Kami - PT PEMA')
-@section('meta_description', 'Hubungi PT Pembangunan Aceh (PEMA) — Kirim pesan langsung melalui form kontak atau temukan lokasi kantor kami di Banda Aceh.')
+@section('meta_description', 'Hubungi PT Pembangunan Aceh (PEMA) — Temukan lokasi kantor kami di Banda Aceh dan informasi kontak resmi.')
 
 @section('content')
 <!-- Page Header -->
@@ -43,8 +43,9 @@
             <div class="w-16 h-1 bg-gold-500 rounded-full"></div>
         </div>
 
-        <!-- Map + Form Row -->
+        <!-- Map + Alamat Kantor Row -->
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-16">
+
             <!-- Left Column: Google Maps -->
             <div class="animate-slide-in-left">
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
@@ -61,69 +62,62 @@
                 </div>
             </div>
 
-            <!-- Right Column: Contact Form -->
-            <div class="animate-slide-in-right">
-                <div class="bg-white rounded-2xl p-6 lg:p-8 border border-gray-100 shadow-sm">
-                    <h3 class="font-heading font-semibold text-xl text-gray-900 mb-2">Kirim Pesan</h3>
-                    <p class="text-gray-500 text-sm mb-6">
-                        Silakan hubungi kami melalui saluran kontak di atas atau kirimkan pesan langsung melalui media sosial resmi PEMA.
-                    </p>
+           <!-- Right Column: Alamat Kantor -->
+                <div class="animate-slide-in-right">
+                    <div class="bg-gray rounded-2xl p-8 lg:p-10 border border-gray-100 shadow-sm h-full flex flex-col justify-center">
+                    <h3 class="font-heading font-bold text-xl text-gray-900 uppercase tracking-wide mb-8">
+                        Alamat Kantor
+                    </h3>
 
-                    <form action="{{ route('kontak.send') }}" method="POST" class="space-y-5">
-                        @csrf
-                        <div class="grid sm:grid-cols-2 gap-5">
-                            <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap</label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                placeholder="Masukan nama lengkap Anda"
-                                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-pema-500 focus:border-transparent transition-all duration-200"
-                                >
-                            </div>
-                            <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700 mb 1.5">Email</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    placeholder="Masukkan email Anda"
-                                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-pema-500 focus:border-transparent transition-all duration-200"
-                                >
-                            </div>
-                        </div>
-                        <div>
-                            <label for="subject" class="block text-sm font-medium text-gray-700 mb 1.5">Subjek</label>
-                                <input
-                                    type="text"
-                                    id="subject"
-                                    name="subject"
-                                    placeholder="Masukkan subjek pesan"
-                                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-pema-500 focus:border-transparent transition-all duration-200"
-                                >
-                        </div>
-                        <div>
-                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1.5">Pesan</label>
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    rows="4"
-                                    placeholder="Tulis pesan Anda di sini..."
-                                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-pema-500 focus:border-transparent transition-all duration-200 resize-none"
-                                ></textarea>
-                        </div>
-                        <button
-                            type="submit"
-                            class="w-full sm:w-auto px-6 py-3 bg-pema-500 text-white font-medium rounded-xl hover:bg-pema-600 focus:ring-2 focus:ring-pema-500 focus:ring-offset-2 transition-all duration-200"
-                        >
-                            Kirim Pesan
-                        </button>
-                    </form>
-                </div>
-            </div>
+        <div class="space-y-4">
+
+    <!-- Alamat -->
+    <div class="flex items-start gap-4">
+        <div class="group w-11 h-11 rounded-xl bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center flex-shrink-0 transition-transform duration-300 hover:scale-110 hover:-rotate-3">
+            <i class="fi fi-rs-marker text-orange-500 text-lg animate-pulse-slow"></i>
+        </div>
+        <div>
+            <h4 class="text-xs font-semibold uppercase tracking-wide text-gold-500 mb-1.5">Alamat</h4>
+            <p class="text-sm leading-relaxed text-black-600">
+                Rumah Budaya, Jl. Tgk Moh. Daud Beureueh, Kec. Kuta Alam, Kota Banda Aceh 23121
+            </p>
         </div>
     </div>
+
+    <!-- Telepon -->
+    <div class="flex items-start gap-4">
+        <div class="group w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-100 to-emerald-50 flex items-center justify-center flex-shrink-0 transition-transform duration-300 hover:scale-110 hover:rotate-3">
+            <i class="fi fi-rs-phone-call text-emerald-500 text-lg animate-pulse-slow"></i>
+        </div>
+        <div>
+            <h4 class="text-xs font-semibold uppercase tracking-wide text-gold-500 mb-1.5">Telepon</h4>
+            <p class="text-sm text-black-600">0651-47414</p>
+        </div>
+    </div>
+
+    <!-- Email -->
+    <div class="flex items-start gap-4">
+        <div class="group w-11 h-11 rounded-xl bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center flex-shrink-0 transition-transform duration-300 hover:scale-110 hover:-rotate-3">
+            <i class="fi fi-rs-envelope text-blue-500 text-lg animate-pulse-slow"></i>
+        </div>
+        <div>
+            <h4 class="text-xs font-semibold uppercase tracking-wide text-gold-500 mb-1.5">Email</h4>
+            <p class="text-sm text-black-600">contact@pema.co.id</p>
+        </div>
+    </div>
+
+    <!-- Fax -->
+    <div class="flex items-start gap-4">
+        <div class="group w-11 h-11 rounded-xl bg-gradient-to-br from-purple-100 to-purple-50 flex items-center justify-center flex-shrink-0 transition-transform duration-300 hover:scale-110 hover:rotate-3">
+            <i class="fi fi-rs-fax text-purple-500 text-lg animate-pulse-slow"></i>
+        </div>
+        <div>
+            <h4 class="text-xs font-semibold uppercase tracking-wide text-gold-500 mb-1.5">Fax</h4>
+            <p class="text-sm text-black-600">0651-47414</p>
+        </div>
+    </div>
+
+</div>
 </section>
 
 @endsection

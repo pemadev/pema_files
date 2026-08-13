@@ -129,9 +129,9 @@
                          x-transition:enter-start="opacity-0 translate-y-2"
                          x-transition:enter-end="opacity-100 translate-y-0">
                         <a href="{{ route('kerjasama') }}" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Mitra</a>
-                        <a href="https://ivds.pema.co.id" target="_blank" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Vendor</a>
+                        <a href="{{ route('vendor') }}" class="block px-4 py-2.5 text-sm text-gray-700 hover:text-pema-500 hover:bg-pema-50 transition-colors">Vendor</a>
+                            </div>
                     </div>
-                </div>
 
                 <!-- PPID -->
                 @php
@@ -235,7 +235,7 @@
                 </button>
                 <div x-show="open" x-cloak class="ml-4 space-y-1">
                     <a href="{{ route('kerjasama') }}" class="block px-4 py-2 text-sm text-gray-500 hover:text-pema-500 rounded-lg transition-colors">Mitra</a>
-                    <a href="https://ivds.ptpema.co.id" target="_blank" class="block px-4 py-2 text-sm text-gray-500 hover:text-pema-500 rounded-lg transition-colors">Vendor</a>
+                    <a href="{{ route('vendor') }}" class="block px-4 py-2 text-sm text-gray-500 hover:text-pema-500 rounded-lg transition-colors">Vendor</a>
                 </div>
             </div>
 

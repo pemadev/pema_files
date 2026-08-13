@@ -23,64 +23,34 @@ class ProfileContentController extends Controller
         return view('admin.profil.edit', compact('profile', 'type'));
     }
 
-    public function update(string $type, Request $request)
-{
-    $validated = $request->validate([
-        'title'          => ['required', 'string', 'max:255'],
-        'content'        => ['required', 'string'],
-        'additional_info' => ['nullable', 'string'],
-        'image'          => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-        'image_left'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-        'image_right'    => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-    ], [
-        'title.required'           => 'Judul wajib diisi.',
-        'title.string'             => 'Judul harus berupa teks.',
-        'title.max'                => 'Judul maksimal :max karakter.',
-        'content.required'         => 'Konten wajib diisi.',
-        'content.string'           => 'Konten harus berupa teks.',
-        'additional_info.string'   => 'Informasi tambahan harus berupa teks.',
-        'image.image'              => 'File harus berupa gambar.',
-        'image.mimes'              => 'Format gambar harus jpg, jpeg, png, atau webp.',
-        'image.max'                => 'Ukuran gambar maksimal :max KB.',
-        'image_left.image'         => 'Foto kiri harus berupa gambar.',
-        'image_left.mimes'         => 'Format foto kiri harus jpg, jpeg, png, atau webp.',
-        'image_left.max'           => 'Ukuran foto kiri maksimal :max KB.',
-        'image_right.image'        => 'Foto kanan harus berupa gambar.',
-        'image_right.mimes'        => 'Format foto kanan harus jpg, jpeg, png, atau webp.',
-        'image_right.max'          => 'Ukuran foto kanan maksimal :max KB.',
-    ]);
+    public function update(Request $request, $type)
+    {
+        $profile = ProfileContent::where('type', $type)->firstOrFail();
 
-    $profile = ProfileContent::firstOrCreate(['type' => $type]);
+        $validated = $request->validate([
+            'title'           => 'nullable|string|max:255',
+            'content'         => 'nullable|string',
+            'additional_info' => 'nullable|string',
+            'image'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image_left'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image_right'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
 
-    $profile->title = $validated['title'];
-    $profile->content = $validated['content'];
-    $profile->additional_info = $validated['additional_info'] ?? null;
+        $imageFields = ['image', 'image_left', 'image_right'];
 
-    if ($request->hasFile('image')) {
-        if ($profile->image) {
-            Storage::disk('public')->delete($profile->image);
+        foreach ($imageFields as $field) {
+            if ($request->hasFile($field)) {
+                if ($profile->$field) {
+                    Storage::disk('public')->delete($profile->$field);
+                }
+                $validated[$field] = $request->file($field)->store('profil', 'public');
+            } else {
+                unset($validated[$field]);
+            }
         }
-        $profile->image = $request->file('image')->store('profile', 'public');
+
+        $profile->update($validated);
+
+        return redirect()->route('admin.profil.index')->with('success', "$type berhasil diperbarui.");
     }
-
-    if ($request->hasFile('image_left')) {
-        if ($profile->image_left) {
-            Storage::disk('public')->delete($profile->image_left);
-        }
-        $profile->image_left = $request->file('image_left')->store('profile', 'public');
-    }
-
-    if ($request->hasFile('image_right')) {
-        if ($profile->image_right) {
-            Storage::disk('public')->delete($profile->image_right);
-        }
-        $profile->image_right = $request->file('image_right')->store('profile', 'public');
-    }
-
-    $profile->save();
-
-    return redirect()->route('admin.profil.index')
-        ->with('success', 'Konten profil berhasil diperbarui.');
-}
-
 }

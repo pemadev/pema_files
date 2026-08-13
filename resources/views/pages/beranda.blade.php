@@ -310,14 +310,14 @@
     </div>
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="w-40 h-40 mx-auto mb-6 rounded-full overflow-hidden border-2 border-gold-500/30">
-             <img src="{{ asset('storage/team/foto-direktur.png') }}" alt="Mawardi Nur, SE" class="w-full h-full object-contain bg-gray-50">
+             <img src="{{ asset('storage/team/ChatGPT Image Jul 21, 2026, 02_45_01 PM.png') }}" alt="Faisal Ilyas S.E, M.M" class="w-full h-full object-contain bg-gray-50">
         </div>
         <i class="fi fi-rs-quote-right text-gold-500 text-4xl mb-6 inline-block opacity-50"></i>
         <blockquote class="text-2xl sm:text-2xl font-heading font-medium text-white leading-relaxed mb-4">
             "PT PEMA hadir sebagai  Badan Usaha Milik Aceh (BUMA) dengan kepemilikan saham penuh oleh Pemerintah Aceh. Sejak resmi berdiri pada 05 April 2019, PT PEMA mengemban mandat strategis untuk mengoptimalkan potensi dan sumber daya daerah"
         </blockquote>
         <div class="w-16 h-0.5 bg-gold-500 mx-auto mb-6"></div>
-        <p class="font-heading font-semibold text-white text-lg">Mawardi Nur, S.E</p>
+        <p class="font-heading font-semibold text-white text-lg">Faisal Ilyas S.E, M.M</p>
         <p class="text-gold-400 text-sm mt-1">Direktur Utama</p>
         <p class="text-gold-400 text-sm mt-1">PT Pembangunan Aceh (Perseroda)</p>
         <div class="mt-4 mb-4">

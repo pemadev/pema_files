@@ -35,6 +35,7 @@ class PartnerController extends Controller
     {
         $validated = $request->validate([
             'name'       => ['required', 'string', 'max:255'],
+            'caption'    => ['nullable', 'string', 'max:255'],
             'website'    => ['nullable', 'url', 'max:255'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'logo'       => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:2048'],
@@ -42,6 +43,8 @@ class PartnerController extends Controller
             'name.required'       => 'Nama wajib diisi.',
             'name.string'         => 'Nama harus berupa teks.',
             'name.max'            => 'Nama maksimal :max karakter.',
+            'caption.string'      => 'Caption harus berupa teks.',
+            'caption.max'         => 'Caption maksimal :max karakter.',
             'website.url'         => 'Format URL website tidak valid.',
             'website.max'         => 'URL website maksimal :max karakter.',
             'sort_order.integer'  => 'Urutan harus berupa angka.',
@@ -78,6 +81,7 @@ class PartnerController extends Controller
     {
         $validated = $request->validate([
             'name'       => ['required', 'string', 'max:255'],
+            'caption'    => ['nullable', 'string', 'max:255'],
             'website'    => ['nullable', 'url', 'max:255'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'logo'       => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:2048'],
@@ -85,6 +89,8 @@ class PartnerController extends Controller
             'name.required'       => 'Nama wajib diisi.',
             'name.string'         => 'Nama harus berupa teks.',
             'name.max'            => 'Nama maksimal :max karakter.',
+            'caption.string'      => 'Caption harus berupa teks.',
+            'caption.max'         => 'Caption maksimal :max karakter.',
             'website.url'         => 'Format URL website tidak valid.',
             'website.max'         => 'URL website maksimal :max karakter.',
             'sort_order.integer'  => 'Urutan harus berupa angka.',
