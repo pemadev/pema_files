@@ -40,6 +40,14 @@
 .article-content img {
     @apply rounded-xl my-6 w-full;
 }
+
+.article-content figcaption {
+    display: none;
+}
+
+.article-content figure {
+    @apply my-6;
+}
 </style>
 @endpush
 
@@ -98,11 +106,82 @@
         <div class="grid lg:grid-cols-3 gap-12">
             <!-- Main Article -->
             <div class="lg:col-span-2">
-                @if($news->image)
-                    <div class="animate-fade-in-up mb-8">
-                        <img src="{{ asset('storage/' . $news->image) }}"
-                             alt="{{ $news->title }}"
-                             class="w-full aspect-[16/9] object-contain rounded-2xl shadow-sm bg-gray-50">
+
+                {{--
+                    ============================================================
+                    SLIDER FOTO BERITA
+                    ============================================================
+                    Mendukung banyak foto lewat relasi $news->photos (disarankan).
+                    Kalau relasi itu belum ada, otomatis fallback ke $news->image
+                    (kolom lama, satu foto) supaya berita lama tetap tampil normal.
+                @endphp --}}
+                @php
+                    $newsPhotos = (isset($news->photos) && $news->photos->count())
+                        ? $news->photos->pluck('path')->map(fn ($p) => asset('storage/' . $p))->all()
+                        : ($news->image ? [asset('storage/' . $news->image)] : []);
+                @endphp
+
+                @if(count($newsPhotos) > 0)
+                    <div class="animate-fade-in-up mb-8" x-data="newsSlider({{ count($newsPhotos) }})">
+                        <!-- Slide utama -->
+                        <div class="relative rounded-2xl overflow-hidden shadow-sm bg-gray-50">
+                            <div class="relative aspect-[16/9]">
+                                @foreach($newsPhotos as $i => $photo)
+                                    <img
+                                        x-show="active === {{ $i }}"
+                                        x-transition:enter="transition ease-out duration-300"
+                                        x-transition:enter-start="opacity-0"
+                                        x-transition:enter-end="opacity-100"
+                                        src="{{ $photo }}"
+                                        alt="{{ $news->title }} - Foto {{ $i + 1 }}"
+                                        class="absolute inset-0 w-full h-full object-contain bg-gray-50"
+                                    >
+                                @endforeach
+
+                                @if(count($newsPhotos) > 1)
+                                    <!-- Tombol navigasi -->
+                                    <button @click="prev()" type="button" aria-label="Foto sebelumnya"
+                                            class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-gray-900 flex items-center justify-center shadow-md transition">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                                        </svg>
+                                    </button>
+                                    <button @click="next()" type="button" aria-label="Foto selanjutnya"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-gray-900 flex items-center justify-center shadow-md transition">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Counter -->
+                                    <div class="absolute top-3 right-3 bg-black/60 text-white text-xs font-medium px-2.5 py-1 rounded-full">
+                                        <span x-text="active + 1"></span> / {{ count($newsPhotos) }}
+                                    </div>
+
+                                    <!-- Dot indicator -->
+                                    <div class="absolute bottom-3 inset-x-0 flex justify-center gap-1.5">
+                                        @foreach($newsPhotos as $i => $photo)
+                                            <button @click="go({{ $i }})" type="button" aria-label="Ke foto {{ $i + 1 }}"
+                                                    class="h-1.5 rounded-full transition-all"
+                                                    :class="active === {{ $i }} ? 'w-6 bg-gold-500' : 'w-1.5 bg-white/70 hover:bg-white'"></button>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Thumbnail strip -->
+                        @if(count($newsPhotos) > 1)
+                            <div class="flex gap-2 mt-3 overflow-x-auto pb-1">
+                                @foreach($newsPhotos as $i => $photo)
+                                    <button @click="go({{ $i }})" type="button"
+                                            class="flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition bg-gray-50"
+                                            :class="active === {{ $i }} ? 'border-gold-500' : 'border-transparent opacity-60 hover:opacity-100'">
+                                        <img src="{{ $photo }}" alt="Thumbnail {{ $i + 1 }}" class="w-full h-full object-contain">
+                                    </button>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 @endif
 
@@ -212,4 +291,18 @@
         </div>
     </div>
 </section>
+
+@push('scripts')
+<script>
+    function newsSlider(total) {
+        return {
+            active: 0,
+            total: total,
+            next() { this.active = (this.active + 1) % this.total; },
+            prev() { this.active = (this.active - 1 + this.total) % this.total; },
+            go(i) { this.active = i; },
+        }
+    }
+</script>
+@endpush
 @endsection

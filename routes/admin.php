@@ -58,6 +58,8 @@
             Route::get('/berita/{news}/edit', [NewsController::class, 'edit'])->name('berita.edit');
             Route::put('/berita/{news}', [NewsController::class, 'update'])->name('berita.update');
             Route::delete('/berita/{news}', [NewsController::class, 'destroy'])->name('berita.destroy');
+            Route::post('/berita/upload-image', [NewsController::class, 'uploadContentImage'])->name('berita.upload-image');
+            Route::delete('/berita/photos/{photo}', [NewsController::class, 'destroyPhoto'])->name('berita.photos.destroy');
 
             // Pengumuman
             Route::get('/pengumuman', [NewsController::class, 'indexPengumuman'])->name('pengumuman.index');

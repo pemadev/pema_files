@@ -168,3 +168,36 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('trix-attachment-add', function (event) {
+        const attachment = event.attachment;
+
+        if (attachment.file) {
+            const formData = new FormData();
+            formData.append('image', attachment.file);
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+
+            fetch("{{ route('admin.berita.upload-image') }}", {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Upload gagal');
+                return response.json();
+            })
+            .then(data => {
+                attachment.setAttributes({
+                    url: data.url,
+                    href: data.url,
+                });
+            })
+            .catch(() => {
+                alert('Gagal mengunggah gambar. Coba lagi.');
+                attachment.remove();
+            });
+        }
+    });
+</script>
+@endpush
