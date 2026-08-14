@@ -194,15 +194,15 @@
 @endif
 
 
-<!-- Stakeholder -->
+<<!-- Stakeholder -->
 @if($stakeholder && $stakeholder->content)
 <section id="stakeholder" class="py-20 lg:py-28 bg-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="text-center max-w-3xl mx-auto mb-16">
-            <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Stakeholder</span>
+            <span class="text-gold-500 font-semibold text-sm uppercase tracking-widest">Shareholder</span>
             <h2 class="text-3xl sm:text-4xl font-heading font-bold text-gray-900 mt-3 mb-4">
-                {{ $stakeholder->title ?? 'Pemangku Kepentingan PEMA' }}
+                Pemegang Saham PT Pembangunan Aceh (Perseroda)
             </h2>
             <div class="w-16 h-1 bg-gold-500 rounded-full mx-auto"></div>
         </div>
@@ -212,21 +212,22 @@
                 <div class="flex flex-col md:flex-row items-center gap-8 lg:gap-12">
 
                     <!-- Frame Foto -->
-@if($stakeholder->image_left)
-<div class="flex-shrink-0">
-    <div class="w-40 h-40 lg:w-52 lg:h-52 rounded-xl overflow-hidden border-4 border-gold-100 shadow-md">
-        <img src="{{ asset('storage/' . $stakeholder->image_left) }}"
-             alt="{{ $stakeholder->title ?? 'Stakeholder' }}"
-             class="w-full h-full object-cover">
-    </div>
-</div>
-@else
-<div class="flex-shrink-0">
-    <div class="w-40 h-40 lg:w-52 lg:h-52 rounded-xl bg-gradient-to-br from-blue-800 to-teal-600 flex items-center justify-center border-4 border-gold-100 shadow-md">
-        <span class="text-white/70 text-xs text-center px-4">Foto belum diunggah</span>
-    </div>
-</div>
-@endif
+                    @if($stakeholder->image_left)
+                    <div class="flex-shrink-0">
+                        <div class="w-40 h-40 lg:w-52 lg:h-52 rounded-xl overflow-hidden border-4 border-gold-100 shadow-md">
+                            <img src="{{ asset('storage/' . $stakeholder->image_left) }}"
+                                 alt="{{ $stakeholder->title ?? 'Stakeholder' }}"
+                                 class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    @else
+                    <div class="flex-shrink-0">
+                        <div class="w-40 h-40 lg:w-52 lg:h-52 rounded-xl bg-gradient-to-br from-blue-800 to-teal-600 flex items-center justify-center border-4 border-gold-100 shadow-md">
+                            <span class="text-white/70 text-xs text-center px-4">Foto belum diunggah</span>
+                        </div>
+                    </div>
+                    @endif
+
                     <!-- Isi Konten -->
                     <div class="flex-1 min-w-0 text-gray-600 leading-relaxed prose prose-p:mb-4 max-w-none">
                         {!! $stakeholder->content !!}

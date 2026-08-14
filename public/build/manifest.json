@@ -4,11 +4,7 @@
     "name": "module.esm"
   },
   "resources/css/admin-app.css": {
-<<<<<<< HEAD
-    "file": "assets/admin-app-C33dbEEK.css",
-=======
-    "file": "assets/admin-app-Bohj8wL-.css",
->>>>>>> 3fda38e13b1481cf5b182b9f73ab4a55a438932b
+    "file": "assets/admin-app-ZN3zfTJ6.css",
     "src": "resources/css/admin-app.css",
     "isEntry": true,
     "name": "admin-app",
@@ -17,11 +13,7 @@
     ]
   },
   "resources/css/app.css": {
-<<<<<<< HEAD
-    "file": "assets/app-BUWyK56X.css",
-=======
-    "file": "assets/app-CpW9zCWv.css",
->>>>>>> 3fda38e13b1481cf5b182b9f73ab4a55a438932b
+    "file": "assets/app-BZqhm8mA.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
