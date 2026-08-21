@@ -66,6 +66,34 @@
                         </button>
                     </div>
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Role Pengguna</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="relative flex flex-col gap-1 p-4 rounded-xl border-2 cursor-pointer transition-all
+                                      has-[:checked]:border-pema-500 has-[:checked]:bg-pema-50/50 border-gray-200 hover:border-gray-300">
+                            <input type="radio" name="role" value="admin" class="absolute top-3 right-3 accent-pema-500"
+                                   {{ old('role') === 'admin' ? 'checked' : '' }}>
+                            <span class="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                                <i class="fi fi-rs-shield-check text-pema-500"></i>
+                                Admin
+                            </span>
+                            <span class="text-xs text-gray-500">Akses penuh — bisa tambah, edit, dan hapus semua konten.</span>
+                        </label>
+
+                        <label class="relative flex flex-col gap-1 p-4 rounded-xl border-2 cursor-pointer transition-all
+                                      has-[:checked]:border-pema-500 has-[:checked]:bg-pema-50/50 border-gray-200 hover:border-gray-300">
+                            <input type="radio" name="role" value="editor" class="absolute top-3 right-3 accent-pema-500"
+                                   {{ old('role', 'editor') === 'editor' ? 'checked' : '' }}>
+                            <span class="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                                <i class="fi fi-rs-edit text-amber-500"></i>
+                                Editor
+                            </span>
+                            <span class="text-xs text-gray-500">Bisa tambah & edit konten, tidak bisa menghapus.</span>
+                        </label>
+                    </div>
+                    @error('role') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+                </div>
             </div>
 
             <!-- Password Generator Modal -->

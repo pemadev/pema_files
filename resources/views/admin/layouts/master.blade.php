@@ -54,8 +54,10 @@
             <x-admin.sidebar-item icon="fi fi-rs-home" href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" label="Dashboard" />
 
             <!-- Manajemen Sistem -->
+            @role('admin|super_admin')
             <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Manajemen Sistem</div>
             <x-admin.sidebar-item icon="fi fi-rs-users" href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')" label="Pengguna" />
+            @endrole
 
             <!-- Profil & Organisasi -->
             <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Profil & Organisasi</div>
@@ -85,9 +87,10 @@
             <x-admin.sidebar-item icon="fi fi-rs-stats" href="{{ route('admin.statistik.index') }}" :active="request()->routeIs('admin.statistik.*')" label="Statistik Beranda" />
 
             <!-- Settings -->
+            @role('admin|super_admin')
             <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Sistem</div>
             <x-admin.sidebar-item icon="fi fi-rs-settings" href="{{ route('admin.settings.index') }}" :active="request()->routeIs('admin.settings.*')" label="Pengaturan" />
-        </nav>
+            @endrole
 
         <!-- Bottom Profile Card -->
         <a href="{{ route('admin.profile.edit') }}" class="border-t border-gray-100 p-3 flex-shrink-0 block hover:opacity-80 transition-opacity">

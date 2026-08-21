@@ -13,28 +13,91 @@ use App\Models\Report;
 use App\Models\Team;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Modul yang dikelola lewat admin panel.
+     * Tambah/kurangi sesuai kebutuhan proyek.
+     */
+    protected array $modules = [
+    'agenda',
+    'banner',
+    'business',
+    'enquiry',
+    'gallery',
+    'job listing',
+    'news',
+    'partner',
+    'product',
+    'profile content',
+    'report',
+    'settings',
+    'statistik',
+    'team',
+    ];
+
+    protected array $actions = ['view', 'create', 'edit', 'delete'];
+
     public function run(): void
     {
-        // ─── Roles ───────────────────────────────────────
-        if (!Role::where('name', 'super_admin')->exists()) {
-            Role::create(['name' => 'super_admin', 'guard_name' => 'web']);
+        // Bersihkan cache permission Spatie (wajib sebelum generate ulang)
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        // ─── Permissions ─────────────────────────────────
+        $allPermissions = [];
+        foreach ($this->modules as $module) {
+            foreach ($this->actions as $action) {
+                $name = "{$action} {$module}";
+                Permission::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
+                $allPermissions[] = $name;
+            }
         }
-        if (!Role::where('name', 'admin')->exists()) {
-            Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        // Permission khusus untuk kelola akun user (hanya admin/super_admin)
+        foreach (['view users', 'create users', 'edit users', 'delete users'] as $userPerm) {
+            Permission::firstOrCreate(['name' => $userPerm, 'guard_name' => 'web']);
+            $allPermissions[] = $userPerm;
         }
 
+        // ─── Roles ───────────────────────────────────────
+        $superAdmin = Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+        $superAdmin->syncPermissions($allPermissions); // super_admin dapat semua
+
+        $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+        $admin->syncPermissions($allPermissions); // admin juga dapat semua (termasuk delete)
+
+        // editor: semua permission KECUALI yang berawalan "delete"
+        $editorPermissions = collect($allPermissions)
+            ->reject(fn ($perm) => str_starts_with($perm, 'delete '))
+            ->values()
+            ->all();
+
+        $editor = Role::firstOrCreate(['name' => 'editor', 'guard_name' => 'web']);
+        $editor->syncPermissions($editorPermissions);
+
+        $this->command->info('Roles & permissions siap: super_admin, admin, editor (editor tanpa akses delete).');
+
         // ─── Admin User ──────────────────────────────────
-        $admin = User::firstOrCreate(
+        $admin_user = User::firstOrCreate(
             ['email' => 'admin@pema.co.id'],
             [
                 'name' => 'Admin',
                 'password' => bcrypt('password'),
             ]
         );
-        $admin->assignRole('super_admin');
+        $admin_user->assignRole('super_admin');
+
+        // ─── Contoh akun Editor (opsional, hapus kalau tidak perlu) ──
+        $editor_user = User::firstOrCreate(
+            ['email' => 'editor@pema.co.id'],
+            [
+                'name' => 'Editor',
+                'password' => bcrypt('password'),
+            ]
+        );
+        $editor_user->assignRole('editor');
 
         // ─── Profil Perusahaan ────────────────────────────
         ProfileContent::updateOrCreate(
@@ -180,34 +243,6 @@ class DatabaseSeeder extends Seeder
                 $member
             );
         }
-        Team::firstOrCreate(
-            ['name' => 'Ir. Cut Nuraida, MT'],
-            ['position' => 'Direktur Operasional', 'category' => 'direksi', 'sort_order' => 2]
-        );
-        Team::firstOrCreate(
-            ['name' => 'M. Ali Basyah, S.H., M.Kn.'],
-            ['position' => 'Direktur Keuangan', 'category' => 'direksi', 'sort_order' => 3]
-        );
-        Team::firstOrCreate(
-            ['name' => 'Ir. Teuku Reza Fahlevi, ST, MT'],
-            ['position' => 'Direktur Teknik & Operasional', 'category' => 'direksi', 'sort_order' => 4]
-        );
-        Team::firstOrCreate(
-            ['name' => 'Prof. Dr. Ir. Syamsul Rizal, M.Eng.'],
-            ['position' => 'Komisaris Utama', 'category' => 'komisaris', 'sort_order' => 1]
-        );
-        Team::firstOrCreate(
-            ['name' => 'Dra. Hj. Nurlelawati, M.Si.'],
-            ['position' => 'Komisaris', 'category' => 'komisaris', 'sort_order' => 2]
-        );
-        Team::firstOrCreate(
-            ['name' => 'Dr. Ir. Zulkifli, M.Si.'],
-            ['position' => 'Komisaris', 'category' => 'komisaris', 'sort_order' => 3]
-        );
-        Team::firstOrCreate(
-            ['name' => 'H. Muhammad Yunus, SE, Ak., MBA'],
-            ['position' => 'Komisaris', 'category' => 'komisaris', 'sort_order' => 4]
-        );
 
         // ─── Mitra ───────────────────────────────────────
         // Hapus data partner lama

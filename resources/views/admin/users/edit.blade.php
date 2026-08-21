@@ -68,6 +68,45 @@
                         </button>
                     </div>
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Role Pengguna</label>
+
+                    @if($user->hasRole('super_admin'))
+                        <div class="flex items-center gap-3 p-4 rounded-xl border-2 border-pema-200 bg-pema-50/50">
+                            <i class="fi fi-rs-shield-check text-pema-500 text-lg"></i>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900">Super Admin</p>
+                                <p class="text-xs text-gray-500">Role Super Admin tidak dapat diubah lewat form ini.</p>
+                            </div>
+                        </div>
+                    @else
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="relative flex flex-col gap-1 p-4 rounded-xl border-2 cursor-pointer transition-all
+                                          has-[:checked]:border-pema-500 has-[:checked]:bg-pema-50/50 border-gray-200 hover:border-gray-300">
+                                <input type="radio" name="role" value="admin" class="absolute top-3 right-3 accent-pema-500"
+                                       {{ old('role', $user->hasRole('admin') ? 'admin' : '') === 'admin' ? 'checked' : '' }}>
+                                <span class="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                                    <i class="fi fi-rs-shield-check text-pema-500"></i>
+                                    Admin
+                                </span>
+                                <span class="text-xs text-gray-500">Akses penuh — bisa tambah, edit, dan hapus semua konten.</span>
+                            </label>
+
+                            <label class="relative flex flex-col gap-1 p-4 rounded-xl border-2 cursor-pointer transition-all
+                                          has-[:checked]:border-pema-500 has-[:checked]:bg-pema-50/50 border-gray-200 hover:border-gray-300">
+                                <input type="radio" name="role" value="editor" class="absolute top-3 right-3 accent-pema-500"
+                                       {{ old('role', $user->hasRole('editor') ? 'editor' : '') === 'editor' ? 'checked' : '' }}>
+                                <span class="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                                    <i class="fi fi-rs-edit text-amber-500"></i>
+                                    Editor
+                                </span>
+                                <span class="text-xs text-gray-500">Bisa tambah & edit konten, tidak bisa menghapus.</span>
+                            </label>
+                        </div>
+                        @error('role') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+                    @endif
+                </div>
             </div>
 
             <!-- Password Generator Modal -->

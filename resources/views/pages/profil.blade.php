@@ -194,7 +194,7 @@
 @endif
 
 
-<<!-- Stakeholder -->
+ <!-- Stakeholder -->
 @if($stakeholder && $stakeholder->content)
 <section id="stakeholder" class="py-20 lg:py-28 bg-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

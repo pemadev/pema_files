@@ -18,6 +18,7 @@ class UserController extends Controller
         $sortDir = in_array($request->sort_dir, ['asc', 'desc']) ? $request->sort_dir : 'desc';
 
         $users = User::query()
+            ->with('roles') // supaya role bisa ditampilkan di tabel tanpa query tambahan per-baris
             ->when($request->search, fn($q, $v) => $q->where('name', 'like', "%{$v}%")->orWhere('email', 'like', "%{$v}%"))
             ->orderBy($sortBy, $sortDir)
             ->orderBy('id')
@@ -38,6 +39,7 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', Rule::unique('users')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role'     => ['required', Rule::in(['admin', 'editor'])],
         ], [
             'name.required'         => 'Nama wajib diisi.',
             'name.string'           => 'Nama harus berupa teks.',
@@ -50,6 +52,8 @@ class UserController extends Controller
             'password.string'       => 'Kata sandi harus berupa teks.',
             'password.min'          => 'Kata sandi minimal :min karakter.',
             'password.confirmed'    => 'Konfirmasi kata sandi tidak cocok.',
+            'role.required'         => 'Role wajib dipilih.',
+            'role.in'               => 'Role tidak valid.',
         ]);
 
         $user = User::create([
@@ -57,6 +61,8 @@ class UserController extends Controller
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
+
+        $user->assignRole($validated['role']);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Pengguna berhasil ditambahkan.');
@@ -73,6 +79,7 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'role'     => [$user->hasRole('super_admin') ? 'nullable' : 'required', Rule::in(['admin', 'editor'])],
         ], [
             'name.required'         => 'Nama wajib diisi.',
             'name.string'           => 'Nama harus berupa teks.',
@@ -84,7 +91,20 @@ class UserController extends Controller
             'password.string'       => 'Kata sandi harus berupa teks.',
             'password.min'          => 'Kata sandi minimal :min karakter.',
             'password.confirmed'    => 'Konfirmasi kata sandi tidak cocok.',
+            'role.required'         => 'Role wajib dipilih.',
+            'role.in'               => 'Role tidak valid.',
         ]);
+
+        // Cegah admin/super_admin terakhir mengubah role dirinya sendiri jadi editor
+        // (supaya tidak ada kasus semua akun admin terkunci dari fitur hapus)
+        if (
+            $user->id === auth()->id()
+            && $user->hasAnyRole(['admin', 'super_admin'])
+            && $validated['role'] === 'editor'
+        ) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Tidak dapat mengubah role akun sendiri menjadi editor.');
+        }
 
         $user->name = $validated['name'];
         $user->email = $validated['email'];
@@ -94,6 +114,12 @@ class UserController extends Controller
         }
 
         $user->save();
+
+        // super_admin tidak diubah lewat form ini untuk mencegah privilege escalation
+        // yang tidak disengaja; hanya menukar antara admin <-> editor.
+        if (!$user->hasRole('super_admin')) {
+            $user->syncRoles([$validated['role']]);
+        }
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Pengguna berhasil diperbarui.');
