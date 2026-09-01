@@ -176,29 +176,29 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/produk/{product}', [ProductController::class, 'destroy'])
             ->name('produk.destroy')->middleware('permission:delete product');
 
-        // ── Statistik ────────────────────────────────────
-        Route::middleware('permission:view statistik')->group(function () {
-            Route::get('/statistik', [StatistikPemaController::class, 'index'])->name('statistik.index');
-            Route::get('/statistik/{statistik}', [StatistikPemaController::class, 'show'])->name('statistik.show');
-            Route::get('/statistik/{statistik}/edit', [StatistikPemaController::class, 'edit'])->name('statistik.edit');
-        });
+      // ── Statistik ────────────────────────────────────
         Route::middleware('permission:create statistik')->group(function () {
-            Route::get('/statistik/create', [StatistikPemaController::class, 'create'])->name('statistik.create');
-            Route::post('/statistik', [StatistikPemaController::class, 'store'])->name('statistik.store');
-        });
+        Route::get('/statistik/create', [StatistikPemaController::class, 'create'])->name('statistik.create');
+        Route::post('/statistik', [StatistikPemaController::class, 'store'])->name('statistik.store');});
+
+        Route::middleware('permission:view statistik')->group(function () {
+        Route::get('/statistik', [StatistikPemaController::class, 'index'])->name('statistik.index');
+        Route::get('/statistik/{statistik}/edit', [StatistikPemaController::class, 'edit'])->name('statistik.edit');
+        Route::get('/statistik/{statistik}', [StatistikPemaController::class, 'show'])->name('statistik.show');});
+
         Route::put('/statistik/{statistik}', [StatistikPemaController::class, 'update'])
-            ->name('statistik.update')->middleware('permission:edit statistik');
+        ->name('statistik.update')->middleware('permission:edit statistik');
         Route::patch('/statistik/{statistik}', [StatistikPemaController::class, 'update'])
-            ->middleware('permission:edit statistik');
+        ->middleware('permission:edit statistik');
         Route::delete('/statistik/{statistik}', [StatistikPemaController::class, 'destroy'])
-            ->name('statistik.destroy')->middleware('permission:delete statistik');
+        ->name('statistik.destroy')->middleware('permission:delete statistik');
 
         // ── Profile (akun sendiri, semua role boleh) ─────
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
         // ── Users (KHUSUS admin & super_admin) ───────────
-        Route::middleware('role:admin|super_admin')->group(function () {
+            Route::middleware('role:admin|super_admin')->group(function () {
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
             Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
             Route::post('/users', [UserController::class, 'store'])->name('users.store');
