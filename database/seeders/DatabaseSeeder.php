@@ -116,7 +116,7 @@ class DatabaseSeeder extends Seeder
                 'title' => 'Perjalanan PT Pembangunan Aceh',
                 'content' => '<p>PT Pembangunan Aceh (PEMA) didirikan pada tahun 2016 berdasarkan Qanun Aceh Nomor 3 Tahun 2015 tentang Perusahaan Daerah. Sebagai Badan Usaha Milik Daerah Aceh (BUMD/BUMA), PEMA memiliki tugas mulia: mengelola potensi sumber daya alam Aceh untuk sebesar-besarnya kemakmuran rakyat.</p><p>Sejak berdiri, PEMA telah berkembang dari perusahaan yang fokus pada sektor migas menjadi korporasi yang memiliki tiga pilar bisnis utama: Migas, Agroindustri, serta Jasa & Perdagangan. Perjalanan ini diwarnai dengan berbagai capaian dan pembelajaran yang menjadikan PEMA semakin kokoh sebagai penggerak ekonomi daerah.</p><p>Dengan saham 100% milik Pemerintah Aceh, PEMA berkomitmen untuk menjalankan tata kelola perusahaan yang baik (GCG) dan memberikan kontribusi nyata bagi pembangunan dan kesejahteraan masyarakat Aceh.</p>',
             ]
-        );
+        ); 
 
         ProfileContent::firstOrCreate(
             ['type' => 'visi_misi'],

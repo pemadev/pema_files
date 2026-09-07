@@ -33,9 +33,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
-    // Protected routes
-    Route::middleware('admin')->group(function () {
-        // Dashboard - semua yang login (admin & editor) boleh lihat
+        // Protected routes
+        Route::middleware('admin')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         // ── Profil Content ──────────────────────────────
@@ -95,7 +94,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::middleware('permission:view gallery')->group(function () {
             Route::get('/galeri', [GalleryController::class, 'index'])->name('galeri.index');
             Route::get('/galeri/{gallery}/edit', [GalleryController::class, 'edit'])->name('galeri.edit');
-        });
+        }); 
             Route::middleware('permission:create gallery')->group(function () {
             Route::get('/galeri/create', [GalleryController::class, 'create'])->name('galeri.create');
             Route::post('/galeri', [GalleryController::class, 'store'])->name('galeri.store');
@@ -177,21 +176,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('produk.destroy')->middleware('permission:delete product');
 
       // ── Statistik ────────────────────────────────────
-        Route::middleware('permission:create statistik')->group(function () {
-        Route::get('/statistik/create', [StatistikPemaController::class, 'create'])->name('statistik.create');
-        Route::post('/statistik', [StatistikPemaController::class, 'store'])->name('statistik.store');});
+            Route::middleware('permission:create statistik')->group(function () {
+            Route::get('/statistik/create', [StatistikPemaController::class, 'create'])->name('statistik.create');
+            Route::post('/statistik', [StatistikPemaController::class, 'store'])->name('statistik.store');});
 
-        Route::middleware('permission:view statistik')->group(function () {
-        Route::get('/statistik', [StatistikPemaController::class, 'index'])->name('statistik.index');
-        Route::get('/statistik/{statistik}/edit', [StatistikPemaController::class, 'edit'])->name('statistik.edit');
-        Route::get('/statistik/{statistik}', [StatistikPemaController::class, 'show'])->name('statistik.show');});
+            Route::middleware('permission:view statistik')->group(function () {
+            Route::get('/statistik', [StatistikPemaController::class, 'index'])->name('statistik.index');
+            Route::get('/statistik/{statistik}/edit', [StatistikPemaController::class, 'edit'])->name('statistik.edit');
+            Route::get('/statistik/{statistik}', [StatistikPemaController::class, 'show'])->name('statistik.show');});
 
-        Route::put('/statistik/{statistik}', [StatistikPemaController::class, 'update'])
-        ->name('statistik.update')->middleware('permission:edit statistik');
-        Route::patch('/statistik/{statistik}', [StatistikPemaController::class, 'update'])
-        ->middleware('permission:edit statistik');
-        Route::delete('/statistik/{statistik}', [StatistikPemaController::class, 'destroy'])
-        ->name('statistik.destroy')->middleware('permission:delete statistik');
+            Route::put('/statistik/{statistik}', [StatistikPemaController::class, 'update'])
+            ->name('statistik.update')->middleware('permission:edit statistik');
+            Route::patch('/statistik/{statistik}', [StatistikPemaController::class, 'update'])
+            ->middleware('permission:edit statistik');
+            Route::delete('/statistik/{statistik}', [StatistikPemaController::class, 'destroy'])
+            ->name('statistik.destroy')->middleware('permission:delete statistik');
 
         // ── Profile (akun sendiri, semua role boleh) ─────
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

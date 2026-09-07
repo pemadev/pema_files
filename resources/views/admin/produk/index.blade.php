@@ -99,7 +99,7 @@
                                                  <i class="fi fi-rs-edit"></i>
                                                  Edit
                                              </a>
-                                             @can('delete produk')
+                                             @can('delete product')
                                             <button type="button"
                                                     x-on:click="deleteUrl = '{{ route('admin.produk.destroy', $product) }}'; $dispatch('open-confirm-modal', { id: 'delete-confirm' })"
                                                     class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
