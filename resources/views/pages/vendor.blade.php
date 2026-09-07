@@ -40,7 +40,7 @@
 
             <div class="relative">
                 <p class="text-white font-medium text-base sm:text-lg leading-relaxed">
-                    Silakan daftar menjadi vendor PT Pembangunan Aceh, klik link registrasi berikut.
+                    Silahkan daftar menjadi vendor PT Pembangunan Aceh, klik link registrasi berikut ini.
                 </p>
             </div>
 

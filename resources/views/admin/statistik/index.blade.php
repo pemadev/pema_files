@@ -115,21 +115,24 @@
                                 @endif
                             </td>
                             <td class="px-5 py-4">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    <a href="{{ route('admin.statistik.edit', $item) }}"
-                                       title="Edit"
-                                       class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-pema-600 hover:bg-pema-50 transition-colors">
-                                        <i class="fi fi-rs-pencil text-sm"></i>
+                                <div class="flex items-center justify-end gap-2">
+                                <a href="{{ route('admin.statistik.edit', $item) }}"
+                                    class="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-600 ring-1 ring-inset ring-amber-600/20 hover:bg-amber-100 transition-colors">
+                                    <i class="fi fi-rs-pencil text-xs"></i>
+                                        Edit
                                     </a>
                                     <form action="{{ route('admin.statistik.destroy', $item) }}" method="POST"
-                                          onsubmit="return confirm('Hapus statistik &quot;{{ $item->label }}&quot;?');">
+                                    onsubmit="return confirm('Hapus statistik &quot;{{ $item->label }}&quot;?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" title="Hapus"
-                                                class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors">
-                                            <i class="fi fi-rs-trash text-sm"></i>
-                                        </button>
-                                    </form>
+                                        @can('delete statistik')
+                                    <button type="submit"
+                                    class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 ring-1 ring-inset ring-red-600/20 hover:bg-red-100 transition-colors">
+                                    <i class="fi fi-rs-trash text-xs"></i>
+                                        Hapus
+                                </button>
+                                @endcan
+                                </form>
                                 </div>
                             </td>
                         </tr>
