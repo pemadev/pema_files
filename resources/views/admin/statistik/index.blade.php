@@ -114,27 +114,27 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-5 py-4">
-                                <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('admin.statistik.edit', $item) }}"
-                                    class="inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-600 ring-1 ring-inset ring-amber-600/20 hover:bg-amber-100 transition-colors">
-                                    <i class="fi fi-rs-pencil text-xs"></i>
-                                        Edit
-                                    </a>
-                                    <form action="{{ route('admin.statistik.destroy', $item) }}" method="POST"
-                                    onsubmit="return confirm('Hapus statistik &quot;{{ $item->label }}&quot;?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        @can('delete statistik')
-                                    <button type="submit"
-                                    class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 ring-1 ring-inset ring-red-600/20 hover:bg-red-100 transition-colors">
-                                    <i class="fi fi-rs-trash text-xs"></i>
-                                        Hapus
-                                </button>
-                                @endcan
-                                </form>
-                                </div>
-                            </td>
+                           <td class="px-5 py-4">
+                            <div class="flex items-center justify-end gap-2">
+                            <a href="{{ route('admin.statistik.edit', $item) }}"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-amber-600 bg-amber-50 hover:bg-amber-100 rounded-lg transition-all text-xs font-medium">
+                            <i class="fi fi-rs-pencil text-xs"></i>
+                                Edit
+                            </a>
+                            @can('delete statistik')
+                            <form action="{{ route('admin.statistik.destroy', $item) }}" method="POST"
+                            onsubmit="return confirm('Hapus statistik &quot;{{ $item->label }}&quot;?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
+                            <i class="fi fi-rs-trash text-xs"></i>
+                                Hapus
+                            </button>
+                            </form>
+                            @endcan
+                        </div>
+                    </td>
                         </tr>
                     @empty
                         <tr>
