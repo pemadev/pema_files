@@ -70,7 +70,78 @@
 
         </div>
     </div>
+    
+        <!-- Berita Terbaru -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                <h3 class="font-heading font-semibold text-gray-900 text-sm">Berita Terbaru</h3>
+                <a href="{{ route('admin.berita.index') }}" class="text-pema-500 hover:text-pema-600 text-xs font-medium">Lihat Semua</a>
+            </div>
+            <div class="p-5">
+                @if($stats['berita_terbaru']->count() > 0)
+                    <div class="space-y-3">
+                        @foreach($stats['berita_terbaru'] as $berita)
+                            <div class="flex items-start gap-3 pb-3 {{ !$loop->last ? 'border-b border-gray-50' : '' }}">
+                                 <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 mt-0.5 bg-gray-50">
+                                     @if($berita->image)
+                                         <img src="{{ asset('storage/' . $berita->image) }}" alt="" class="w-full h-full object-cover">
+                                     @else
+                                         <div class="w-full h-full flex items-center justify-center bg-pema-50">
+                                             <i class="fi fi-rs-newspaper text-pema-400 text-sm"></i>
+                                         </div>
+                                     @endif
+                                 </div>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $berita->title }}</p>
+                                    <p class="text-xs text-gray-400">{{ $berita->created_at->format('d M Y') }}</p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-sm text-gray-400 text-center py-4">Belum ada berita.</p>
+                @endif
+            </div>
+        </div>
 
+    <!-- Aktivitas Terbaru -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div class="w-8 h-8 bg-pema-50 rounded-lg flex items-center justify-center">
+                <i class="fi fi-rs-clock text-pema-500 text-sm"></i>
+            </div>
+            <h3 class="font-heading font-semibold text-gray-900 text-sm">Aktivitas Terbaru</h3>
+        </div>
+        <div class="p-5">
+            @if($activities->count() > 0)
+                <div class="space-y-4">
+                    @foreach($activities as $activity)
+                        <div class="flex items-start gap-3 text-sm">
+                            <div class="w-7 h-7 rounded-full bg-pema-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span class="text-pema-600 font-semibold text-xs">{{ substr($activity->user->name ?? '?', 0, 1) }}</span>
+                            </div>
+                            <div>
+                                <p class="text-gray-700">
+                                    <span class="font-medium text-gray-900">{{ $activity->user->name ?? 'System' }}</span>
+                                    @if($activity->action === 'created')
+                                        <span class="text-green-600">menambahkan</span>
+                                    @elseif($activity->action === 'updated')
+                                        <span class="text-amber-600">mengubah</span>
+                                    @elseif($activity->action === 'deleted')
+                                        <span class="text-red-600">menghapus</span>
+                                    @endif
+                                    {{ $activity->description }}
+                                </p>
+                                <p class="text-xs text-gray-400 mt-0.5">{{ $activity->created_at->diffForHumans() }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-sm text-gray-400 text-center py-4">Belum ada aktivitas.</p>
+            @endif
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -163,3 +234,4 @@
 .qa-rose:hover .qa-lbl      { color: #be123c; }
 </style>
 @endpush
+
