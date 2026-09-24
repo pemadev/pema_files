@@ -70,7 +70,100 @@
 
         </div>
     </div>
-    
+
+    {{-- ================= GOOGLE ANALYTICS ================= --}}
+    @if($analytics['available'])
+        {{-- Kartu ringkasan --}}
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-pema-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fi fi-rs-chart-line-up text-pema-500 text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400">Page Views Bulan Ini</p>
+                        <p class="text-lg font-heading font-semibold text-gray-900">{{ number_format($analytics['totalThisMonth']) }}</p>
+                    </div>
+                </div>
+                <p class="text-xs mt-2 {{ $analytics['growth'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                    {{ $analytics['growth'] >= 0 ? '▲' : '▼' }} {{ abs($analytics['growth']) }}% vs bulan lalu
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fi fi-rs-calendar text-blue-500 text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400">Page Views Bulan Lalu</p>
+                        <p class="text-lg font-heading font-semibold text-gray-900">{{ number_format($analytics['totalLastMonth']) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fi fi-rs-user text-green-500 text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400">Pengunjung Hari Ini</p>
+                        <p class="text-lg font-heading font-semibold text-gray-900">
+                            {{ number_format($analytics['visitorsToday']) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Grafik & halaman terpopuler --}}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <div class="px-5 py-4 border-b border-gray-100">
+                    <h3 class="font-heading font-semibold text-gray-900 text-sm">Pengunjung Website (30 Hari Terakhir)</h3>
+                </div>
+                <div class="p-5">
+                    <canvas id="visitorsChart" height="90"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <div class="px-5 py-4 border-b border-gray-100">
+                    <h3 class="font-heading font-semibold text-gray-900 text-sm">Halaman Terpopuler</h3>
+                </div>
+                <div class="p-5">
+                    @if($analytics['topPages']->count() > 0)
+                        <div class="space-y-3">
+                            @foreach($analytics['topPages'] as $page)
+                                <div class="flex items-center justify-between gap-3 pb-3 {{ !$loop->last ? 'border-b border-gray-50' : '' }}">
+                                    <span class="text-sm text-gray-700 truncate" title="{{ $page['fullPageUrl'] ?? $page['pageTitle'] ?? '' }}">
+                                        {{ $page['pageTitle'] ?? $page['fullPageUrl'] ?? '-' }}
+                                    </span>
+                                    <span class="text-xs font-medium text-gray-400 flex-shrink-0">{{ number_format($page['screenPageViews'] ?? 0) }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-sm text-gray-400 text-center py-4">Belum ada data.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @else
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fi fi-rs-exclamation text-amber-500 text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-900">Google Analytics belum dikonfigurasi</p>
+                    <p class="text-xs text-gray-400">Periksa kembali kredensial dan Property ID di file .env.</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
         <!-- Berita Terbaru -->
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
             <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
@@ -235,3 +328,44 @@
 </style>
 @endpush
 
+@if($analytics['available'])
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+    const gaLabels = @json($analytics['visitors']->pluck('date'));
+    const gaVisitors = @json($analytics['visitors']->pluck('activeUsers'));
+    const gaPageViews = @json($analytics['visitors']->pluck('screenPageViews'));
+
+    new Chart(document.getElementById('visitorsChart'), {
+        type: 'line',
+        data: {
+            labels: gaLabels,
+            datasets: [
+                {
+                    label: 'Visitors',
+                    data: gaVisitors,
+                    borderColor: '#e11d48',
+                    backgroundColor: 'rgba(225,29,72,0.08)',
+                    tension: 0.3,
+                    fill: true,
+                },
+                {
+                    label: 'Page Views',
+                    data: gaPageViews,
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37,99,235,0.08)',
+                    tension: 0.3,
+                    fill: true,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>
+@endpush
+@endif

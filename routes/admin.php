@@ -36,6 +36,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Protected routes
         Route::middleware('admin')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/active-users', [DashboardController::class, 'activeUsers'])->name('dashboard.active-users');
 
         // ── Profil Content ──────────────────────────────
             Route::middleware('permission:view profile content')->group(function () {
