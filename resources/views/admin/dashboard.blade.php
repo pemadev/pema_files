@@ -117,37 +117,84 @@
             </div>
         </div>
 
-        {{-- Grafik & halaman terpopuler --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm">
+        {{-- Menu grafik: pilih grafik yang ditampilkan --}}
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-pema-50 rounded-lg flex items-center justify-center">
+                    <i class="fi fi-rs-chart-line-up text-pema-500 text-sm"></i>
+                </div>
+                <h3 class="font-heading font-semibold text-gray-900 text-sm">Menu Grafik</h3>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <button type="button" data-chart-tab="all" class="chart-tab chart-tab-active">Semua Grafik</button>
+                <button type="button" data-chart-tab="new" class="chart-tab">Website Baru</button>
+                <button type="button" data-chart-tab="old" class="chart-tab">Website Lama</button>
+            </div>
+        </div>
+
+        {{-- Grafik pengunjung: website baru & website lama --}}
+        <div id="chartGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+            {{-- Website baru --}}
+            <div id="chartCardNew" class="bg-white rounded-2xl border border-gray-100 shadow-sm">
                 <div class="px-5 py-4 border-b border-gray-100">
-                    <h3 class="font-heading font-semibold text-gray-900 text-sm">Pengunjung Website (30 Hari Terakhir)</h3>
+                    <h3 class="font-heading font-semibold text-gray-900 text-sm">Website Baru</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Pengunjung 30 hari terakhir</p>
                 </div>
                 <div class="p-5">
-                    <canvas id="visitorsChart" height="90"></canvas>
+                    <canvas id="visitorsChart" height="150"></canvas>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+            {{-- Website lama --}}
+            <div id="chartCardOld" class="bg-white rounded-2xl border border-gray-100 shadow-sm">
                 <div class="px-5 py-4 border-b border-gray-100">
-                    <h3 class="font-heading font-semibold text-gray-900 text-sm">Halaman Terpopuler</h3>
+                    <h3 class="font-heading font-semibold text-gray-900 text-sm">Website Lama</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Pengunjung per bulan: 2025 (Jan-Des) &amp; 2026 (Jan-Mei)</p>
                 </div>
                 <div class="p-5">
-                    @if($analytics['topPages']->count() > 0)
-                        <div class="space-y-3">
-                            @foreach($analytics['topPages'] as $page)
-                                <div class="flex items-center justify-between gap-3 pb-3 {{ !$loop->last ? 'border-b border-gray-50' : '' }}">
-                                    <span class="text-sm text-gray-700 truncate" title="{{ $page['fullPageUrl'] ?? $page['pageTitle'] ?? '' }}">
-                                        {{ $page['pageTitle'] ?? $page['fullPageUrl'] ?? '-' }}
-                                    </span>
-                                    <span class="text-xs font-medium text-gray-400 flex-shrink-0">{{ number_format($page['screenPageViews'] ?? 0) }}</span>
-                                </div>
-                            @endforeach
+                    @if($oldWebsite['available'])
+                        <canvas id="oldWebsiteChart" height="150"></canvas>
+                        <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-gray-50">
+                            <div>
+                                <p class="text-xs text-gray-400">Total 2025</p>
+                                <p class="text-sm font-semibold text-gray-900">{{ number_format($oldWebsite['total2025']) }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Total Jan-Mei 2026</p>
+                                <p class="text-sm font-semibold text-gray-900">{{ number_format($oldWebsite['total2026']) }}</p>
+                            </div>
                         </div>
                     @else
-                        <p class="text-sm text-gray-400 text-center py-4">Belum ada data.</p>
+                        <p class="text-sm text-gray-400 text-center py-10">
+                            Data website lama belum tersedia.<br>
+                            <span class="text-xs">Periksa ANALYTICS_OLD_PROPERTY_ID di .env dan akses service account.</span>
+                        </p>
                     @endif
                 </div>
+            </div>
+        </div>
+
+        {{-- Halaman terpopuler --}}
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <div class="px-5 py-4 border-b border-gray-100">
+                <h3 class="font-heading font-semibold text-gray-900 text-sm">Halaman Terpopuler</h3>
+            </div>
+            <div class="p-5">
+                @if($analytics['topPages']->count() > 0)
+                    <div class="space-y-3">
+                        @foreach($analytics['topPages'] as $page)
+                            <div class="flex items-center justify-between gap-3 pb-3 {{ !$loop->last ? 'border-b border-gray-50' : '' }}">
+                                <span class="text-sm text-gray-700 truncate" title="{{ $page['fullPageUrl'] ?? $page['pageTitle'] ?? '' }}">
+                                    {{ $page['pageTitle'] ?? $page['fullPageUrl'] ?? '-' }}
+                                </span>
+                                <span class="text-xs font-medium text-gray-400 flex-shrink-0">{{ number_format($page['screenPageViews'] ?? 0) }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-sm text-gray-400 text-center py-4">Belum ada data.</p>
+                @endif
             </div>
         </div>
     @else
@@ -325,6 +372,27 @@
 .qa-rose:hover              { background: #fff1f2; box-shadow: 0 8px 24px rgba(225,29,72,.14); border-color: #fecdd3; }
 .qa-rose:hover .qa-ico      { background: #e11d48; color: #fff; box-shadow: 0 4px 14px rgba(225,29,72,.38); }
 .qa-rose:hover .qa-lbl      { color: #be123c; }
+
+/* ══ MENU GRAFIK (tab) ══ */
+.chart-tab {
+    padding: 6px 14px;
+    border-radius: 9999px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.chart-tab:hover { background: #f9fafb; color: #374151; }
+.chart-tab-active,
+.chart-tab-active:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37,99,235,.25);
+}
 </style>
 @endpush
 
@@ -332,18 +400,15 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
-    const gaLabels = @json($analytics['visitors']->pluck('date'));
-    const gaVisitors = @json($analytics['visitors']->pluck('activeUsers'));
-    const gaPageViews = @json($analytics['visitors']->pluck('screenPageViews'));
-
-    new Chart(document.getElementById('visitorsChart'), {
+    // ── Website baru (30 hari terakhir) ─────────────────────────
+    const chartNew = new Chart(document.getElementById('visitorsChart'), {
         type: 'line',
         data: {
-            labels: gaLabels,
+            labels: @json($analytics['chart']['labels']),
             datasets: [
                 {
                     label: 'Visitors',
-                    data: gaVisitors,
+                    data: @json($analytics['chart']['visitors']),
                     borderColor: '#e11d48',
                     backgroundColor: 'rgba(225,29,72,0.08)',
                     tension: 0.3,
@@ -351,7 +416,7 @@
                 },
                 {
                     label: 'Page Views',
-                    data: gaPageViews,
+                    data: @json($analytics['chart']['pageViews']),
                     borderColor: '#2563eb',
                     backgroundColor: 'rgba(37,99,235,0.08)',
                     tension: 0.3,
@@ -363,8 +428,76 @@
             responsive: true,
             interaction: { mode: 'index', intersect: false },
             plugins: { legend: { position: 'top' } },
-            scales: { y: { beginAtZero: true } }
+            scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 } },
+                x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8 } }
+            }
         }
+    });
+
+    let chartOld = null;
+
+    @if($oldWebsite['available'])
+    // ── Website lama (2025 Jan-Des vs 2026 Jan-Mei) ─────────────
+    chartOld = new Chart(document.getElementById('oldWebsiteChart'), {
+        type: 'line',
+        data: {
+            labels: @json($oldWebsite['labels']),
+            datasets: [
+                {
+                    label: '2025',
+                    data: @json($oldWebsite['series2025']),
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37,99,235,0.08)',
+                    tension: 0.3,
+                    fill: true,
+                },
+                {
+                    label: '2026 (Jan-Mei)',
+                    data: @json($oldWebsite['series2026']),
+                    borderColor: '#e11d48',
+                    backgroundColor: 'rgba(225,29,72,0.08)',
+                    tension: 0.3,
+                    fill: true,
+                    spanGaps: false,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top' } },
+            scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 } }
+            }
+        }
+    });
+    @endif
+
+    // ── Menu grafik (tab): Semua / Website Baru / Website Lama ──
+    const chartTabs = document.querySelectorAll('[data-chart-tab]');
+    const chartGrid = document.getElementById('chartGrid');
+    const cardNew   = document.getElementById('chartCardNew');
+    const cardOld   = document.getElementById('chartCardOld');
+
+    function showCharts(mode) {
+        cardNew.classList.toggle('hidden', mode === 'old');
+        cardOld.classList.toggle('hidden', mode === 'new');
+        chartGrid.classList.toggle('lg:grid-cols-2', mode === 'all');
+
+        chartTabs.forEach(function (btn) {
+            btn.classList.toggle('chart-tab-active', btn.dataset.chartTab === mode);
+        });
+
+        // Chart.js perlu di-resize setelah container tampil kembali
+        requestAnimationFrame(function () {
+            chartNew.resize();
+            if (chartOld) chartOld.resize();
+        });
+    }
+
+    chartTabs.forEach(function (btn) {
+        btn.addEventListener('click', function () { showCharts(btn.dataset.chartTab); });
     });
 </script>
 @endpush

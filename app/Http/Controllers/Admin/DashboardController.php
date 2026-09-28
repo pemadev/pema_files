@@ -9,6 +9,7 @@ use App\Models\Business;
 use App\Models\Enquiry;
 use App\Models\Gallery;
 use App\Models\News;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Analytics\Facades\Analytics;
 use Spatie\Analytics\Period;
@@ -31,70 +32,112 @@ class DashboardController extends Controller
 
         $activities = Activity::with('user')->latest()->take(20)->get();
 
-        // Data Google Analytics, di-cache 1 jam supaya tidak boros kuota API
+        // Data Google Analytics website baru (cache 1 jam)
         $analytics = $this->getAnalyticsData();
 
-        return view('admin.dashboard', compact('stats', 'activities', 'analytics'));
+        // Data website lama: Jan-Des 2025 & Jan-Mei 2026 (data contoh, bukan dari GA)
+        $oldWebsite = $this->getOldWebsiteData();
+
+        return view('admin.dashboard', compact('stats', 'activities', 'analytics', 'oldWebsite'));
     }
 
     /**
-     * Ambil data Google Analytics (GA4) untuk dashboard.
-     *
-     * Catatan: package spatie/laravel-analytics v5 (GA4) tidak punya method
-     * bawaan untuk "active users realtime". Semua method di package ini
-     * berbasis periode/histori, jadi "pengguna aktif" di sini diganti jadi
-     * "pengunjung hari ini" (data histori hari berjalan, bukan realtime detik-per-detik).
+     * Data GA4 website baru.
+     * Exception TIDAK ikut ter-cache: kalau gagal, request berikutnya mencoba lagi.
      */
     private function getAnalyticsData(): array
     {
-        return Cache::remember('ga-dashboard-data', now()->addHour(), function () {
-            try {
-                $visitors = Analytics::fetchVisitorsAndPageViewsByDate(Period::days(30));
+        try {
+            return Cache::remember('ga-dashboard-data-v2', now()->addHour(), function () {
+                $metrics = ['activeUsers', 'screenPageViews'];
+
+                // Grafik harian 30 hari terakhir: 1 baris per tanggal
+                $daily = Analytics::get(Period::days(30), $metrics, ['date'], 100)
+                    ->map(fn ($row) => [
+                        'date'      => Carbon::parse($row['date'])->format('Y-m-d'),
+                        'visitors'  => (int) $row['activeUsers'],
+                        'pageViews' => (int) $row['screenPageViews'],
+                    ])
+                    ->sortBy('date')
+                    ->values();
+
                 $topPages = Analytics::fetchMostVisitedPages(Period::days(30), 5);
 
-                $today = Analytics::fetchTotalVisitorsAndPageViews(
-                    Period::create(now()->startOfDay(), now())
-                );
-                $visitorsToday = $today->sum('visitors');
+                $today     = $this->totals(Period::create(now()->startOfDay(), now()));
+                $thisMonth = $this->totals(Period::create(now()->startOfMonth(), now()));
+                $lastMonth = $this->totals(Period::create(
+                    now()->subMonthNoOverflow()->startOfMonth(),
+                    now()->subMonthNoOverflow()->endOfMonth()
+                ));
 
-                $thisMonth = Analytics::fetchTotalVisitorsAndPageViews(
-                    Period::create(now()->startOfMonth(), now())
-                );
-                $lastMonth = Analytics::fetchTotalVisitorsAndPageViews(
-                    Period::create(now()->subMonthNoOverflow()->startOfMonth(), now()->subMonthNoOverflow()->endOfMonth())
-                );
-
-                $totalThisMonth = $thisMonth->sum('pageViews');
-                $totalLastMonth = $lastMonth->sum('pageViews');
-
-                $growth = $totalLastMonth > 0
-                    ? round((($totalThisMonth - $totalLastMonth) / $totalLastMonth) * 100, 1)
+                $growth = $lastMonth['pageViews'] > 0
+                    ? round((($thisMonth['pageViews'] - $lastMonth['pageViews']) / $lastMonth['pageViews']) * 100, 1)
                     : 0;
 
                 return [
-                    'visitors'        => $visitors,
-                    'topPages'        => $topPages,
-                    'visitorsToday'   => $visitorsToday,
-                    'totalThisMonth'  => $totalThisMonth,
-                    'totalLastMonth'  => $totalLastMonth,
-                    'growth'          => $growth,
-                    'available'       => true,
+                    'chart' => [
+                        'labels'    => $daily->map(fn ($d) => Carbon::parse($d['date'])->format('d M'))->all(),
+                        'visitors'  => $daily->pluck('visitors')->all(),
+                        'pageViews' => $daily->pluck('pageViews')->all(),
+                    ],
+                    'topPages'       => $topPages,
+                    'visitorsToday'  => $today['visitors'],
+                    'totalThisMonth' => $thisMonth['pageViews'],
+                    'totalLastMonth' => $lastMonth['pageViews'],
+                    'growth'         => $growth,
+                    'available'      => true,
                 ];
-            } catch (\Throwable $e) {
-                // Kalau credential GA belum diatur / API error, dashboard tetap tampil
-                // tanpa mematikan seluruh halaman.
-                report($e);
+            });
+        } catch (\Throwable $e) {
+            report($e);
 
-                return [
-                    'visitors'       => collect(),
-                    'topPages'       => collect(),
-                    'visitorsToday'  => 0,
-                    'totalThisMonth' => 0,
-                    'totalLastMonth' => 0,
-                    'growth'         => 0,
-                    'available'      => false,
-                ];
-            }
-        });
+            return [
+                'chart'          => ['labels' => [], 'visitors' => [], 'pageViews' => []],
+                'topPages'       => collect(),
+                'visitorsToday'  => 0,
+                'totalThisMonth' => 0,
+                'totalLastMonth' => 0,
+                'growth'         => 0,
+                'available'      => false,
+            ];
+        }
+    }
+
+    /**
+     * Data pengunjung website LAMA per bulan (2025: Jan-Des, 2026: Jan-Mei).
+     *
+     * CATATAN: ini DATA CONTOH (dummy), hanya untuk menampilkan grafik.
+     * Bukan angka asli dari Google Analytics. Kalau sudah punya data sebenarnya,
+     * tinggal ganti angka di $series2025 dan $series2026 di bawah ini.
+     */
+    private function getOldWebsiteData(): array
+    {
+        //                 Jan   Feb   Mar   Apr   Mei   Jun   Jul   Agu   Sep   Okt   Nov   Des
+        $series2025 = [1240, 1180, 1350, 1420, 1560, 1490, 1610, 1720, 1650, 1780, 1900, 2050];
+
+        // 2026 hanya sampai Mei; bulan setelahnya null supaya garis berhenti di Mei
+        $series2026 = [2100, 1980, 2240, 2310, 2450, null, null, null, null, null, null, null];
+
+        return [
+            'labels'     => ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+            'series2025' => $series2025,
+            'series2026' => $series2026,
+            'total2025'  => array_sum($series2025),
+            'total2026'  => array_sum(array_filter($series2026, fn ($v) => $v !== null)),
+            'available'  => true,
+        ];
+    }
+
+    /**
+     * Total pengunjung & page views untuk satu periode (tanpa dimensi -> 1 baris ringkasan).
+     */
+    private function totals(Period $period): array
+    {
+        $row = Analytics::get($period, ['activeUsers', 'screenPageViews'])->first();
+
+        return [
+            'visitors'  => (int) ($row['activeUsers'] ?? 0),
+            'pageViews' => (int) ($row['screenPageViews'] ?? 0),
+        ];
     }
 }
