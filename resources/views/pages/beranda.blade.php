@@ -317,7 +317,7 @@
             "PT PEMA hadir sebagai  Badan Usaha Milik Aceh (BUMA) dengan kepemilikan saham penuh oleh Pemerintah Aceh. Sejak resmi berdiri pada 05 April 2019, PT PEMA mengemban mandat strategis untuk mengoptimalkan potensi dan sumber daya daerah"
         </blockquote>
         <div class="w-16 h-0.5 bg-gold-500 mx-auto mb-6"></div>
-        <p class="font-heading font-semibold text-white text-lg">Faisal Ilyas S.E, M.M</p>
+        <p class="font-heading font-semibold text-white text-lg">Faisal Ilyas, S.E, M.M</p>
         <p class="text-gold-400 text-sm mt-1">Direktur Utama</p>
         <p class="text-gold-400 text-sm mt-1">PT Pembangunan Aceh (Perseroda)</p>
         <div class="mt-4 mb-4">
