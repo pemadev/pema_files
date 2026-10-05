@@ -135,17 +135,35 @@
         {{-- Grafik pengunjung: website baru & website lama --}}
         <div id="chartGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-            {{-- Website baru --}}
-            <div id="chartCardNew" class="bg-white rounded-2xl border border-gray-100 shadow-sm">
-                <div class="px-5 py-4 border-b border-gray-100">
-                    <h3 class="font-heading font-semibold text-gray-900 text-sm">Website Baru</h3>
-                    <p class="text-xs text-gray-400 mt-0.5">Pengunjung 30 hari terakhir</p>
-                </div>
-                <div class="p-5">
-                    <canvas id="visitorsChart" height="150"></canvas>
-                </div>
-            </div>
+           {{-- Website baru --}}
+            @php
+             $totalVisitorsNew  = collect($analytics['chart']['visitors'] ?? [])->sum();
+            $totalPageViewsNew = collect($analytics['chart']['pageViews'] ?? [])->sum();
+            @endphp
+    <div id="chartCardNew" class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+    <div class="px-5 py-4 border-b border-gray-100">
+        <h3 class="font-heading font-semibold text-gray-900 text-sm">Website Baru</h3>
+        <p class="text-xs text-gray-400 mt-0.5">Pengunjung 30 hari terakhir</p>
+    </div>
+    <div class="p-5">
+        <canvas id="visitorsChart" height="150"></canvas>
 
+        {{-- ▼ TAMBAHAN: total website baru ▼ --}}
+        <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-gray-50">
+            <div>
+                <p class="text-xs text-gray-400">Total Visitors (30 hari)</p>
+                <p class="text-sm font-semibold text-gray-900">{{ number_format($totalVisitorsNew) }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400">Total Page Views (30 hari)</p>
+                <p class="text-sm font-semibold text-gray-900">{{ number_format($totalPageViewsNew) }}</p>
+            </div>
+        </div>
+        {{-- ▲ TAMBAHAN ▲ --}}
+    </div>
+</div>
+
+            
             {{-- Website lama --}}
             <div id="chartCardOld" class="bg-white rounded-2xl border border-gray-100 shadow-sm">
                 <div class="px-5 py-4 border-b border-gray-100">

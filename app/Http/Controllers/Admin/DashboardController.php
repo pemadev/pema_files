@@ -113,7 +113,7 @@ class DashboardController extends Controller
     private function getOldWebsiteData(): array
     {
         //                 Jan   Feb   Mar   Apr   Mei   Jun   Jul   Agu   Sep   Okt   Nov   Des
-        $series2025 = [240, 180, 350, 420, 560, 490, 610, 720, 650, 780, 900, 450];
+        $series2025 = [240, 480, 350, 420, 560, 490, 610, 720, 650, 780, 900, 450];
 
         // 2026 hanya sampai Mei; bulan setelahnya null supaya garis berhenti di Mei
         $series2026 = [100, 180, 240, 310, 450, null, null, null, null, null, null, null];
