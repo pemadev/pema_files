@@ -135,10 +135,10 @@
         {{-- Grafik pengunjung: website baru & website lama --}}
         <div id="chartGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-           {{-- Website baru --}}
+          {{-- Website baru --}}
             @php
              $totalVisitorsNew  = collect($analytics['chart']['visitors'] ?? [])->sum();
-            $totalPageViewsNew = collect($analytics['chart']['pageViews'] ?? [])->sum();
+             $totalPageViewsNew = collect($analytics['chart']['pageViews'] ?? [])->sum();
             @endphp
     <div id="chartCardNew" class="bg-white rounded-2xl border border-gray-100 shadow-sm">
     <div class="px-5 py-4 border-b border-gray-100">
@@ -160,8 +160,8 @@
             </div>
         </div>
         {{-- ▲ TAMBAHAN ▲ --}}
-    </div>
-</div>
+        </div>
+        </div>
 
             
             {{-- Website lama --}}
