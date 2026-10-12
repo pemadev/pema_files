@@ -10,6 +10,7 @@ use App\Models\Enquiry;
 use App\Models\Gallery;
 use App\Models\News;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Analytics\Facades\Analytics;
 use Spatie\Analytics\Period;
@@ -39,6 +40,30 @@ class DashboardController extends Controller
         $oldWebsite = $this->getOldWebsiteData();
 
         return view('admin.dashboard', compact('stats', 'activities', 'analytics', 'oldWebsite'));
+    }
+
+    /**
+     * Halaman "Lihat Semua" untuk Halaman Terpopuler:
+     * grafik total + tabel semua halaman, dengan filter periode 7/30/90 hari.
+     */
+    public function halamanTerpopuler(Request $request)
+    {
+        $days = in_array((int) $request->query('days'), [7, 30, 90], true)
+            ? (int) $request->query('days')
+            : 30;
+
+        try {
+            // Cache per periode selama 1 jam (sama seperti data dashboard).
+            // Exception tidak ikut ter-cache, jadi request berikutnya mencoba lagi.
+            $pages = Cache::remember("ga-top-pages-{$days}", now()->addHour(), function () use ($days) {
+                return Analytics::fetchMostVisitedPages(Period::days($days), 100);
+            });
+        } catch (\Throwable $e) {
+            report($e);
+            $pages = collect();
+        }
+
+        return view('admin.dashboard.halaman-terpopuler', compact('pages', 'days'));
     }
 
     /**

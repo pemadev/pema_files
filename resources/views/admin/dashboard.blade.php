@@ -194,10 +194,10 @@
         </div>
 
         {{-- Halaman terpopuler --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
-            <div class="px-5 py-4 border-b border-gray-100">
-                <h3 class="font-heading font-semibold text-gray-900 text-sm">Halaman Terpopuler</h3>
-            </div>
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="font-heading font-semibold text-gray-900 text-sm">Halaman Terpopuler</h3>
+            <a href="{{ route('admin.dashboard.halaman-terpopuler') }}" class="text-pema-500 hover:text-pema-600 text-xs font-medium">Lihat Semua</a>
+        </div>
             <div class="p-5">
                 @if($analytics['topPages']->count() > 0)
                     <div class="space-y-3">

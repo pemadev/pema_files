@@ -38,6 +38,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/active-users', [DashboardController::class, 'activeUsers'])->name('dashboard.active-users');
 
+        Route::get('dashboard/halaman-terpopuler', [DashboardController::class, 'halamanTerpopuler'])->name('dashboard.halaman-terpopuler');
+        
         // ── Profil Content ──────────────────────────────
             Route::middleware('permission:view profile content')->group(function () {
             Route::get('/profil', [ProfileContentController::class, 'index'])->name('profil.index');
