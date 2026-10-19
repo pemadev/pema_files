@@ -30,7 +30,7 @@
         <h2>Semua Halaman</h2>
         <div class="pp-tools">
             <input id="ppSearch" type="search" placeholder="Cari halaman...">
-            <button id="ppSort" type="button">Urut: Tertinggi</button>
+            <button id="ppSort" type="button">Urut : Tertinggi</button>
         </div>
         <div class="pp-tbl">
             <table>
@@ -93,7 +93,7 @@
 
     const fmt = n => n.toLocaleString('id-ID');
     const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-
+ 
     document.getElementById('ppTotal').textContent = fmt(total);
     document.getElementById('ppCount').textContent = data.length >= 100 ? '10' : data.length;
     document.getElementById('ppTop').textContent   = data.length ? fmt(Math.max(...data.map(d => d.views))) : '-';
@@ -111,7 +111,7 @@
         const list = data
     .filter(d => d.name.toLowerCase().includes(q))
     .sort((a, b) => desc ? b.views - a.views : a.views - b.views)
-    .slice(0, 10);
+    .slice(0, 5);
 
         document.getElementById('ppRows').innerHTML = list.length
             ? list.map((d, i) =>
