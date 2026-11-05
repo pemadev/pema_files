@@ -1,6 +1,6 @@
-@props(['icon', 'href', 'active' => false, 'label', 'badge' => null])
+@props(['icon', 'href', 'active' => false, 'label', 'badge' => null, 'target' => null])
 
-<a href="{{ $href }}"
+<a href="{{ $href }}" @if($target) target="{{ $target }}" @endif @if($target === '_blank') rel="noopener" @endif
    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ $active ? 'bg-pema-50 text-pema-600 shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
      <i class="{{ $icon }} {{ $active ? 'text-pema-500' : 'text-gray-400' }} text-lg"></i>
      <span class="flex-1">{{ $label }}</span>

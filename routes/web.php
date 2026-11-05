@@ -6,7 +6,9 @@ use App\Models\Team;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Ppid\DashboardController;
-use App\Http\Controllers\Ppid\PpidController;
+use App\Http\Controllers\Ppid\PermohonanController;
+use App\Http\Controllers\Ppid\PengaduanController;
+use App\Http\Controllers\Ppid\KeberatanController;
 use App\Http\Controllers\VendorController;
 
 
@@ -43,9 +45,28 @@ Route::get('/id/privacy-policy', [WebController::class, 'policy'])->name('policy
 Route::get('/terms-of-service', [WebController::class, 'terms'])->name('terms');
 Route::get('/direksi/{team}', function (Team $team) {return view('direksi.show', compact('team'));})->name('direksi.show');
 
-// ADMIN ROUTES
-Route::get('/dashboard', [DashboardController::class, 'index']);
-Route::get('/ppid_users', [PpidController::class, 'index']);
-Route::get('/ppid_request_information', [PpidController::class, 'index']);
-Route::get('/ppid_request_objection', [PpidController::class, 'index']);
-// END ADMIN ROUTES
+// PPID ROUTES (wajib login admin)
+Route::middleware('admin')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('ppid.dashboard');
+
+    Route::prefix('ppid')->name('ppid.')->group(function () {
+        $resources = [
+            'pemohon'   => PermohonanController::class,
+            'pengaduan' => PengaduanController::class,
+            'keberatan' => KeberatanController::class,
+        ];
+
+        foreach ($resources as $slug => $controller) {
+            Route::get("/{$slug}", [$controller, 'index'])->name("{$slug}.index");
+            Route::get("/{$slug}/export", [$controller, 'export'])->name("{$slug}.export");
+            Route::get("/{$slug}/{id}", [$controller, 'show'])->whereNumber('id')->name("{$slug}.show");
+            Route::put("/{$slug}/{id}", [$controller, 'update'])->whereNumber('id')->name("{$slug}.update");
+        }
+    });
+
+    // Alamat lama, diarahkan ke halaman baru
+    Route::redirect('/ppid_users', '/ppid/pemohon');
+    Route::redirect('/ppid_request_information', '/ppid/pemohon');
+    Route::redirect('/ppid_request_objection', '/ppid/keberatan');
+});
+// END PPID ROUTES

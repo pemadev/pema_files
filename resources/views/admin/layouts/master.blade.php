@@ -53,6 +53,15 @@
         <nav class="p-3 space-y-1 flex-1 overflow-y-auto">
             <x-admin.sidebar-item icon="fi fi-rs-home" href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" label="Dashboard" />
 
+            <!-- Layanan PPID -->
+            <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Layanan PPID</div>
+            <x-admin.sidebar-item icon="fi fi-rs-chart-pie" href="{{ route('ppid.dashboard') }}" :active="request()->routeIs('ppid.dashboard')" label="Dashboard PPID" target="_blank" />
+            <x-admin.sidebar-item icon="fi fi-rs-users" href="{{ route('ppid.pemohon.index') }}" :active="request()->routeIs('ppid.pemohon.*')" label="Daftar Pemohon" :badge="rescue(fn () => \App\Models\PpidPermohonan::where('status', 'diproses')->count(), 0, false)" />
+            <x-admin.sidebar-item icon="fi fi-rs-megaphone" href="{{ route('ppid.pengaduan.index') }}" :active="request()->routeIs('ppid.pengaduan.*')" label="Pengaduan" :badge="rescue(fn () => \App\Models\PpidPengaduan::where('status', 'baru')->count(), 0, false)" />
+            <x-admin.sidebar-item icon="fi fi-rs-scale" href="{{ route('ppid.keberatan.index') }}" :active="request()->routeIs('ppid.keberatan.*')" label="Keberatan" :badge="rescue(fn () => \App\Models\PpidKeberatan::where('status', 'diproses')->count(), 0, false)" />
+
+
+            @unless(request()->routeIs('ppid.*'))
             <!-- Manajemen Sistem -->
             @role('admin|super_admin')
             <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Manajemen Sistem</div>
@@ -91,6 +100,7 @@
             <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Sistem</div>
             <x-admin.sidebar-item icon="fi fi-rs-settings" href="{{ route('admin.settings.index') }}" :active="request()->routeIs('admin.settings.*')" label="Pengaturan" />
             @endrole
+            @endunless
 
         <!-- Bottom Profile Card -->
         <a href="{{ route('admin.profile.edit') }}" class="border-t border-gray-100 p-3 flex-shrink-0 block hover:opacity-80 transition-opacity">

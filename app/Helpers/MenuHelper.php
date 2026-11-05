@@ -20,16 +20,18 @@ class MenuHelper
         return [
             [
                 'icon' => 'user-profile',
-                'name' => 'Daftar Pengguna',
-                'path' => '/ppid_users'
+                'name' => 'Jumlah Pemohon',
+                'path' => '/ppid/pemohon'
             ],
             [
-                'name' => 'Permohonan',
-                'icon' => 'forms',
-                'subItems' => [
-                    ['name' => 'Informasi', 'path' => '/', 'pro' => false],
-                    ['name' => 'Keberatan', 'path' => '/', 'pro' => false],
-                ],
+                'icon' => 'support-ticket',
+                'name' => 'Pengaduan',
+                'path' => '/ppid/pengaduan'
+            ],
+            [
+                'icon' => 'task',
+                'name' => 'Keberatan',
+                'path' => '/ppid/keberatan'
             ],
         ];
     }
