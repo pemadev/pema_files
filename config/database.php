@@ -19,6 +19,10 @@ return [
 
     'default' => env('DB_CONNECTION', 'sqlite'),
 
+    // Koneksi untuk data PPID (permohonan, pengaduan, keberatan).
+    // Isi PPID_DB_CONNECTION=mysql untuk kembali ke database lokal.
+    'ppid_connection' => env('PPID_DB_CONNECTION', 'ppid'),
+
     /*
     |--------------------------------------------------------------------------
     | Database Connections
@@ -61,6 +65,48 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        // Database PPID (tabel berawalan ppid_) di server HR.
+        // Koneksi yang dipakai model PPID diatur lewat 'ppid_connection' di bawah.
+        'ppid' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL_2'),
+            'host' => env('DB_HOST_2', '127.0.0.1'),
+            'port' => env('DB_PORT_2', '3306'),
+            'database' => env('DB_DATABASE_2', 'laravel'),
+            'username' => env('DB_USERNAME_2', 'root'),
+            'password' => env('DB_PASSWORD_2', ''),
+            'unix_socket' => env('DB_SOCKET_2', ''),
+            'charset' => env('DB_CHARSET_2', 'utf8mb4'),
+            'collation' => env('DB_COLLATION_2', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA_2'),
+            ]) : [],
+        ],
+
+        'dwh' => [
+            'driver' => 'mysql',
+            'url' => env('DWH_URL'),
+            'host' => env('DWH_HOST', 'dwh.pema.co.id'),
+            'port' => env('DWH_PORT', '3306'),
+            'database' => env('DWH_DATABASE', 'ppid'),
+            'username' => env('DWH_USERNAME'),
+            'password' => env('DWH_PASSWORD'),
+            'unix_socket' => env('DWH_SOCKET', ''),
+            'charset' => env('DWH_CHARSET', 'utf8mb4'),
+            'collation' => env('DWH_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('DWH_SSL_CA'),
             ]) : [],
         ],
 

@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Ppid;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Controller dasar untuk daftar, detail, ubah status, dan ekspor CSV
- * data layanan PPID. Turunannya cukup mengisi properti di bawah.
+ * data layanan PPID (database production). Turunannya cukup mengisi properti di bawah.
  */
 abstract class PpidRecordController extends Controller
 {
@@ -19,8 +18,10 @@ abstract class PpidRecordController extends Controller
     protected string $view;       // folder view: ppid/{view}
     protected string $routeName;  // nama route: ppid.{routeName}.*
     protected string $title;
-    protected string $noteField;  // kolom catatan/tanggapan petugas
-    protected array $with = [];   // relasi yang dimuat di daftar & ekspor
+    protected array $with = ['user', 'latestStatus'];
+
+    /** Panjang kolom info di tabel status (varchar 255). */
+    protected const NOTE_MAX = 255;
 
     abstract protected function exportHeader(): array;
 
@@ -43,19 +44,12 @@ abstract class PpidRecordController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        // Jumlah per status (mengikuti filter lain, tanpa filter status)
-        $statusCounts = $model::query()
-            ->filter(array_diff_key($filters, ['status' => true]))
-            ->select('status', DB::raw('COUNT(*) as total'))
-            ->groupBy('status')
-            ->pluck('total', 'status');
-
         return view("ppid.{$this->view}.index", [
             'title'        => $this->title,
             'items'        => $items,
             'filters'      => $filters,
             'statuses'     => $model::STATUSES,
-            'statusCounts' => $statusCounts,
+            'statusCounts' => collect($model::statusCounts($filters)),
             'years'        => $this->availableYears(),
             'routeName'    => $this->routeName,
         ]);
@@ -63,35 +57,44 @@ abstract class PpidRecordController extends Controller
 
     public function show(int $id)
     {
-        $item = $this->model::findOrFail($id);
+        $item = $this->model::with(array_merge($this->with, ['statuses']))->findOrFail($id);
 
         return view("ppid.{$this->view}.show", [
             'title'     => $this->title . ' ' . $item->nomor,
             'item'      => $item,
             'statuses'  => $this->model::STATUSES,
             'routeName' => $this->routeName,
-            'noteField' => $this->noteField,
+            'noteField' => 'info',
+            'noteMax'   => self::NOTE_MAX,
         ]);
     }
 
+    /**
+     * Ubah status = menambah satu baris riwayat status di server,
+     * sama seperti yang dilakukan portal PPID (status_by = nama admin).
+     */
     public function update(Request $request, int $id)
     {
         $model = $this->model;
         $item = $model::findOrFail($id);
 
         $data = $request->validate([
-            'status'          => ['required', 'in:' . implode(',', array_keys($model::STATUSES))],
-            $this->noteField  => ['nullable', 'string', 'max:5000'],
+            'status' => ['required', 'in:' . implode(',', array_keys($model::STATUSES))],
+            'info'   => ['nullable', 'string', 'max:' . self::NOTE_MAX],
         ]);
 
-        $isFinal = in_array($data['status'], $model::finalStatuses(), true);
-        $data['tanggal_selesai'] = $isFinal ? ($item->tanggal_selesai ?? now()->toDateString()) : null;
+        $label = $model::STATUSES[$data['status']]['label'];
 
-        $item->update($data);
+        $item->statuses()->create([
+            'status'    => $data['status'],
+            'status_by' => $request->user()?->name ?? 'Admin',
+            'active'    => true,
+            'info'      => filled($data['info'] ?? null) ? $data['info'] : 'Status diubah menjadi ' . $label,
+        ]);
 
         return redirect()
             ->route("ppid.{$this->routeName}.show", $item->id)
-            ->with('success', 'Status ' . $item->nomor . ' diperbarui menjadi "' . $item->status_label . '".');
+            ->with('success', 'Status ' . $item->nomor . ' diperbarui menjadi "' . $label . '".');
     }
 
     public function export(Request $request): StreamedResponse
@@ -103,11 +106,11 @@ abstract class PpidRecordController extends Controller
         return response()->streamDownload(function () use ($model, $filters) {
             $out = fopen('php://output', 'w');
             fwrite($out, "\xEF\xBB\xBF"); // BOM agar Excel membaca UTF-8
-            fputcsv($out, $this->exportHeader(), ';');
+            fputcsv($out, $this->exportHeader(), ';', '"', '');
 
-            $model::query()->with($this->with)->filter($filters)->latest()->chunk(500, function ($rows) use ($out) {
+            $model::query()->with($this->with)->filter($filters)->orderByDesc('id')->chunk(500, function ($rows) use ($out) {
                 foreach ($rows as $row) {
-                    fputcsv($out, $this->exportRow($row), ';');
+                    fputcsv($out, $this->exportRow($row), ';', '"', '');
                 }
             });
 

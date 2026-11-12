@@ -56,9 +56,9 @@
             <!-- Layanan PPID -->
             <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-3 pt-5 pb-2">Layanan PPID</div>
             <x-admin.sidebar-item icon="fi fi-rs-chart-pie" href="{{ route('ppid.dashboard') }}" :active="request()->routeIs('ppid.dashboard')" label="Dashboard PPID" target="_blank" />
-            <x-admin.sidebar-item icon="fi fi-rs-users" href="{{ route('ppid.pemohon.index') }}" :active="request()->routeIs('ppid.pemohon.*')" label="Daftar Pemohon" :badge="rescue(fn () => \App\Models\PpidPermohonan::where('status', 'diproses')->count(), 0, false)" />
-            <x-admin.sidebar-item icon="fi fi-rs-megaphone" href="{{ route('ppid.pengaduan.index') }}" :active="request()->routeIs('ppid.pengaduan.*')" label="Pengaduan" :badge="rescue(fn () => \App\Models\PpidPengaduan::where('status', 'baru')->count(), 0, false)" />
-            <x-admin.sidebar-item icon="fi fi-rs-scale" href="{{ route('ppid.keberatan.index') }}" :active="request()->routeIs('ppid.keberatan.*')" label="Keberatan" :badge="rescue(fn () => \App\Models\PpidKeberatan::where('status', 'diproses')->count(), 0, false)" />
+            <x-admin.sidebar-item icon="fi fi-rs-users" href="{{ route('ppid.akun.index') }}" :active="request()->routeIs('ppid.akun.*', 'ppid.pengguna.show')" label="Daftar Pemohon" />
+            <x-admin.sidebar-item icon="fi fi-rs-id-badge" href="{{ route('ppid.pengguna.index') }}" :active="request()->routeIs('ppid.pengguna.index', 'ppid.pemohon.*')" label="Pemohon Informasi" :badge="rescue(fn () => \App\Models\PpidPermohonan::whereCurrentStatus('disubmit')->count(), 0, false)" />
+            <x-admin.sidebar-item icon="fi fi-rs-scale" href="{{ route('ppid.keberatan.index') }}" :active="request()->routeIs('ppid.keberatan.*')" label="Keberatan" :badge="rescue(fn () => \App\Models\PpidKeberatan::whereCurrentStatus('disubmit')->count(), 0, false)" />
 
 
             @unless(request()->routeIs('ppid.*'))

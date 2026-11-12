@@ -11,31 +11,33 @@ class PermohonanController extends PpidRecordController
     protected string $view = 'permohonan';
     protected string $routeName = 'pemohon';
     protected string $title = 'Permohonan Informasi';
-    protected string $noteField = 'catatan';
+    protected array $with = ['user.kategori', 'latestStatus'];
 
     protected function exportHeader(): array
     {
-        return ['No. Registrasi', 'Tanggal', 'Nama', 'NIK', 'Email', 'Telepon', 'Pekerjaan', 'Kategori',
-            'Rincian Informasi', 'Tujuan', 'Cara Memperoleh', 'Status', 'Tanggal Selesai', 'Catatan'];
+        return ['No. Permohonan', 'Tanggal', 'Nama', 'No. KTP', 'Email', 'Telepon', 'Kategori',
+            'Rincian Informasi', 'Tujuan Penggunaan', 'Cara Memperoleh', 'Bentuk Salinan', 'Cara Mendapatkan Salinan',
+            'Status', 'Tanggal Selesai', 'Keterangan Status'];
     }
 
     protected function exportRow(Model $item): array
     {
         return [
-            $item->no_registrasi,
+            $item->no_permohonan,
             $item->created_at->format('Y-m-d H:i'),
             $item->nama,
-            $item->nik,
+            $item->user?->no_ktp,
             $item->email,
             $item->telepon,
-            $item->pekerjaan,
-            PpidPermohonan::KATEGORI_PEMOHON[$item->kategori_pemohon] ?? $item->kategori_pemohon,
+            $item->user?->kategori?->kategori_pemohon,
             $item->rincian_informasi,
             $item->tujuan_penggunaan,
-            PpidPermohonan::CARA_MEMPEROLEH[$item->cara_memperoleh] ?? $item->cara_memperoleh,
+            implode(', ', (array) $item->cara_memperoleh_informasi),
+            implode(', ', (array) $item->bentuk_salinan_informasi),
+            $item->cara_mendapatkan_salinan,
             $item->status_label,
             optional($item->tanggal_selesai)->format('Y-m-d'),
-            $item->catatan,
+            $item->latestStatus?->info,
         ];
     }
 }

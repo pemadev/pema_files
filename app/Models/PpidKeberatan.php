@@ -5,51 +5,29 @@ namespace App\Models;
 use App\Models\Concerns\HasPpidRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
+/** Permohonan keberatan (tabel ppid_permohonan_keberatan di database production). */
 class PpidKeberatan extends Model
 {
-    use SoftDeletes, HasPpidRecord;
+    use HasPpidRecord;
 
-    protected $table = 'ppid_keberatan';
+    protected $table = 'ppid_permohonan_keberatan';
 
-    const NUMBER_COLUMN = 'no_registrasi';
-    const NUMBER_PREFIX = 'PPID/KBR';
-    const SEARCHABLE = ['ppid_keberatan.no_registrasi', 'ppid_keberatan.nama', 'ppid_keberatan.email', 'ppid_keberatan.uraian'];
+    const NUMBER_COLUMN = 'no_permohonan';
+    const STATUS_MODEL = PpidPkStatus::class;
+    const STATUS_FK = 'ppid_pk_id';
+    const SEARCHABLE = ['no_permohonan', 'alasan_pengajuan_keberatan', 'nama_kuasa_hukum', 'user.name', 'user.email'];
 
-    const STATUSES = [
-        'diproses' => ['label' => 'Diproses', 'color' => 'warning'],
-        'diterima' => ['label' => 'Diterima', 'color' => 'success', 'final' => true],
-        'ditolak'  => ['label' => 'Ditolak',  'color' => 'error',   'final' => true],
-    ];
-
-    /** Alasan keberatan, Pasal 35 ayat (1) UU 14/2008. */
-    const ALASAN = [
-        'a' => 'Permohonan informasi ditolak berdasarkan alasan pengecualian',
-        'b' => 'Informasi berkala tidak disediakan',
-        'c' => 'Permohonan informasi tidak ditanggapi',
-        'd' => 'Permohonan ditanggapi tidak sebagaimana yang diminta',
-        'e' => 'Permohonan informasi tidak dipenuhi',
-        'f' => 'Biaya yang dikenakan tidak wajar',
-        'g' => 'Informasi disampaikan melebihi waktu yang diatur',
-    ];
-
-    protected $fillable = [
-        'no_registrasi', 'permohonan_id', 'nama', 'email', 'telepon', 'alasan', 'uraian',
-        'status', 'tanggapan', 'tanggal_selesai',
-    ];
-
-    protected $casts = [
-        'tanggal_selesai' => 'date',
-    ];
-
+    /** Permohonan informasi yang dikeberatani (dihubungkan lewat no_permohonan). */
     public function permohonan(): BelongsTo
     {
-        return $this->belongsTo(PpidPermohonan::class, 'permohonan_id');
+        return $this->belongsTo(PpidPermohonan::class, 'no_permohonan', 'no_permohonan');
     }
 
-    public function getAlasanLabelAttribute(): string
+    /** Batas tanggapan atasan PPID: 30 hari kerja (Pasal 36 UU KIP). */
+    public function getBatasWaktuAttribute(): Carbon
     {
-        return self::ALASAN[$this->alasan] ?? (string) $this->alasan;
+        return $this->created_at->copy()->addWeekdays(30);
     }
 }

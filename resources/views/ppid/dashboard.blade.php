@@ -7,7 +7,7 @@
     $fmt = fn ($n) => number_format((int) $n, 0, ',', '.');
     $hex = ['success' => '#16a34a', 'warning' => '#d97706', 'error' => '#dc2626', 'brand' => '#0A6AC9', 'gray' => '#9ca3af'];
     $statusChart = [];
-    foreach (['pemohon', 'pengaduan', 'keberatan'] as $k) {
+    foreach (array_keys($statusDefs) as $k) {
         $statusChart[$k] = [
             'labels' => array_values(array_map(fn ($d) => $d['label'], $statusDefs[$k])),
             'data'   => array_values(array_map(fn ($sKey) => $status[$k][$sKey] ?? 0, array_keys($statusDefs[$k]))),
@@ -20,10 +20,9 @@
         'keberatan' => ['bg' => 'bg-purple-50', 'fg' => 'text-purple-600', 'icon' => 'fi fi-rs-scale'],
     ];
     $kpMax = max(1, max(array_column($kategoriPemohon, 'total') ?: [0]));
-    $kaMax = max(1, max(array_column($kategoriPengaduan, 'total') ?: [0]));
-    $diproses = $status['pemohon']['diproses'] ?? 0;
-    $aduanBaru = $status['pengaduan']['baru'] ?? 0;
-    $kbrProses = $status['keberatan']['diproses'] ?? 0;
+    $csMax = max(1, max(array_column($caraSalinan, 'total') ?: [0]));
+    $diproses = $status['pemohon']['disubmit'] ?? 0;
+    $kbrProses = $status['keberatan']['disubmit'] ?? 0;
 @endphp
 
 @section('content')
@@ -55,20 +54,20 @@
                 <div class="qa-ico"><i class="fi fi-rs-users text-lg"></i></div>
                 <span class="qa-lbl">Jumlah Pemohon</span>
             </a>
-            <a href="{{ route('ppid.pemohon.index', ['status' => 'diproses']) }}" class="qa-btn qa-amber">
+            <a href="{{ route('ppid.pemohon.index', ['status' => 'disubmit']) }}" class="qa-btn qa-amber">
                 <span class="qa-count">{{ $fmt($diproses) }}</span>
                 <div class="qa-ico"><i class="fi fi-rs-hourglass-end text-lg"></i></div>
-                <span class="qa-lbl">Perlu Diproses</span>
+                <span class="qa-lbl">Permohonan Baru</span>
             </a>
-            <a href="{{ route('ppid.pengaduan.index', ['status' => 'baru']) }}" class="qa-btn qa-rose">
-                <span class="qa-count">{{ $fmt($aduanBaru) }}</span>
-                <div class="qa-ico"><i class="fi fi-rs-megaphone text-lg"></i></div>
-                <span class="qa-lbl">Pengaduan Baru</span>
+            <a href="{{ route('ppid.pengguna.index') }}" class="qa-btn qa-rose">
+                @if ($akun['total'])<span class="qa-count">{{ $fmt($akun['total']) }}</span>@endif
+                <div class="qa-ico"><i class="fi fi-rs-id-badge text-lg"></i></div>
+                <span class="qa-lbl">Pemohon Informasi</span>
             </a>
-            <a href="{{ route('ppid.keberatan.index', ['status' => 'diproses']) }}" class="qa-btn qa-purple">
+            <a href="{{ route('ppid.keberatan.index', ['status' => 'disubmit']) }}" class="qa-btn qa-purple">
                 <span class="qa-count">{{ $fmt($kbrProses) }}</span>
                 <div class="qa-ico"><i class="fi fi-rs-scale text-lg"></i></div>
-                <span class="qa-lbl">Keberatan Diproses</span>
+                <span class="qa-lbl">Keberatan Baru</span>
             </a>
             <a href="{{ route('ppid.pemohon.index', ['status' => 'diproses']) }}" class="qa-btn qa-slate">
                 <span class="qa-count {{ $terlambat > 0 ? 'qa-count-alert' : '' }}">{{ $fmt($terlambat) }}</span>
@@ -94,7 +93,7 @@
     @endif
 
     {{-- ================= KARTU RINGKASAN ================= --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         @foreach ($cards as $card)
             @php $st = $cardStyle[$card['key']]; @endphp
             <a href="{{ $card['route'] }}" class="ppid-stat group bg-white rounded-2xl border border-gray-100 shadow-sm p-5 block">
@@ -136,7 +135,6 @@
             <div class="flex items-center gap-2 flex-wrap" role="group" aria-label="Pilih data grafik">
                 <button type="button" data-ppid-tab="all" class="chart-tab chart-tab-active" aria-pressed="true">Semua</button>
                 <button type="button" data-ppid-tab="pemohon" class="chart-tab" aria-pressed="false">Permohonan</button>
-                <button type="button" data-ppid-tab="pengaduan" class="chart-tab" aria-pressed="false">Pengaduan</button>
                 <button type="button" data-ppid-tab="keberatan" class="chart-tab" aria-pressed="false">Keberatan</button>
             </div>
             <span class="hidden sm:block w-px h-6 bg-gray-200"></span>
@@ -153,9 +151,9 @@
             <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between gap-3">
                 <div>
                     <h3 class="font-heading font-semibold text-gray-900 text-sm">Layanan Masuk per Bulan</h3>
-                    <p class="text-xs text-gray-400 mt-0.5" id="ppidChartSub">Permohonan, pengaduan, dan keberatan tahun {{ $year }}</p>
+                    <p class="text-xs text-gray-400 mt-0.5" id="ppidChartSub">Permohonan dan keberatan tahun {{ $year }}</p>
                 </div>
-                <span class="text-xs text-gray-400">Total <strong class="text-gray-900" id="ppidChartTotal">{{ $fmt($cards[0]['total'] + $cards[1]['total'] + $cards[2]['total']) }}</strong></span>
+                <span class="text-xs text-gray-400">Total <strong class="text-gray-900" id="ppidChartTotal">{{ $fmt(array_sum(array_column($cards, 'total'))) }}</strong></span>
             </div>
             <div class="p-5">
                 <div class="relative h-72">
@@ -172,7 +170,6 @@
             <div class="p-5 space-y-4">
                 <div class="flex gap-1 rounded-xl bg-gray-100 p-1" role="group" aria-label="Pilih jenis layanan">
                     <button type="button" data-status-tab="pemohon" class="status-tab status-tab-active flex-1" aria-pressed="true">Permohonan</button>
-                    <button type="button" data-status-tab="pengaduan" class="status-tab flex-1" aria-pressed="false">Pengaduan</button>
                     <button type="button" data-status-tab="keberatan" class="status-tab flex-1" aria-pressed="false">Keberatan</button>
                 </div>
                 <div class="relative h-48">
@@ -189,7 +186,7 @@
 
     {{-- ================= REKAP BULANAN MASUK & KELUAR ================= --}}
     @php
-        $jenisLabel = ['pemohon' => 'Permohonan', 'pengaduan' => 'Pengaduan', 'keberatan' => 'Keberatan'];
+        $jenisLabel = ['pemohon' => 'Permohonan', 'keberatan' => 'Keberatan'];
         $dotBg = ['success' => 'bg-green-500', 'warning' => 'bg-amber-500', 'error' => 'bg-red-500', 'brand' => 'bg-pema-500', 'gray' => 'bg-gray-400'];
         $numTxt = ['success' => 'text-green-700', 'warning' => 'text-amber-700', 'error' => 'text-red-700', 'brand' => 'text-pema-700', 'gray' => 'text-gray-700'];
         $nowMonth = $year === (int) now()->format('Y') ? (int) now()->format('n') : 13;
@@ -327,18 +324,93 @@
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
             <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
-                <div class="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center"><i class="fi fi-rs-megaphone text-amber-600 text-sm"></i></div>
-                <h3 class="font-heading font-semibold text-gray-900 text-sm">Kategori Pengaduan</h3>
+                <div class="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center"><i class="fi fi-rs-envelope text-amber-600 text-sm"></i></div>
+                <h3 class="font-heading font-semibold text-gray-900 text-sm">Cara Mendapatkan Salinan</h3>
             </div>
             <div class="p-5 space-y-4">
-                @foreach ($kategoriPengaduan as $k)
+                @forelse ($caraSalinan as $k)
                     <div>
                         <div class="flex justify-between text-sm mb-1.5"><span class="text-gray-700">{{ $k['label'] }}</span><span class="font-semibold text-gray-900 tabular-nums">{{ $fmt($k['total']) }}</span></div>
-                        <div class="h-2 rounded-full bg-gray-100 overflow-hidden"><div class="ppid-bar h-full rounded-full bg-amber-500" style="--w: {{ round($k['total'] / $kaMax * 100, 1) }}%"></div></div>
+                        <div class="h-2 rounded-full bg-gray-100 overflow-hidden"><div class="ppid-bar h-full rounded-full bg-amber-500" style="--w: {{ round($k['total'] / $csMax * 100, 1) }}%"></div></div>
                     </div>
-                @endforeach
+                @empty
+                    <p class="text-sm text-gray-400 text-center">Belum ada permohonan tahun {{ $year }}.</p>
+                @endforelse
             </div>
         </div>
+    </div>
+
+    {{-- ================= AKUN PENGGUNA (API) ================= --}}
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-pema-50 rounded-lg flex items-center justify-center"><i class="fi fi-rs-user-add text-pema-500 text-sm"></i></div>
+                <div>
+                    <h3 class="font-heading font-semibold text-gray-900 text-sm">Akun Pengguna Terdaftar</h3>
+                    <p class="text-xs text-gray-400">Akun pemohon di portal PPID</p>
+                </div>
+            </div>
+            @if ($akun['fetchedAt'])
+                <span class="text-xs text-gray-400">Diperbarui {{ $akun['fetchedAt']->timezone(config('app.timezone'))->diffForHumans() }}</span>
+            @endif
+        </div>
+
+        @if (! $akun['configured'])
+            <p class="p-5 text-sm text-gray-400 text-center">API akun pengguna belum dikonfigurasi. Isi <code class="text-gray-600">PPID_API_USERS_URL</code> di file <code class="text-gray-600">.env</code>.</p>
+        @elseif ($akun['error'])
+            <p class="p-5 text-sm text-red-600 text-center">{{ $akun['error'] }}</p>
+        @else
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-5 border-b border-gray-100">
+                <div class="rounded-xl bg-pema-50 p-4">
+                    <p class="text-xs text-pema-700">Total akun</p>
+                    <p class="text-lg font-heading font-semibold text-gray-900 tabular-nums" data-countup="{{ (int) $akun['total'] }}">{{ $fmt($akun['total']) }}</p>
+                </div>
+                <div class="rounded-xl bg-green-50 p-4">
+                    <p class="text-xs text-green-700">Akun aktif</p>
+                    <p class="text-lg font-heading font-semibold text-gray-900 tabular-nums" data-countup="{{ (int) $akun['aktif'] }}">{{ $fmt($akun['aktif']) }}</p>
+                </div>
+                <div class="rounded-xl bg-gray-50 p-4">
+                    <p class="text-xs text-gray-500">Daftar bulan ini</p>
+                    <p class="text-lg font-heading font-semibold text-gray-900 tabular-nums" data-countup="{{ (int) $akun['bulanIni'] }}">{{ $fmt($akun['bulanIni']) }}</p>
+                </div>
+            </div>
+
+            @if (empty($akun['terbaru']))
+                <p class="p-5 text-sm text-gray-400 text-center">Belum ada akun terdaftar.</p>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-xs text-gray-400 border-b border-gray-100">
+                                <th class="px-5 py-3 font-medium">Nama</th>
+                                <th class="px-5 py-3 font-medium">Email</th>
+                                <th class="px-5 py-3 font-medium">Telepon</th>
+                                <th class="px-5 py-3 font-medium">Terdaftar</th>
+                                <th class="px-5 py-3 font-medium">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            @foreach ($akun['terbaru'] as $u)
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-5 py-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-pema-100 text-pema-700 flex items-center justify-center flex-shrink-0 font-semibold text-xs">{{ strtoupper(mb_substr($u['name'], 0, 1)) }}</div>
+                                            <span class="font-medium text-gray-900">{{ $u['name'] }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-5 py-3 text-gray-600">{{ $u['email'] }}</td>
+                                    <td class="px-5 py-3 text-gray-600 tabular-nums">{{ $u['telepon'] ?: '-' }}</td>
+                                    <td class="px-5 py-3 text-gray-500 whitespace-nowrap">{{ $u['created'] ? $u['created']->translatedFormat('d M Y, H:i') : '-' }}</td>
+                                    <td class="px-5 py-3">
+                                        @include('ppid.partials.status-badge', ['label' => $u['active'] ? 'Aktif' : 'Nonaktif', 'color' => $u['active'] ? 'success' : 'gray'])
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        @endif
     </div>
 
     {{-- ================= MASUK TERBARU ================= --}}
@@ -351,13 +423,12 @@
             <div class="flex items-center gap-2 flex-wrap" role="group" aria-label="Saring jenis">
                 <button type="button" @click="filter = 'all'" :class="filter === 'all' ? 'chart-tab chart-tab-active' : 'chart-tab'" :aria-pressed="filter === 'all'">Semua</button>
                 <button type="button" @click="filter = 'pemohon'" :class="filter === 'pemohon' ? 'chart-tab chart-tab-active' : 'chart-tab'" :aria-pressed="filter === 'pemohon'">Permohonan</button>
-                <button type="button" @click="filter = 'pengaduan'" :class="filter === 'pengaduan' ? 'chart-tab chart-tab-active' : 'chart-tab'" :aria-pressed="filter === 'pengaduan'">Pengaduan</button>
                 <button type="button" @click="filter = 'keberatan'" :class="filter === 'keberatan' ? 'chart-tab chart-tab-active' : 'chart-tab'" :aria-pressed="filter === 'keberatan'">Keberatan</button>
             </div>
         </div>
         <div class="p-5">
             @if ($recent->isEmpty())
-                <p class="text-sm text-gray-400 text-center py-4">Belum ada permohonan, pengaduan, atau keberatan.</p>
+                <p class="text-sm text-gray-400 text-center py-4">Belum ada permohonan atau keberatan.</p>
             @else
                 <div class="space-y-3">
                     @foreach ($recent as $row)
@@ -430,7 +501,6 @@
     var labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
     var series = [
         { key: 'pemohon',   label: 'Permohonan', color: '#0A6AC9' },
-        { key: 'pengaduan', label: 'Pengaduan',  color: '#d97706' },
         { key: 'keberatan', label: 'Keberatan',  color: '#7c3aed' }
     ];
     var fmt = function (n) { return Number(n).toLocaleString('id-ID'); };
@@ -514,7 +584,7 @@
         });
         var total = active.reduce(function (sum, s) { return sum + monthly[s.key].reduce(function (a, b) { return a + b; }, 0); }, 0);
         totalEl.textContent = fmt(total);
-        sub.textContent = (current === 'all' ? 'Permohonan, pengaduan, dan keberatan' : active[0].label) + ' tahun {{ $year }}';
+        sub.textContent = (current === 'all' ? 'Permohonan dan keberatan' : active[0].label) + ' tahun {{ $year }}';
     }
 
     function setActive(selector, btn) {

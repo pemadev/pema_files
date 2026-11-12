@@ -36,4 +36,13 @@ return [
     ],
 
     'ga4_measurement_id' => env('GA4_MEASUREMENT_ID'),
+
+    // API eksternal daftar akun pengguna PPID (dipakai di Dashboard PPID)
+    'ppid_api' => [
+        'users_url' => env('PPID_API_USERS_URL'),
+        'token'     => env('PPID_API_TOKEN'),
+        'timeout'   => env('PPID_API_TIMEOUT', 10),
+        'page_size' => env('PPID_API_PAGE_SIZE', 100),
+        'cache_ttl' => env('PPID_API_CACHE_TTL', 600),
+    ],
 ];

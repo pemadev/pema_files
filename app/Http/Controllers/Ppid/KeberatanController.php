@@ -11,29 +11,30 @@ class KeberatanController extends PpidRecordController
     protected string $view = 'keberatan';
     protected string $routeName = 'keberatan';
     protected string $title = 'Keberatan';
-    protected string $noteField = 'tanggapan';
-    protected array $with = ['permohonan'];
+    protected array $with = ['user', 'latestStatus', 'permohonan.latestStatus'];
 
     protected function exportHeader(): array
     {
-        return ['No. Registrasi', 'Tanggal', 'Nama', 'Email', 'Telepon', 'No. Permohonan', 'Alasan',
-            'Uraian', 'Status', 'Tanggal Selesai', 'Tanggapan'];
+        return ['No. Permohonan', 'Tanggal', 'Nama', 'Email', 'Telepon', 'Alasan Keberatan', 'Tujuan Penggunaan Informasi',
+            'Kuasa Hukum', 'Alamat Kuasa Hukum', 'Telepon Kuasa Hukum', 'Status', 'Tanggal Selesai', 'Keterangan Status'];
     }
 
     protected function exportRow(Model $item): array
     {
         return [
-            $item->no_registrasi,
+            $item->no_permohonan,
             $item->created_at->format('Y-m-d H:i'),
             $item->nama,
             $item->email,
             $item->telepon,
-            optional($item->permohonan)->no_registrasi,
-            strtoupper($item->alasan) . '. ' . $item->alasan_label,
-            $item->uraian,
+            $item->alasan_pengajuan_keberatan,
+            $item->tujuan_penggunaan_informasi,
+            $item->nama_kuasa_hukum,
+            $item->alamat_kuasa_hukum,
+            $item->telepon_kuasa_hukum,
             $item->status_label,
             optional($item->tanggal_selesai)->format('Y-m-d'),
-            $item->tanggapan,
+            $item->latestStatus?->info,
         ];
     }
 }

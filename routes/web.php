@@ -7,7 +7,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Ppid\DashboardController;
 use App\Http\Controllers\Ppid\PermohonanController;
-use App\Http\Controllers\Ppid\PengaduanController;
+use App\Http\Controllers\Ppid\PenggunaController;
 use App\Http\Controllers\Ppid\KeberatanController;
 use App\Http\Controllers\VendorController;
 
@@ -52,7 +52,6 @@ Route::middleware('admin')->group(function () {
     Route::prefix('ppid')->name('ppid.')->group(function () {
         $resources = [
             'pemohon'   => PermohonanController::class,
-            'pengaduan' => PengaduanController::class,
             'keberatan' => KeberatanController::class,
         ];
 
@@ -62,10 +61,15 @@ Route::middleware('admin')->group(function () {
             Route::get("/{$slug}/{id}", [$controller, 'show'])->whereNumber('id')->name("{$slug}.show");
             Route::put("/{$slug}/{id}", [$controller, 'update'])->whereNumber('id')->name("{$slug}.update");
         }
+
+        // Daftar pemohon informasi (ppid_permohonan_informasi) + profil pemohon
+        Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
+        Route::get('/akun', [PenggunaController::class, 'akun'])->name('akun.index');
+        Route::get('/pengguna/{id}', [PenggunaController::class, 'show'])->whereNumber('id')->name('pengguna.show');
     });
 
     // Alamat lama, diarahkan ke halaman baru
-    Route::redirect('/ppid_users', '/ppid/pemohon');
+    Route::redirect('/ppid_users', '/ppid/pengguna');
     Route::redirect('/ppid_request_information', '/ppid/pemohon');
     Route::redirect('/ppid_request_objection', '/ppid/keberatan');
 });
