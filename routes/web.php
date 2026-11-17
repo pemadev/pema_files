@@ -65,6 +65,9 @@ Route::middleware('admin')->group(function () {
         // Daftar pemohon informasi (ppid_permohonan_informasi) + profil pemohon
         Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
         Route::get('/akun', [PenggunaController::class, 'akun'])->name('akun.index');
+
+        // Semua data masuk (dari tombol "Semua" di kartu Masuk Terbaru dashboard)
+        Route::get('/masuk', [DashboardController::class, 'masuk'])->name('masuk.index');
         Route::get('/pengguna/{id}', [PenggunaController::class, 'show'])->whereNumber('id')->name('pengguna.show');
     });
 

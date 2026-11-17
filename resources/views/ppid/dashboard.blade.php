@@ -421,32 +421,40 @@
                 <h3 class="font-heading font-semibold text-gray-900 text-sm">Masuk Terbaru</h3>
             </div>
             <div class="flex items-center gap-2 flex-wrap" role="group" aria-label="Saring jenis">
-                <button type="button" @click="filter = 'all'" :class="filter === 'all' ? 'chart-tab chart-tab-active' : 'chart-tab'" :aria-pressed="filter === 'all'">Semua</button>
+                <button type="button" @click="filter = 'all'" :class="filter === 'all' ? 'chart-tab chart-tab-active' : 'chart-tab'" :aria-pressed="filter === 'all'">Terbaru</button>
                 <button type="button" @click="filter = 'pemohon'" :class="filter === 'pemohon' ? 'chart-tab chart-tab-active' : 'chart-tab'" :aria-pressed="filter === 'pemohon'">Permohonan</button>
                 <button type="button" @click="filter = 'keberatan'" :class="filter === 'keberatan' ? 'chart-tab chart-tab-active' : 'chart-tab'" :aria-pressed="filter === 'keberatan'">Keberatan</button>
+                <a href="{{ route('ppid.masuk.index') }}" class="chart-tab" title="Lihat semua data masuk">Semua <i class="fi fi-rs-angle-small-right"></i></a>
             </div>
         </div>
         <div class="p-5">
-            @if ($recent->isEmpty())
-                <p class="text-sm text-gray-400 text-center py-4">Belum ada permohonan atau keberatan.</p>
-            @else
-                <div class="space-y-3">
-                    @foreach ($recent as $row)
-                        @php
-                            $dot = ['pemohon' => 'bg-pema-100 text-pema-600', 'pengaduan' => 'bg-amber-100 text-amber-700', 'keberatan' => 'bg-purple-100 text-purple-700'][$row['key']];
-                        @endphp
-                        <a href="{{ $row['url'] }}" x-show="filter === 'all' || filter === '{{ $row['key'] }}'"
-                           class="flex items-center gap-3 rounded-xl p-2 -mx-2 hover:bg-gray-50 transition-colors">
-                            <div class="w-9 h-9 rounded-full {{ $dot }} flex items-center justify-center flex-shrink-0 font-semibold text-xs">{{ strtoupper(substr($row['nama'], 0, 1)) }}</div>
-                            <div class="min-w-0 flex-1">
-                                <p class="text-sm text-gray-700 truncate"><span class="font-medium text-gray-900">{{ $row['nama'] }}</span> mengajukan {{ strtolower($row['type']) }}</p>
-                                <p class="text-xs text-gray-400">{{ $row['nomor'] }} · {{ $row['date']->diffForHumans() }}</p>
-                            </div>
-                            @include('ppid.partials.status-badge', ['label' => $row['status'], 'color' => $row['color']])
-                        </a>
-                    @endforeach
+            @php
+                $dot = ['pemohon' => 'bg-pema-100 text-pema-600', 'keberatan' => 'bg-purple-100 text-purple-700'];
+                $kosong = ['all' => 'Belum ada permohonan atau keberatan.', 'pemohon' => 'Belum ada permohonan.', 'keberatan' => 'Belum ada keberatan.'];
+            @endphp
+            @foreach ($recent as $tab => $rows)
+                <div x-show="filter === '{{ $tab }}'" @if ($tab !== 'all') x-cloak @endif>
+                    @if ($rows->isEmpty())
+                        <p class="text-sm text-gray-400 text-center py-4">{{ $kosong[$tab] }}</p>
+                    @else
+                        <div class="space-y-3">
+                            @foreach ($rows as $row)
+                                <a href="{{ $row['url'] }}" class="flex items-center gap-3 rounded-xl p-2 -mx-2 hover:bg-gray-50 transition-colors">
+                                    <div class="w-9 h-9 rounded-full {{ $dot[$row['key']] }} flex items-center justify-center flex-shrink-0 font-semibold text-xs">{{ strtoupper(mb_substr($row['nama'], 0, 1)) }}</div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-sm text-gray-700 truncate"><span class="font-medium text-gray-900">{{ $row['nama'] }}</span> mengajukan {{ strtolower($row['type']) }}</p>
+                                        <p class="text-xs text-gray-400">{{ $row['nomor'] }} · {{ $row['date']->diffForHumans() }}</p>
+                                    </div>
+                                    @include('ppid.partials.status-badge', ['label' => $row['status'], 'color' => $row['color']])
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
-            @endif
+            @endforeach
+            <a href="{{ route('ppid.masuk.index') }}" class="mt-4 flex items-center justify-center gap-1 rounded-xl border border-gray-100 py-2.5 text-sm font-medium text-pema-500 hover:bg-pema-50 hover:text-pema-600 transition-colors">
+                Lihat semua data masuk <i class="fi fi-rs-angle-small-right"></i>
+            </a>
         </div>
     </div>
 </div>

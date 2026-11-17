@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     /** Sumber data dashboard: tabel PPID di database production. */
+    /** Jumlah data yang tampil di kartu "Masuk Terbaru" pada dashboard. */
+    private const RECENT_LIMIT = 5;
+
     private const SOURCES = [
         'pemohon'   => PpidPermohonan::class,
         'keberatan' => PpidKeberatan::class,
@@ -88,12 +91,16 @@ class DashboardController extends Controller
             ->map(fn ($total, $label) => ['label' => $label, 'total' => $total])
             ->values()->all();
 
-        $recent = collect()
-            ->merge(PpidPermohonan::with(['user', 'latestStatus'])->latest()->take(8)->get()->map(fn ($i) => $this->recentRow($i, 'Permohonan', 'pemohon')))
-            ->merge(PpidKeberatan::with(['user', 'latestStatus'])->latest()->take(8)->get()->map(fn ($i) => $this->recentRow($i, 'Keberatan', 'keberatan')))
-            ->sortByDesc('date')
-            ->take(12)
-            ->values();
+        // Masuk terbaru: 5 data per tab (semua jenis, permohonan, keberatan); selengkapnya di halaman "Semua"
+        $recentPermohonan = PpidPermohonan::with(['user', 'latestStatus'])->latest()->take(self::RECENT_LIMIT)->get()
+            ->map(fn ($i) => $this->recentRow($i, 'Permohonan', 'pemohon'));
+        $recentKeberatan = PpidKeberatan::with(['user', 'latestStatus'])->latest()->take(self::RECENT_LIMIT)->get()
+            ->map(fn ($i) => $this->recentRow($i, 'Keberatan', 'keberatan'));
+        $recent = [
+            'all'       => $recentPermohonan->concat($recentKeberatan)->sortByDesc('date')->take(self::RECENT_LIMIT)->values(),
+            'pemohon'   => $recentPermohonan,
+            'keberatan' => $recentKeberatan,
+        ];
 
         $rekap = [];
         foreach (self::SOURCES as $key => $model) {
@@ -102,7 +109,7 @@ class DashboardController extends Controller
 
         return view('ppid.dashboard', [
             'rekap'     => $rekap,
-            'akun'      => $userApi->summary(10),
+            'akun'      => $userApi->summary(5),
             'title'     => 'Dashboard PPID',
             'year'      => $year,
             'years'     => $years,
@@ -178,6 +185,45 @@ class DashboardController extends Controller
             'rows'  => array_values($rows),
             'total' => $total,
         ];
+    }
+
+    /** Halaman "Semua" dari Masuk Terbaru: seluruh permohonan & keberatan, terbaru di atas. */
+    public function masuk(Request $request)
+    {
+        $filters = $request->only(['jenis', 'q', 'status', 'tahun']);
+        $jenis = $filters['jenis'] ?? null;
+        $search = array_intersect_key($filters, array_flip(['q', 'status', 'tahun']));
+
+        $rows = collect();
+        if ($jenis !== 'keberatan') {
+            $rows = $rows->concat(PpidPermohonan::with(['user', 'latestStatus'])->filter($search)->get()
+                ->map(fn ($i) => $this->recentRow($i, 'Permohonan', 'pemohon') + ['email' => $i->email, 'detail' => $i->rincian_informasi]));
+        }
+        if ($jenis !== 'pemohon') {
+            $rows = $rows->concat(PpidKeberatan::with(['user', 'latestStatus'])->filter($search)->get()
+                ->map(fn ($i) => $this->recentRow($i, 'Keberatan', 'keberatan') + ['email' => $i->email, 'detail' => $i->alasan_pengajuan_keberatan]));
+        }
+        $rows = $rows->sortByDesc('date')->values();
+
+        $perPage = 15;
+        $page = max(1, (int) $request->input('page', 1));
+        $items = new \Illuminate\Pagination\LengthAwarePaginator(
+            $rows->forPage($page, $perPage)->values(), $rows->count(), $perPage, $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('ppid.masuk.index', [
+            'title'    => 'Semua Data Masuk',
+            'items'    => $items,
+            'filters'  => $filters,
+            'statuses' => PpidPermohonan::STATUSES,
+            'years'    => $this->availableYears(),
+            'counts'   => [
+                'all'       => PpidPermohonan::filter($search)->count() + PpidKeberatan::filter($search)->count(),
+                'pemohon'   => PpidPermohonan::filter($search)->count(),
+                'keberatan' => PpidKeberatan::filter($search)->count(),
+            ],
+        ]);
     }
 
     private function recentRow($item, string $type, string $route): array
