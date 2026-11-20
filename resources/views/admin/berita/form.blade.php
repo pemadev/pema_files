@@ -4,7 +4,8 @@
 @section('page_title', isset($news) ? 'Edit Berita' : 'Tambah Berita')
 
 @section('content')
-<div class="max-w-3xl mx-auto">
+@include('partials.word-content-style')
+<div class="max-w-5xl mx-auto">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
         {{-- Header --}}
         <div class="px-6 py-4 border-b border-gray-100">
@@ -17,7 +18,8 @@
         <form action="{{ isset($news) ? route('admin.berita.update', $news) : route('admin.berita.store') }}"
               method="POST"
               enctype="multipart/form-data"
-              x-data="{ preview: false, contentHtml: '{{ old('content', isset($news) ? $news->content : '') }}' }"
+              x-data="{ preview: false, contentHtml: @js(old('content', $news->content ?? '')) }"
+              @word-editor-change="contentHtml = $event.detail.html"
               class="p-6 space-y-6">
             @csrf
             @if(isset($news))
@@ -55,11 +57,16 @@
                         <span x-text="preview ? 'Edit' : 'Preview'"></span>
                     </button>
                 </div>
-                <input type="hidden" id="content" name="content" value="{{ old('content', isset($news) ? $news->content : '') }}">
-                <trix-editor input="content" class="trix-content" placeholder="Masukkan konten berita..." x-show="!preview"
-                             @trix-change="contentHtml = $event.target.value"></trix-editor>
+                <div x-show="!preview">
+                    @include('admin.partials.word-editor', [
+                        'name'        => 'content',
+                        'value'       => old('content', $news->content ?? ''),
+                        'uploadUrl'   => route('admin.berita.upload-image'),
+                        'placeholder' => 'Masukkan konten berita...',
+                    ])
+                </div>
                 <div x-show="preview" x-cloak
-                     class="p-4 rounded-xl border border-gray-200 bg-gray-50 min-h-[180px] text-sm text-gray-700 leading-relaxed"
+                     class="word-content p-6 rounded-xl border border-gray-200 bg-white text-gray-700 leading-relaxed" style="min-height:320px"
                      x-html="contentHtml">
                 </div>
                 @error('content')
@@ -168,36 +175,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    document.addEventListener('trix-attachment-add', function (event) {
-        const attachment = event.attachment;
-
-        if (attachment.file) {
-            const formData = new FormData();
-            formData.append('image', attachment.file);
-            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-
-            fetch("{{ route('admin.berita.upload-image') }}", {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Upload gagal');
-                return response.json();
-            })
-            .then(data => {
-                attachment.setAttributes({
-                    url: data.url,
-                    href: data.url,
-                });
-            })
-            .catch(() => {
-                alert('Gagal mengunggah gambar. Coba lagi.');
-                attachment.remove();
-            });
-        }
-    });
-</script>
-@endpush

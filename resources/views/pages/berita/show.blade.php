@@ -52,6 +52,7 @@
 @endpush
 
 @section('content')
+@include('partials.word-content-style')
 <!-- Page Header -->
 <section class="relative pt-20 pb-12 lg:pb-16 bg-pema-800 overflow-hidden">
     <div class="absolute inset-0 opacity-20">
@@ -185,7 +186,7 @@
                     </div>
                 @endif
 
-                <article class="animate-fade-in-up delay-100 article-content text-gray-600 leading-relaxed">
+                <article class="animate-fade-in-up delay-100 article-content word-content text-gray-600 leading-relaxed">
                     {!! html_entity_decode($news->content) !!}
                 </article>
 
