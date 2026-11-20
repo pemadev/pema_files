@@ -69,6 +69,7 @@ Route::middleware('admin')->group(function () {
         // Semua data masuk (dari tombol "Semua" di kartu Masuk Terbaru dashboard)
         Route::get('/masuk', [DashboardController::class, 'masuk'])->name('masuk.index');
         Route::get('/pengguna/{id}', [PenggunaController::class, 'show'])->whereNumber('id')->name('pengguna.show');
+        Route::get('/pengguna/{id}/dokumen/{jenis}', [PenggunaController::class, 'dokumen'])->whereNumber('id')->whereIn('jenis', ['ktp', 'surat'])->name('pengguna.dokumen');
     });
 
     // Alamat lama, diarahkan ke halaman baru

@@ -98,17 +98,29 @@
             <section class="rounded-2xl border border-gray-100 bg-white shadow-sm p-5 sm:p-6">
                 <h2 class="text-sm font-semibold text-gray-800">Dokumen</h2>
                 <ul class="mt-3 space-y-2">
-                    @foreach (['KTP' => $item->file_ktp, 'Surat pengantar' => $item->file_surat_pengantar] as $label => $file)
+                    @foreach (['ktp' => ['KTP', $item->file_ktp], 'surat' => ['Surat pengantar', $item->file_surat_pengantar]] as $jenis => [$label, $file])
                         <li class="flex items-center gap-3 rounded-xl border border-gray-100 px-3 py-2.5">
                             <i class="fi fi-rs-file {{ $file ? 'text-pema-500' : 'text-gray-300' }}"></i>
-                            <div class="min-w-0">
+                            <div class="min-w-0 flex-1">
                                 <p class="text-sm text-gray-800">{{ $label }}</p>
-                                <p class="text-xs truncate {{ $file ? 'text-gray-500' : 'text-gray-400' }}">{{ $file ?: 'Tidak diunggah' }}</p>
+                                <p class="text-xs truncate {{ $file ? 'text-gray-500' : 'text-gray-400' }}" title="{{ $file }}">{{ $file ?: 'Tidak diunggah' }}</p>
                             </div>
+                            @if ($file)
+                                <div class="flex flex-shrink-0 gap-1.5">
+                                    <a href="{{ route('ppid.pengguna.dokumen', [$item->id, $jenis]) }}" target="_blank" rel="noopener"
+                                       class="inline-flex h-8 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 text-xs font-medium text-gray-700 transition-colors hover:border-pema-300 hover:bg-pema-50 hover:text-pema-600">
+                                        <i class="fi fi-rs-eye"></i> Lihat
+                                    </a>
+                                    <a href="{{ route('ppid.pengguna.dokumen', [$item->id, $jenis, 'unduh' => 1]) }}"
+                                       class="inline-flex h-8 items-center gap-1.5 rounded-lg bg-pema-500 px-3 text-xs font-medium text-white transition-colors hover:bg-pema-600">
+                                        <i class="fi fi-rs-download"></i> Unduh
+                                    </a>
+                                </div>
+                            @endif
                         </li>
                     @endforeach
                 </ul>
-                <p class="mt-3 text-xs text-gray-400">File tersimpan di server portal PPID, jadi di sini hanya nama filenya yang ditampilkan.</p>
+                <p class="mt-3 text-xs text-gray-400">File diambil dari server portal PPID. Akses dokumen dicatat di log aktivitas.</p>
             </section>
         </div>
 

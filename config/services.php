@@ -44,5 +44,7 @@ return [
         'timeout'   => env('PPID_API_TIMEOUT', 10),
         'page_size' => env('PPID_API_PAGE_SIZE', 100),
         'cache_ttl' => env('PPID_API_CACHE_TTL', 600),
+        // Lokasi file dokumen pemohon (KTP, surat pengantar) di server portal PPID
+        'storage_url' => env('PPID_STORAGE_URL', 'https://hr-api.pema.co.id/storage/ppid'),
     ],
 ];

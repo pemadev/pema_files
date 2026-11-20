@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Ppid;
 use App\Http\Controllers\Controller;
 use App\Models\PpidKategoriPemohon;
 use App\Models\PpidPermohonan;
+use App\Services\ActivityLogger;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use App\Models\PpidUser;
 use Illuminate\Http\Request;
 
@@ -113,6 +116,50 @@ class PenggunaController extends Controller
             'stats'     => $stats,
             'aktivitas' => $aktivitas->sortByDesc('date')->values(),
             'whatsapp'  => $this->whatsappNumber($item->telepon),
+        ]);
+    }
+
+    /** Kolom file dokumen di ppid_users. */
+    private const DOKUMEN = [
+        'ktp'   => ['kolom' => 'file_ktp',             'label' => 'KTP'],
+        'surat' => ['kolom' => 'file_surat_pengantar', 'label' => 'Surat pengantar'],
+    ];
+
+    /**
+     * Lihat / unduh dokumen pemohon. File disimpan di server portal PPID; diambil lewat aplikasi ini
+     * supaya hanya admin yang login yang bisa membukanya. ?unduh=1 untuk mengunduh, selain itu dibuka di browser.
+     */
+    public function dokumen(Request $request, int $id, string $jenis)
+    {
+        abort_unless(isset(self::DOKUMEN[$jenis]), 404);
+
+        $user = PpidUser::findOrFail($id);
+        $file = $user->{self::DOKUMEN[$jenis]['kolom']};
+        abort_if(blank($file) || str_contains($file, '/') || str_contains($file, '\\') || str_contains($file, '..'), 404, 'Dokumen tidak ditemukan.');
+
+        $url = rtrim((string) config('services.ppid_api.storage_url'), '/') . '/' . rawurlencode($file);
+
+        try {
+            $response = Http::timeout(30)->get($url);
+        } catch (\Throwable $e) {
+            Log::warning("Gagal mengambil dokumen PPID {$file}: " . $e->getMessage());
+            abort(502, 'Server portal PPID tidak dapat dihubungi. Coba lagi beberapa saat lagi.');
+        }
+
+        $type = strtolower((string) $response->header('Content-Type'));
+        // Server portal mengembalikan halaman HTML bila file tidak ada
+        abort_if($response->failed() || str_starts_with($type, 'text/html'), 404, 'File dokumen tidak ditemukan di server portal PPID.');
+
+        $unduh = $request->boolean('unduh');
+        ActivityLogger::log($unduh ? 'downloaded' : 'viewed', 'ppid', ($unduh ? 'Mengunduh' : 'Melihat') . ' dokumen ' . self::DOKUMEN[$jenis]['label'] . ' pemohon ' . $user->name);
+
+        $nama = str_replace(['"', "\r", "\n"], '', $file);
+
+        return response($response->body(), 200, [
+            'Content-Type'           => $type ?: 'application/octet-stream',
+            'Content-Disposition'    => ($unduh ? 'attachment' : 'inline') . '; filename="' . $nama . '"; filename*=UTF-8\'\'' . rawurlencode($nama),
+            'X-Content-Type-Options' => 'nosniff',
+            'Cache-Control'          => 'private, no-store',
         ]);
     }
 
