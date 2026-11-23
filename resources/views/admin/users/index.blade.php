@@ -3,6 +3,18 @@
 @section('title', 'Pengguna')
 @section('page_title', 'Pengguna')
 
+@push('styles')
+<style>
+    .user-status-dot { position: absolute; right: -1px; bottom: -1px; width: 12px; height: 12px; border-radius: 9999px; background: #cbd5e1; border: 2px solid #fff; display: inline-block; flex-shrink: 0; }
+    .user-status-dot.is-online { background: #22c55e; box-shadow: 0 0 0 0 rgba(34,197,94,.55); animation: user-online-pulse 2s infinite; }
+    @keyframes user-online-pulse {
+        0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.55); }
+        70%  { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+        100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+    }
+</style>
+@endpush
+
 @section('content')
 <div x-data="{ deleteUrl: '' }"
      @confirm-action.window="if($event.detail.id === 'delete-confirm') { const f=document.createElement('form'); f.method='POST'; f.action=deleteUrl; const t=document.querySelector('meta[name=\'csrf-token\']').getAttribute('content'); f.innerHTML='<input type=\'hidden\' name=\'_token\' value=\''+t+'\'><input type=\'hidden\' name=\'_method\' value=\'DELETE\'>'; document.body.appendChild(f); f.submit(); }">
@@ -14,7 +26,13 @@
         variant="danger"
     />
     <div class="flex items-center justify-between mb-5">
-        <p class="text-sm text-gray-500">Kelola akun pengguna admin.</p>
+        <div class="flex flex-wrap items-center gap-3">
+            <p class="text-sm text-gray-500">Kelola akun pengguna admin.</p>
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium" style="background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0">
+                <span class="user-status-dot is-online" style="position:static;border-width:0"></span>
+                {{ $onlineCount }} pengguna online
+            </span>
+        </div>
         <a href="{{ route('admin.users.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-pema-500 hover:bg-pema-600 text-white text-sm font-medium rounded-xl transition-all duration-200 shadow-sm">
             <i class="fi fi-rs-plus text-sm"></i>
             Tambah Pengguna
@@ -84,11 +102,24 @@
                         <tr class="hover:bg-gray-50/50 transition-colors">
                             <td class="py-3 px-3 text-gray-400 text-xs">{{ $loop->iteration }}</td>
                             <td class="px-5 py-4">
+                                @php
+                                    $last = $lastActivity[$user->id] ?? null;
+                                    $online = \App\Models\User::isOnlineAt($last);
+                                @endphp
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 bg-pema-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <span class="text-pema-600 font-semibold text-sm">{{ substr($user->name, 0, 1) }}</span>
+                                    {{-- Foto profil + tanda bulat: hijau = online, abu-abu = offline --}}
+                                    <x-admin.avatar :user="$user" size="38" :online="$online"
+                                                    title="{{ $online ? 'Online' : ($last ? 'Terakhir aktif ' . $last->diffForHumans() : 'Offline') }}" />
+                                    <div class="min-w-0">
+                                        <span class="font-medium text-gray-900">{{ $user->name }}</span>
+                                        @if($online)
+                                            <p class="text-xs font-medium" style="color:#16a34a">Online</p>
+                                        @elseif($last)
+                                            <p class="text-xs text-gray-400">Terakhir aktif {{ $last->diffForHumans() }}</p>
+                                        @else
+                                            <p class="text-xs text-gray-400">Offline</p>
+                                        @endif
                                     </div>
-                                    <span class="font-medium text-gray-900">{{ $user->name }}</span>
                                 </div>
                             </td>
                             <td class="px-5 py-4 text-gray-600">{{ $user->email }}</td>

@@ -19,6 +19,11 @@
         trix-toolbar .trix-button { border-radius: 6px !important; height: 2em !important; }
         .trix-button--icon { width: 2em !important; }
     </style>
+    <style>
+        /* Titik status online pada avatar pengguna */
+        .avatar-dot-online { animation: avatar-online-pulse 2s infinite; }
+        @keyframes avatar-online-pulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,.55); } 70% { box-shadow: 0 0 0 6px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+    </style>
     @stack('styles')
 </head>
 <body x-data="{ sidebarOpen: true, mobileSidebar: false }"
@@ -136,9 +141,8 @@
 
                 <div x-data="{}" class="relative">
                     <button @click="$refs.profileDropdown.classList.toggle('hidden')" @click.outside="$refs.profileDropdown.classList.add('hidden')" class="flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm transition-all duration-200 hover:bg-gray-50">
-                        <div class="w-8 h-8 bg-pema-100 rounded-full flex items-center justify-center">
-                            <i class="fi fi-rs-user text-pema-500 text-sm"></i>
-                        </div>
+                        {{-- Foto profil (atau huruf depan) + tanda online akun yang sedang login --}}
+                        <x-admin.avatar :user="Auth::user()" size="34" :online="true" />
                         <span class="hidden sm:block text-gray-700 font-medium">{{ Auth::user()->email }}</span>
                         <svg class="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
@@ -147,13 +151,16 @@
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 translate-y-2"
                          x-transition:enter-end="opacity-100 translate-y-0">
-                        <div class="px-4 py-3 border-b border-gray-50">
-                            <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name ?? 'Admin' }}</p>
-                            <p class="text-xs text-gray-400">{{ Auth::user()->email }}</p>
+                        <div class="px-4 py-3 border-b border-gray-50 flex items-center gap-3">
+                            <x-admin.avatar :user="Auth::user()" size="40" />
+                            <div class="min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">{{ Auth::user()->name ?? 'Admin' }}</p>
+                                <p class="text-xs text-gray-400 truncate">{{ Auth::user()->email }}</p>
+                            </div>
                         </div>
                         <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                            <i class="fi fi-rs-user text-base text-gray-400"></i>
-                            Edit Profil
+                            <i class="fi fi-rs-camera text-base text-gray-400"></i>
+                            Edit Profil & Foto
                         </a>
                         <a href="{{ route('beranda') }}" target="_blank" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                             <i class="fi fi-rs-globe text-base text-gray-400"></i>

@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -39,6 +41,34 @@ class ProfileController extends Controller
         $user->name = $validated['name'];
         $user->email = $validated['email'];
 
+        // Foto profil
+        if ($request->hasFile("avatar") || $request->boolean("remove_avatar")) {
+            if (! User::supportsAvatar()) {
+                return back()->withInput()->with("error", "Kolom foto profil belum ada di database. Jalankan dulu SQL penambahan kolom avatar pada tabel users.");
+            }
+
+            $request->validate([
+                "avatar" => ["nullable", "image", "mimes:jpg,jpeg,png,webp", "max:2048", "dimensions:min_width=64,min_height=64"],
+            ], [
+                "avatar.image"      => "Foto profil harus berupa gambar.",
+                "avatar.mimes"      => "Format foto profil harus JPG, PNG, atau WebP.",
+                "avatar.max"        => "Ukuran foto profil maksimal 2MB.",
+                "avatar.dimensions" => "Foto profil minimal 64 x 64 piksel.",
+            ]);
+
+            $lama = $user->avatar;
+
+            if ($request->hasFile("avatar")) {
+                $user->avatar = $request->file("avatar")->store("avatars", "public");
+            } else {
+                $user->avatar = null;
+            }
+
+            if ($lama && $lama !== $user->avatar) {
+                $fileLama = $lama; // dihapus setelah data tersimpan
+            }
+        }
+
         if ($request->filled('password')) {
             $request->validate([
                 'current_password' => ['required', 'current_password'],
@@ -56,6 +86,10 @@ class ProfileController extends Controller
         }
 
         $user->save();
+
+        if (! empty($fileLama)) {
+            Storage::disk('public')->delete($fileLama);
+        }
 
         return redirect()->route('admin.profile.edit')
             ->with('success', 'Profil berhasil diperbarui.');

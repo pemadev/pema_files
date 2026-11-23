@@ -29,16 +29,18 @@
             .tox .tox-promotion, .tox .tox-statusbar__branding { display: none !important; }
 
             /* Header: menu + toolbar dengan latar lembut */
-            .tox:not(.tox-tinymce-inline) .tox-editor-header { background: #f8fafc !important; border-bottom: 1px solid #eef0f3 !important; box-shadow: none !important; padding: 4px 8px 6px !important; }
+            .tox:not(.tox-tinymce-inline) .tox-editor-header { background: #eaf2fb !important; border-bottom: 1px solid #d6e4f5 !important; box-shadow: none !important; padding: 0 !important; }
             .tox .tox-menubar, .tox .tox-toolbar, .tox .tox-toolbar__primary, .tox .tox-toolbar__overflow, .tox .tox-toolbar-overlord { background: transparent !important; background-image: none !important; }
-            .tox .tox-menubar { padding: 0 2px !important; }
-            .tox .tox-mbtn { height: 30px !important; padding: 0 10px !important; border-radius: 8px !important; color: #475569 !important; font-size: 13px !important; font-weight: 500; }
-            .tox .tox-mbtn:hover:not(:disabled), .tox .tox-mbtn--active { background: #e8eef7 !important; color: #0f172a !important; }
+            .tox .tox-menubar { background: linear-gradient(90deg, #0A6AC9 0%, #0b5cad 100%) !important; padding: 5px 8px !important; gap: 2px; }
+            .tox .tox-toolbar-overlord { padding: 4px 8px 6px !important; }
+            .tox .tox-mbtn { height: 30px !important; padding: 0 12px !important; border-radius: 8px !important; background: transparent !important; color: rgba(255,255,255,.88) !important; font-size: 13px !important; font-weight: 500; }
+            .tox .tox-mbtn .tox-mbtn__select-label { color: inherit !important; }
+            .tox .tox-mbtn:hover:not(:disabled), .tox .tox-mbtn--active, .tox .tox-mbtn:focus:not(:disabled) { background: rgba(255,255,255,.18) !important; color: #fff !important; box-shadow: none !important; }
 
             /* Kelompok tombol berbentuk "pil" */
-            .tox .tox-toolbar__group { background: #fff; border: 1px solid #e5e7eb !important; border-radius: 12px; padding: 2px 3px !important; margin: 3px 4px 3px 0 !important; box-shadow: 0 1px 1px rgba(16,24,40,.03); }
-            .tox .tox-toolbar__group:not(:last-of-type) { border-right: 1px solid #e5e7eb !important; }
-            .tox .tox-toolbar__overflow { border-top: 1px dashed #e2e8f0 !important; margin-top: 2px; padding-top: 2px !important; }
+            .tox .tox-toolbar__group { background: #fff; border: 1px solid #d6e4f5 !important; border-radius: 12px; padding: 2px 3px !important; margin: 3px 4px 3px 0 !important; box-shadow: 0 1px 1px rgba(16,24,40,.03); }
+            .tox .tox-toolbar__group:not(:last-of-type) { border-right: 1px solid #d6e4f5 !important; }
+            .tox .tox-toolbar__overflow { background: #f3f8fd !important; border-top: 1px dashed #c9dbf1 !important; margin: 4px -8px -6px !important; padding: 4px 8px 6px !important; }
 
             /* Tombol */
             .tox .tox-tbtn { height: 32px !important; min-width: 32px; margin: 1px !important; border-radius: 8px !important; color: #334155 !important; transition: background-color .12s, color .12s; }
@@ -52,7 +54,7 @@
             .tox .tox-split-button__chevron { width: 16px !important; }
 
             /* Dropdown gaya, huruf, ukuran */
-            .tox .tox-tbtn--select, .tox .tox-tbtn--bespoke { background: #f8fafc !important; padding: 0 6px 0 10px !important; font-size: 13px !important; }
+            .tox .tox-tbtn--select, .tox .tox-tbtn--bespoke { background: #f1f6fc !important; padding: 0 6px 0 10px !important; font-size: 13px !important; }
             .tox .tox-tbtn--bespoke .tox-tbtn__select-label { width: 6.5em !important; }
             .tox .tox-tbtn--select:hover, .tox .tox-tbtn--bespoke:hover { background: #eef2f7 !important; }
 

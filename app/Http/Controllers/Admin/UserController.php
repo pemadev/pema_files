@@ -25,7 +25,11 @@ class UserController extends Controller
             ->paginate(15)
             ->appends(request()->query());
 
-        return view('admin.users.index', compact('users', 'sortBy', 'sortDir'));
+        // Status online: dari aktivitas terakhir di tabel sessions
+        $lastActivity = User::lastActivityMap($users->pluck('id'));
+        $onlineCount = User::onlineCount();
+
+        return view('admin.users.index', compact('users', 'sortBy', 'sortDir', 'lastActivity', 'onlineCount'));
     }
 
     public function create(): View
