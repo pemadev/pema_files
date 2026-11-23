@@ -28,6 +28,20 @@
 @section('title', 'Edit ' . $label)
 @section('page_title', 'Edit ' . $label)
 
+@push('styles')
+<style>
+    .modern-field { position: relative; display: flex; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; transition: border-color .15s, box-shadow .15s, background-color .15s; }
+    .modern-field:hover { border-color: #cbd5e1; }
+    .modern-field:focus-within { background: #fff; border-color: #0A6AC9; box-shadow: 0 0 0 4px rgba(10,106,201,.12); }
+    .modern-field__icon { position: absolute; left: 16px; display: flex; color: #94a3b8; font-size: 16px; pointer-events: none; transition: color .15s; }
+    .modern-field:focus-within .modern-field__icon { color: #0A6AC9; }
+    .modern-field__input { width: 100%; height: 48px; padding: 0 16px 0 46px; border: 0 !important; background: transparent; border-radius: 14px; font-size: 15px; color: #0f172a; outline: none !important; box-shadow: none !important; }
+    .modern-field__input::placeholder { color: #94a3b8; }
+    .modern-field.is-invalid { border-color: #fca5a5; background: #fef2f2; }
+    .modern-field.is-invalid:focus-within { box-shadow: 0 0 0 4px rgba(239,68,68,.12); }
+</style>
+@endpush
+
 @section('content')
 <div class="max-w-3xl">
     <form method="POST" action="{{ route('admin.profil.update', $type) }}" enctype="multipart/form-data" class="space-y-6">
@@ -76,6 +90,13 @@
                          class="p-4 rounded-xl border border-gray-200 bg-gray-50 min-h-[120px] text-sm text-gray-700 leading-relaxed"
                          x-html="titleHtml">
                     </div>
+                @elseif($type === 'sambutan')
+                    <label for="title" class="block text-sm font-medium text-gray-700 mb-1.5">{{ $fl['title'] }}</label>
+                    <div class="modern-field @error('title') is-invalid @enderror">
+                        <i class="fi fi-rs-user modern-field__icon"></i>
+                        <input type="text" id="title" name="title" value="{{ old('title', $profile->title) }}"
+                               class="modern-field__input" placeholder="Contoh: Faisal Ilyas S.E, M.M" autocomplete="off">
+                    </div>
                 @else
                     {{-- Other types use regular input --}}
                     <label for="title" class="block text-sm font-medium text-gray-700 mb-1.5">{{ $fl['title'] }}</label>
@@ -90,6 +111,22 @@
             </div>
 
             <!-- Content -->
+            @if($type === 'sambutan')
+            <div>
+                <label for="content" class="block text-sm font-medium text-gray-700 mb-1.5">{{ $fl['content'] }}</label>
+                <div class="modern-field @error('content') is-invalid @enderror">
+                    <i class="fi fi-rs-briefcase modern-field__icon"></i>
+                    {{-- Data lama dari Trix bisa berisi tag HTML, jadi diambil teksnya saja --}}
+                    <input type="text" id="content" name="content" maxlength="255"
+                           value="{{ trim(html_entity_decode(strip_tags(str_replace(['<br>', '<br/>', '<br />'], ' ', (string) old('content', $profile->content))))) }}"
+                           class="modern-field__input" placeholder="Contoh: Direktur Utama PT PEMA" autocomplete="off">
+                </div>
+                <p class="mt-1.5 text-xs text-gray-400">Ditampilkan di bawah nama direktur pada halaman Profil.</p>
+                @error('content')
+                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+            @else
             <div>
                 <div class="flex items-center justify-between mb-1.5">
                     <label for="content" class="block text-sm font-medium text-gray-700">{{ $fl['content'] }}</label>
@@ -110,7 +147,10 @@
                     <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                 @enderror
             </div>
+            @endif
 
+            {{-- Sejarah, Visi Misi & Stakeholder tidak memakai Informasi Tambahan & Gambar --}}
+            @if(! in_array($type, ['sejarah', 'visi_misi', 'stakeholder']))
             <!-- Additional Info -->
             <div>
                 <div class="flex items-center justify-between mb-1.5">
@@ -151,6 +191,7 @@
                 @enderror
                 <p class="mt-1 text-xs text-gray-400">Format: JPG, PNG, WebP. Maksimal 2MB.</p>
             </div>
+            @endif
 
             <!-- Foto Stakeholder (khusus Stakeholder) -->
 @if($type === 'stakeholder')

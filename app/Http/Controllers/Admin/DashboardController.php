@@ -31,7 +31,6 @@ class DashboardController extends Controller
             'pesan_terbaru' => Enquiry::latest()->take(5)->get(),
         ];
 
-        $activities = Activity::with('user')->latest()->take(20)->get();
 
         // Data Google Analytics website baru (cache 1 jam)
         $analytics = $this->getAnalyticsData();
@@ -39,7 +38,7 @@ class DashboardController extends Controller
         // Data website lama: Jan-Des 2025 & Jan-Mei 2026 (data contoh, bukan dari GA)
         $oldWebsite = $this->getOldWebsiteData();
 
-        return view('admin.dashboard', compact('stats', 'activities', 'analytics', 'oldWebsite'));
+        return view('admin.dashboard', compact('stats', 'analytics', 'oldWebsite'));
     }
 
     /**

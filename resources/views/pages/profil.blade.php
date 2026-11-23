@@ -48,7 +48,7 @@
             <div class="w-16 h-1 bg-gold-500 rounded-full mx-auto"></div>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 gap-8 max-w-4xl mx-auto">{{-- Visi di atas, Misi di bawah --}}
             <!-- Visi -->
             @if($visiText)
             <div class="bg-gradient-to-br from-pema-500 to-pema-600 rounded-2xl p-8 lg:p-10 text-white animate-slide-in-left">

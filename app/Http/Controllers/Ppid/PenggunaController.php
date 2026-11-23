@@ -134,21 +134,34 @@ class PenggunaController extends Controller
         abort_unless(isset(self::DOKUMEN[$jenis]), 404);
 
         $user = PpidUser::findOrFail($id);
+        $label = self::DOKUMEN[$jenis]['label'];
         $file = $user->{self::DOKUMEN[$jenis]['kolom']};
-        abort_if(blank($file) || str_contains($file, '/') || str_contains($file, '\\') || str_contains($file, '..'), 404, 'Dokumen tidak ditemukan.');
+
+        // Gagal: kembali ke profil pemohon dengan notifikasi, bukan halaman error
+        $gagal = fn (string $pesan) => redirect()->route('ppid.pengguna.show', $user->id)->with('error', $pesan);
+
+        if (blank($file) || str_contains($file, '/') || str_contains($file, '\\') || str_contains($file, '..')) {
+            return $gagal("Dokumen {$label} tidak ditemukan.");
+        }
 
         $url = rtrim((string) config('services.ppid_api.storage_url'), '/') . '/' . rawurlencode($file);
 
         try {
-            $response = Http::timeout(30)->get($url);
+            // Coba 2 kali (jeda 1 detik) agar gangguan jaringan sesaat tidak langsung gagal
+            $response = Http::connectTimeout(8)->timeout(30)->retry(2, 1000, throw: false)->get($url);
         } catch (\Throwable $e) {
             Log::warning("Gagal mengambil dokumen PPID {$file}: " . $e->getMessage());
-            abort(502, 'Server portal PPID tidak dapat dihubungi. Coba lagi beberapa saat lagi.');
+
+            return $gagal("Dokumen {$label} tidak dapat dibuka: server portal PPID (hr-api.pema.co.id) sedang tidak dapat dihubungi. Coba lagi beberapa saat lagi.");
         }
 
         $type = strtolower((string) $response->header('Content-Type'));
         // Server portal mengembalikan halaman HTML bila file tidak ada
-        abort_if($response->failed() || str_starts_with($type, 'text/html'), 404, 'File dokumen tidak ditemukan di server portal PPID.');
+        if ($response->failed() || str_starts_with($type, 'text/html')) {
+            Log::warning("Dokumen PPID {$file} tidak tersedia (HTTP {$response->status()}).");
+
+            return $gagal("File dokumen {$label} tidak ditemukan di server portal PPID.");
+        }
 
         $unduh = $request->boolean('unduh');
         ActivityLogger::log($unduh ? 'downloaded' : 'viewed', 'ppid', ($unduh ? 'Mengunduh' : 'Melihat') . ' dokumen ' . self::DOKUMEN[$jenis]['label'] . ' pemohon ' . $user->name);
