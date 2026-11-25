@@ -48,30 +48,35 @@
             <div class="w-16 h-1 bg-gold-500 rounded-full mx-auto"></div>
         </div>
 
-        <div class="grid grid-cols-1 gap-8 max-w-4xl mx-auto">{{-- Visi di atas, Misi di bawah --}}
+        {{-- Visi di atas, Misi di bawah (ukuran ringkas) --}}
+        <div class="grid grid-cols-1 gap-6 max-w-3xl mx-auto">
             <!-- Visi -->
             @if($visiText)
-            <div class="bg-gradient-to-br from-pema-500 to-pema-600 rounded-2xl p-8 lg:p-10 text-white animate-slide-in-left">
-                <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-6">
-                    <i class="fi fi-rs-flag text-white text-2xl"></i>
+            <div class="bg-gradient-to-br from-pema-500 to-pema-600 rounded-2xl p-6 text-white animate-slide-in-left" style="box-shadow:0 10px 24px -12px rgba(10,106,201,.45)">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fi fi-rs-flag text-white text-base"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl">Visi</h3>
                 </div>
-                <h3 class="font-heading font-bold text-2xl mb-4">Visi</h3>
-                <p class="text-white leading-relaxed text-lg">{!! $visiText !!}</p>
+                <p class="text-white leading-relaxed text-base">{!! $visiText !!}</p>
             </div>
             @endif
 
             <!-- Misi -->
             @if(count($misiItems) > 0)
-            <div class="bg-gradient-to-br from-gold-500 to-gold-600 rounded-2xl p-8 lg:p-10 text-white animate-slide-in-right">
-                <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-6">
-                    <i class="fi fi-rs-bullseye text-white text-2xl"></i>
+            <div class="bg-gradient-to-br from-gold-500 to-gold-600 rounded-2xl p-6 text-white animate-slide-in-right" style="box-shadow:0 10px 24px -12px rgba(180,130,50,.5)">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fi fi-rs-bullseye text-white text-base"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl">Misi</h3>
                 </div>
-                <h3 class="font-heading font-bold text-2xl mb-4">Misi</h3>
-                <ul class="space-y-4">
+                <ul class="text-base" style="display:flex;flex-direction:column;gap:.6rem">
                     @foreach($misiItems as $misi)
                         @if(trim($misi))
                         <li class="flex items-start gap-3">
-                            <span class="w-2 h-2 bg-white rounded-full mt-2 flex-shrink-0"></span>
+                            <span class="bg-white rounded-full flex-shrink-0" style="width:6px;height:6px;margin-top:.6em"></span>
                             <span class="text-white/90 leading-relaxed">{{ trim($misi) }}</span>
                         </li>
                         @endif
@@ -211,22 +216,31 @@
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 lg:p-10">
                 <div class="flex flex-col md:flex-row items-center gap-8 lg:gap-12">
 
-                    <!-- Frame Foto -->
-                    @if($stakeholder->image_left)
-                    <div class="flex-shrink-0">
-                        <div class="w-40 h-40 lg:w-52 lg:h-52 rounded-xl overflow-hidden border-4 border-gold-100 shadow-md">
-                            <img src="{{ asset('storage/' . $stakeholder->image_left) }}"
-                                 alt="{{ $stakeholder->title ?? 'Stakeholder' }}"
-                                 class="w-full h-full object-cover">
-                        </div>
+                    <!-- Frame Foto + nama & jabatan -->
+                    <div class="flex-shrink-0 flex flex-col items-center text-center">
+                        @if($stakeholder->image_left)
+                            <div class="w-40 h-40 lg:w-52 lg:h-52 rounded-xl overflow-hidden border-4 border-gold-100 shadow-md">
+                                <img src="{{ asset('storage/' . $stakeholder->image_left) }}"
+                                     alt="{{ $stakeholder->person_name ?: ($stakeholder->title ?? 'Stakeholder') }}"
+                                     class="w-full h-full object-cover">
+                            </div>
+                        @else
+                            <div class="w-40 h-40 lg:w-52 lg:h-52 rounded-xl bg-gradient-to-br from-blue-800 to-teal-600 flex items-center justify-center border-4 border-gold-100 shadow-md">
+                                <span class="text-white/70 text-xs text-center px-4">Foto belum diunggah</span>
+                            </div>
+                        @endif
+
+                        @if($stakeholder->person_name || $stakeholder->person_position)
+                            <div class="mt-4" style="max-width:15rem">
+                                @if($stakeholder->person_name)
+                                    <p class="font-heading font-semibold text-gray-900 text-lg leading-snug">{{ $stakeholder->person_name }}</p>
+                                @endif
+                                @if($stakeholder->person_position)
+                                    <p class="text-gold-500 font-medium text-sm mt-1">{{ $stakeholder->person_position }}</p>
+                                @endif
+                            </div>
+                        @endif
                     </div>
-                    @else
-                    <div class="flex-shrink-0">
-                        <div class="w-40 h-40 lg:w-52 lg:h-52 rounded-xl bg-gradient-to-br from-blue-800 to-teal-600 flex items-center justify-center border-4 border-gold-100 shadow-md">
-                            <span class="text-white/70 text-xs text-center px-4">Foto belum diunggah</span>
-                        </div>
-                    </div>
-                    @endif
 
                     <!-- Isi Konten -->
                     <div class="flex-1 min-w-0 text-gray-600 leading-relaxed prose prose-p:mb-4 max-w-none">

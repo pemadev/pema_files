@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ProfileContent extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['type', 'title', 'content', 'image', 'image_left', 'additional_info'];
+    protected $fillable = ['type', 'title', 'content', 'image', 'image_left', 'additional_info', 'person_name', 'person_position'];
 
     public function scopeType($query, $type)
     {

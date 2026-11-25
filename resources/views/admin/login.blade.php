@@ -23,6 +23,12 @@
                 <h1 class="text-2xl font-heading font-bold text-gray-900 text-center mb-">Panel Admin</h1>
                 <p class="text-gray-500 text-sm text-center mb-4">Masukkan email dan password admin</p>
 
+                @if (session('status'))
+                    <div class="mb-4 rounded-xl px-4 py-3 text-sm" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d" role="status">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('admin.login') }}" class="space-y-5">
                     @csrf
 

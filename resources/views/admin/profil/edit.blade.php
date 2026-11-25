@@ -212,6 +212,35 @@
         <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
     @enderror
     <p class="mt-1 text-xs text-gray-400">Format: JPG, PNG, WebP. Maksimal 2MB.</p>
+
+    {{-- Nama & jabatan yang tampil di bawah foto pada halaman Profil --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+        <div>
+            <label for="person_name" class="block text-sm font-medium text-gray-700 mb-1.5">Nama <span class="text-gray-400 font-normal">(di bawah foto)</span></label>
+            <div class="modern-field @error('person_name') is-invalid @enderror">
+                <i class="fi fi-rs-user modern-field__icon"></i>
+                <input type="text" id="person_name" name="person_name" maxlength="255"
+                       value="{{ old('person_name', $profile->person_name) }}"
+                       class="modern-field__input" placeholder="Contoh: H. Muzakir Manaf" autocomplete="off">
+            </div>
+            @error('person_name')
+                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+            @enderror
+        </div>
+        <div>
+            <label for="person_position" class="block text-sm font-medium text-gray-700 mb-1.5">Jabatan <span class="text-gray-400 font-normal">(di bawah nama)</span></label>
+            <div class="modern-field @error('person_position') is-invalid @enderror">
+                <i class="fi fi-rs-briefcase modern-field__icon"></i>
+                <input type="text" id="person_position" name="person_position" maxlength="255"
+                       value="{{ old('person_position', $profile->person_position) }}"
+                       class="modern-field__input" placeholder="Contoh: Gubernur Aceh" autocomplete="off">
+            </div>
+            @error('person_position')
+                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+            @enderror
+        </div>
+    </div>
+    <p class="mt-1.5 text-xs text-gray-400">Kosongkan bila tidak ingin menampilkan nama/jabatan di bawah foto.</p>
 </div>
 @endif
 

@@ -29,9 +29,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Forgot Password & Reset Password
     Route::get('forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
-    Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email')->middleware('throttle:5,1'); // maks. 5 permintaan/menit
     Route::get('reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
     Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+    // Tautan reset yang terpotong (tanpa token): arahkan ke form lupa password, jangan tampilkan error
+    Route::get('reset-password', fn () => redirect()->route('admin.password.request')
+        ->withErrors(['email' => 'Tautan reset password tidak lengkap. Salin seluruh tautan dari email, atau minta tautan baru di bawah ini.']));
 
         // Protected routes
         Route::middleware('admin')->group(function () {

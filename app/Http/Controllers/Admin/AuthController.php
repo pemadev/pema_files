@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -64,22 +68,28 @@ public function forgotPassword(Request $request)
         'email.email'    => 'Format email tidak valid.',
     ]);
  
-    $status = Password::sendResetLink(
-        $request->only('email')
-    );
- 
-    if ($status === Password::RESET_LINK_SENT) {
-        return back()->with('status', 'Tautan reset password telah dikirim ke email Anda.');
+    try {
+        $status = Password::sendResetLink($request->only('email'));
+    } catch (\Throwable $e) {
+        // Biasanya karena pengaturan email (SMTP) di .env belum benar
+        Log::error('Gagal mengirim email reset password: ' . $e->getMessage());
+
+        return back()->withInput()->withErrors([
+            'email' => 'Email tidak dapat dikirim saat ini karena gangguan server email. Silakan coba lagi nanti atau hubungi tim IT.',
+        ]);
     }
- 
-    // Pesan generik, sengaja tidak menyebutkan apakah email terdaftar
-    // atau tidak, supaya tidak membocorkan data pengguna (enumerasi akun).
-    return back()->withErrors([
-        'email' => 'Tidak dapat mengirim tautan reset. Pastikan email terdaftar sebagai admin.',
-    ]);
+
+    if ($status === Password::RESET_THROTTLED) {
+        return back()->withInput()->withErrors([
+            'email' => 'Tautan reset baru saja dikirim. Tunggu sekitar 1 menit sebelum meminta lagi.',
+        ]);
+    }
+
+    // Pesan sama untuk email terdaftar maupun tidak, supaya tidak membocorkan
+    // email mana yang terdaftar sebagai admin (enumerasi akun).
+    return back()->with('status', 'Jika email tersebut terdaftar sebagai admin, tautan reset password sudah dikirim. Periksa kotak masuk atau folder spam Anda.');
 }
- 
-/**
+ /**
  * Tampilkan form reset password (dibuka dari link di email).
  */
 public function showResetPassword(Request $request, string $token)
@@ -108,8 +118,11 @@ public function resetPassword(Request $request)
         $request->only('email', 'password', 'password_confirmation', 'token'),
         function ($user) use ($request) {
             $user->forceFill([
-                'password' => bcrypt($request->password),
+                'password'       => Hash::make($request->password),
+                'remember_token' => Str::random(60), // keluarkan sesi "ingat saya" yang lama
             ])->save();
+
+            event(new PasswordReset($user));
         }
     );
  

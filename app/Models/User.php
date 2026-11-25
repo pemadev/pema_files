@@ -114,4 +114,10 @@ class User extends Authenticatable
 
         return $ada ??= Schema::hasColumn((new static)->getTable(), "avatar");
     }
+
+    /** Email reset password memakai template bahasa Indonesia & tautan halaman reset panel admin. */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new \App\Notifications\AdminResetPassword($token));
+    }
 }

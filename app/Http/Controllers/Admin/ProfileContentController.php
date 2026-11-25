@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ProfileContent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 class ProfileContentController extends Controller
 {
@@ -34,7 +35,16 @@ class ProfileContentController extends Controller
             'image'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'image_left'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'image_right'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'person_name'     => 'nullable|string|max:255',
+            'person_position' => 'nullable|string|max:255',
         ]);
+
+        // Nama & jabatan di bawah foto: abaikan bila kolomnya belum dibuat di database
+        foreach (['person_name', 'person_position'] as $kolom) {
+            if (array_key_exists($kolom, $validated) && ! Schema::hasColumn($profile->getTable(), $kolom)) {
+                unset($validated[$kolom]);
+            }
+        }
 
         $imageFields = ['image', 'image_left', 'image_right'];
 
