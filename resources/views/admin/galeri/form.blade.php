@@ -8,13 +8,8 @@
     <form action="{{ isset($gallery) ? route('admin.galeri.update', $gallery) : route('admin.galeri.store') }}"
           method="POST"
           enctype="multipart/form-data"
-          x-data="{ files: [], previews: [] }"
-          @submit.prevent="
-            dt = new DataTransfer();
-            files.forEach(f => dt.items.add(f));
-            $refs.fileInput.files = dt.files;
-            $el.submit();
-          "
+          x-data="galleryForm({{ isset($gallery) && $gallery->image ? 'true' : 'false' }})"
+          @submit.prevent="submit($el)"
           class="space-y-6">
         @csrf
         @if(isset($gallery))
@@ -29,6 +24,19 @@
                 </h3>
             </div>
             <div class="px-6 py-5 space-y-5">
+                {{-- Pesan error (dari server atau pengecekan sebelum kirim) --}}
+                @if ($errors->any())
+                    <div class="rounded-xl px-4 py-3 text-sm" style="background:#fef2f2;border:1px solid #fecaca;color:#b91c1c">
+                        <p class="font-medium">Galeri belum tersimpan:</p>
+                        <ul style="list-style:disc;padding-left:1.25rem;margin-top:.25rem">
+                            @foreach ($errors->all() as $msg)
+                                <li>{{ $msg }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <div x-show="clientError" x-cloak class="rounded-xl px-4 py-3 text-sm" style="background:#fef2f2;border:1px solid #fecaca;color:#b91c1c" x-text="clientError"></div>
+
                 {{-- Title --}}
                 <div>
                     <label for="title" class="block text-sm font-medium text-gray-700 mb-1.5">
@@ -55,7 +63,7 @@
                         <div class="mb-3" x-show="!removeAll">
                             <div class="flex items-center justify-between mb-2">
                                 <p class="text-xs text-gray-400">Gambar saat ini ({{ count(explode(',', $gallery->image)) }} gambar):</p>
-                                <button type="button" @click="removeAll = true; document.getElementById('existing_images').value = '';"
+                                <button type="button" @click="removeAll = true; existingRemoved = true; document.getElementById('existing_images').value = '';"
                                         class="text-xs text-red-500 hover:text-red-600 font-medium">
                                     <i class="fi fi-rs-trash"></i> Hapus Semua
                                 </button>
@@ -80,7 +88,7 @@
                         </div>
                         <div x-show="removeAll" class="mb-3 p-3 bg-red-50 rounded-xl border border-red-200">
                             <p class="text-sm text-red-600"><i class="fi fi-rs-warning"></i> Semua gambar akan dihapus saat disimpan.</p>
-                            <button type="button" @click="removeAll = false; document.getElementById('existing_images').value = '{{ $gallery->image }}';"
+                            <button type="button" @click="removeAll = false; existingRemoved = false; document.getElementById('existing_images').value = @js($gallery->image);"
                                     class="text-xs text-red-500 hover:text-red-600 font-medium mt-1">
                                 Batalkan
                             </button>
@@ -99,11 +107,14 @@
                         </script>
                     @endif
 
-                    <div class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-pema-300 transition-colors cursor-pointer"
-                         @click="$refs.fileInput.click()">
+                    <div class="border-2 border-dashed rounded-xl p-6 text-center transition-colors cursor-pointer"
+                         :class="dragging ? 'border-pema-500 bg-pema-50' : 'border-gray-200 hover:border-pema-300'"
+                         @click="document.getElementById('images').click()"
+                         @dragover.prevent="dragging = true" @dragleave.prevent="dragging = false"
+                         @drop.prevent="dragging = false; add($event.dataTransfer.files)">
                         <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l2.409-2.409a2.25 2.25 0 013.182 0l2.409 2.409m-3-3.75a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         <p class="text-sm text-gray-500">Klik atau tarik gambar ke sini</p>
-                        <p class="text-xs text-gray-400 mt-1">Bisa pilih banyak gambar sekaligus atau bertahap</p>
+                        <p class="text-xs text-gray-400 mt-1">Bisa pilih banyak gambar sekaligus atau bertahap. JPG, PNG, WebP, maks. 5MB per gambar.</p>
                     </div>
 
                     <input type="file"
@@ -112,12 +123,7 @@
                            multiple
                            accept="image/jpeg,image/png,image/jpg,image/webp"
                            class="hidden"
-                           x-ref="fileInput"
-                           @change="
-                            newFiles = Array.from($event.target.files);
-                            newFiles.forEach(f => { files.push(f); previews.push(URL.createObjectURL(f)); });
-                            $event.target.value = '';
-                           ">
+                           @change="add($event.target.files); $event.target.value = ''">
 
                     <template x-if="previews.length > 0">
                         <div class="mt-3">
@@ -129,7 +135,7 @@
                                     <div class="relative">
                                         <img :src="src" alt="Preview"
                                              class="w-32 h-24 object-contain bg-gray-50 rounded-xl border border-gray-200">
-                                        <button type="button" @click="previews.splice(i,1); files.splice(i,1)"
+                                        <button type="button" @click="remove(i)"
                                                 class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
                                             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                         </button>
@@ -174,6 +180,7 @@
                            min="0"
                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pema-500/20 focus:border-pema-500 outline-none transition-all text-sm @error('sort_order') border-red-300 bg-red-50 @enderror"
                            placeholder="0">
+                    <p class="mt-1 text-xs text-gray-400">Angka kecil tampil lebih dulu di halaman Galeri website (9 galeri per halaman). Kosongkan agar galeri tampil paling depan.</p>
                     @error('sort_order')
                         <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                     @enderror
@@ -186,12 +193,73 @@
                    class="px-6 py-2.5 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-all duration-200 inline-flex items-center gap-2">
                     Batal
                 </a>
-                <button type="submit"
+                <button type="submit" :disabled="sending" :style="sending ? 'opacity:.65;cursor:wait' : ''"
                         class="px-6 py-2.5 bg-pema-500 hover:bg-pema-600 text-white text-sm font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center gap-2">
-                    {{ isset($gallery) ? 'Simpan Perubahan' : 'Simpan' }}
+                    <span x-text="sending ? 'Mengunggah...' : @js(isset($gallery) ? 'Simpan Perubahan' : 'Simpan')"></span>
                 </button>
             </div>
         </div>
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function galleryForm(hasExisting) {
+        const MAX_FILE = 5 * 1024 * 1024;   // sama dengan validasi server (5120 KB)
+        const MAX_TOTAL = 38 * 1024 * 1024; // di bawah batas post_max_size PHP (40M)
+        const TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
+        return {
+            files: [], previews: [], dragging: false, sending: false, clientError: '',
+            existingRemoved: false,
+
+            add(list) {
+                this.clientError = '';
+                const ditolak = [];
+                Array.from(list || []).forEach(f => {
+                    if (!TYPES.includes(f.type)) { ditolak.push(f.name + ' (bukan JPG/PNG/WebP)'); return; }
+                    if (f.size > MAX_FILE) { ditolak.push(f.name + ' (' + (f.size / 1048576).toFixed(1) + 'MB, maks. 5MB)'); return; }
+                    this.files.push(f);
+                    this.previews.push(URL.createObjectURL(f));
+                });
+                if (ditolak.length) this.clientError = 'Gambar tidak ditambahkan: ' + ditolak.join(', ') + '.';
+            },
+
+            remove(i) {
+                URL.revokeObjectURL(this.previews[i]);
+                this.previews.splice(i, 1);
+                this.files.splice(i, 1);
+            },
+
+            submit(form) {
+                this.clientError = '';
+                const title = form.querySelector('#title');
+                if (!title.value.trim()) {
+                    this.clientError = 'Judul wajib diisi.';
+                    title.focus();
+                    title.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+                const sisaLama = (document.getElementById('existing_images')?.value || '').trim();
+                if (this.files.length === 0 && (!hasExisting || this.existingRemoved || sisaLama === '')) {
+                    this.clientError = 'Pilih minimal satu gambar.';
+                    return;
+                }
+                const total = this.files.reduce((n, f) => n + f.size, 0);
+                if (total > MAX_TOTAL) {
+                    this.clientError = 'Total ukuran gambar ' + (total / 1048576).toFixed(1) + 'MB terlalu besar (maks. 38MB sekali simpan). Kurangi jumlah gambar, lalu tambahkan sisanya lewat Edit.';
+                    return;
+                }
+
+                // Masukkan file yang dipilih ke input file, lalu kirim form
+                const dt = new DataTransfer();
+                this.files.forEach(f => dt.items.add(f));
+                document.getElementById('images').files = dt.files;
+                this.sending = true;
+                form.submit();
+            },
+        };
+    }
+</script>
+@endpush

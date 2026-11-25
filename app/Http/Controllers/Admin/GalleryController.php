@@ -31,18 +31,18 @@ class GalleryController extends Controller
         $validated = $request->validate([
             'title'      => ['required', 'string', 'max:255'],
             'images'     => ['required', 'array'],
-            'images.*'   => ['image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'images.*'   => ['image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'caption'    => ['nullable', 'string', 'max:500'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ], [
             'title.required'      => 'Judul wajib diisi.',
             'title.string'        => 'Judul harus berupa teks.',
             'title.max'           => 'Judul maksimal :max karakter.',
-            'images.required'     => 'Gambar wajib diisi.',
+            'images.required'     => 'Pilih minimal satu gambar.',
             'images.array'        => 'Gambar tidak valid.',
             'images.*.image'      => 'File harus berupa gambar.',
             'images.*.mimes'      => 'Format gambar harus jpeg, png, jpg, atau webp.',
-            'images.*.max'        => 'Ukuran gambar maksimal :max KB.',
+            'images.*.max'      => 'Ukuran setiap gambar maksimal 5MB.',
             'caption.string'      => 'Keterangan harus berupa teks.',
             'caption.max'         => 'Keterangan maksimal :max karakter.',
             'sort_order.integer'  => 'Urutan harus berupa angka.',
@@ -79,7 +79,7 @@ class GalleryController extends Controller
         $validated = $request->validate([
             'title'      => ['required', 'string', 'max:255'],
             'images'     => ['nullable', 'array'],
-            'images.*'   => ['image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'images.*'   => ['image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'caption'    => ['nullable', 'string', 'max:500'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'existing_images' => ['nullable', 'string'],
@@ -90,7 +90,7 @@ class GalleryController extends Controller
             'images.array'          => 'Gambar tidak valid.',
             'images.*.image'        => 'File harus berupa gambar.',
             'images.*.mimes'        => 'Format gambar harus jpeg, png, jpg, atau webp.',
-            'images.*.max'          => 'Ukuran gambar maksimal :max KB.',
+            'images.*.max'          => 'Ukuran setiap gambar maksimal 5MB.',
             'caption.string'        => 'Keterangan harus berupa teks.',
             'caption.max'           => 'Keterangan maksimal :max karakter.',
             'sort_order.integer'    => 'Urutan harus berupa angka.',
@@ -105,60 +105,38 @@ class GalleryController extends Controller
         }
         $validated['sort_order'] = $sortOrder;
 
-        if ($request->hasFile('images')) {
-            // Delete old images if they exist
-            if ($gallery->image) {
-                foreach (explode(',', $gallery->image) as $oldPath) {
-                    Storage::disk('public')->delete(trim($oldPath));
-                }
-            }
-            
-            $paths = [];
-            foreach ($request->file('images') as $image) {
-                $paths[] = $image->store('gallery', 'public');
-            }
-            $validated['image'] = implode(',', $paths);
-        } else {
-            // Check if user wants to remove all images
-            $existingImages = $request->input('existing_images', '');
-            
-            if ($existingImages === '' || $existingImages === null) {
-                // User removed all images - delete them
-                if ($gallery->image) {
-                    foreach (explode(',', $gallery->image) as $oldPath) {
-                        Storage::disk('public')->delete(trim($oldPath));
-                    }
-                }
-                $validated['image'] = null;
-            } else {
-                // Keep existing images
-                $validated['image'] = $existingImages;
-            }
-        }
-        
-        // Handle individual image removal
-        if ($request->filled('remove_images')) {
-            $removePaths = explode(',', $request->remove_images);
-            foreach ($removePaths as $path) {
-                $trimmedPath = trim($path);
-                if ($trimmedPath && Storage::disk('public')->exists($trimmedPath)) {
-                    Storage::disk('public')->delete($trimmedPath);
-                }
-            }
-        }
-        
-        unset($validated['images'], $validated['existing_images']);
+        // Gambar lama: hanya path milik galeri ini yang boleh dipertahankan
+        $lama = $this->paths($gallery->image);
+        $dipertahankan = array_values(array_intersect($lama, $this->paths($request->input('existing_images', ''))));
 
-        if ($request->filled('remove_images')) {
-            foreach (explode(',', $request->remove_images) as $path) {
-                Storage::disk('public')->delete(trim($path));
-            }
+        // Gambar baru ditambahkan di belakang gambar lama (bukan menggantikan)
+        $baru = [];
+        foreach ((array) $request->file('images', []) as $image) {
+            $baru[] = $image->store('gallery', 'public');
         }
+
+        $semua = array_merge($dipertahankan, $baru);
+        if (empty($semua)) {
+            return back()->withInput()->withErrors(['images' => 'Galeri harus memiliki minimal satu gambar.']);
+        }
+        $validated['image'] = implode(',', $semua);
+        unset($validated['images'], $validated['existing_images']);
 
         $gallery->update($validated);
 
+        // Hapus file gambar lama yang tidak dipakai lagi (setelah data tersimpan)
+        foreach (array_diff($lama, $dipertahankan) as $path) {
+            Storage::disk('public')->delete($path);
+        }
+
         return redirect()->route('admin.galeri.index')
             ->with('success', 'Galeri berhasil diperbarui.');
+    }
+
+    /** "a.jpg, b.jpg" -> ['a.jpg', 'b.jpg'] */
+    private function paths(?string $value): array
+    {
+        return array_values(array_filter(array_map('trim', explode(',', (string) $value))));
     }
 
     public function destroy(Gallery $gallery)
